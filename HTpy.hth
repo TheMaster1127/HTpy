@@ -1,0 +1,154 @@
+; HTpy
+webMode := 0
+if (webMode = 1)
+{
+Gui, Font, s19
+Gui, Show, +websiteMode w%A_ScreenWidth% h%A_ScreenHeight%
+
+editBoxX := (A_ScreenWidth - 500) / 2
+editBoxY := (A_ScreenHeight - 500) / 2
+
+editBoxX := editBoxX - 250
+editBoxX2 := editBoxX + 550
+Gui, Add, Edit, x%editBoxX% y%editBoxY% w500 h500 veditBox gCodeTextEditBox cffffff bg303030, put or type your HTpy code here...
+Gui, Add, Edit, x%editBoxX2% y%editBoxY% w500 h500 vcodeBox bg303030 cffffff
+
+sendButtonX := (A_ScreenWidth - 140) / 2
+sendButtonY := ((A_ScreenHeight - 40) / 2) + 280
+Gui, Add, Button, x%sendButtonX% y%sendButtonY% w140 h40 gButton, Transpile
+
+GuiControl, Focus, editBox
+return
+
+CodeTextEditBox:
+HTpyCode := A_GuiControl
+Return
+
+}
+else
+{
+gosub, Button
+}
+return
+Button:
+if (webMode = 0)
+{
+eval("variables.HTpyCode = input;")
+}
+
+
+pyCode := ""
+
+HTpyCodeD1 := ""
+
+Loop, Parse, HTpyCode, `n, `r
+{
+HTpyCodeD1 .= Trim(A_LoopField) . "`n"
+}
+StringTrimRight, HTpyCode, HTpyCodeD1, 1
+
+
+Loop, Parse, HTpyCode, `n, `r
+{
+
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("msgbox, "))
+{
+StringTrimLeft, var1, A_LoopField, 8
+
+if (InStr(var1, "%"))
+{
+var2 := StrSplit(var1, "%", 2)
+
+out := "print(" . var2 . ")"
+
+}
+else
+{
+out := "print(" . Chr(34) . var1 . Chr(34) . ")"
+}
+
+pyCode .= out . "`n"
+}
+
+
+
+}
+
+
+if (webMode = 1)
+{
+GuiControl, Text, codeBox, %pyCode%
+}
+else
+{
+OutputDebug, %pyCode%
+}
+Return
+
+StrSplit(str, delimiter, num)
+{
+
+if (num = 1)
+{
+out := ""
+Loop, Parse, str
+{
+
+out .= A_LoopField
+
+if (A_LoopField = delimiter)
+{
+StringTrimRight, out, out, 1
+break
+}
+
+}
+return out
+}
+else
+{
+
+str := delimiter . str
+
+posNum := 0
+allowPos := 0
+out := ""
+Loop, Parse, str
+{
+
+if (allowPos = 1)
+{
+out .= A_LoopField
+}
+
+if (A_LoopField = delimiter) && (allowPos = 1)
+{
+
+if (pos = num)
+{
+StringTrimRight, out, out, 1
+break
+}
+else
+{
+allowPos := 0
+out := ""
+}
+
+}
+if (A_LoopField = delimiter) && (allowPos = 0)
+{
+allowPos := 1
+posNum++
+pos := posNum
+}
+
+
+} ; end of Loop
+return out
+}
+
+
+} ; end of func
+
+
