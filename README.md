@@ -1,54 +1,19 @@
-### this is still in very early development
 
-# HTpy
+### HTpy: Early Development Preview
 
-HTpy is a custom scripting language that transpiles `.htpy` files into Python scripts. It enables users to write simple scripts using HTpy syntax and convert them into executable Python code.
+**HTpy** is a custom scripting language designed to transpile AHK-like syntax files into Python scripts. It allows users to write scripts using HTpy syntax and convert them into executable Python code.
 
-## Getting Started
+**Note:** This project is still in its early stages of development.
 
-To use HTpy, follow these steps:
+#### Usage Example
 
-1. **Install Node.js (if you dont have it alredy)**
-you can do it here https://nodejs.org/en/download
-
-2. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/TheMaster1127/HTpy.git
-   cd HTpy
-   ```
-
-3. **Write HTpy Script**
-
-   Create a `.htpy` file and write HTpy code using the supported syntax (e.g., `msgbox, Hello World!`).
-
-4. **Run Transpiler**
-
-   Use the `HTpy.py` script to transpile your `.htpy` file into a Python script.
-
-   ```bash
-   python HTpy.py your_script.htpy
-   ```
-
-   This command will transpile `your_script.htpy` into `your_script.py`.
-
-5. **Execute Python Script**
-
-   Execute the generated Python script.
-
-   ```bash
-   python your_script.py
-   ```
-
-   This will run the Python script and execute the corresponding actions defined in your HTpy script.
-
-## HTpy Syntax
-
-HTpy supports a limited set of commands. Currently, you can use `msgbox` to display a message box with text.
-
-Example HTpy script (`example.htpy`):
+Currently, HTpy supports a basic `msgbox` command. Here's an example of HTpy syntax:
 
 ```plaintext
 msgbox, Hello HTpy!
 ```
+
+#### Try It Out
+
+You can experiment with HTpy syntax using the online demo [here](https://themaster1127.github.io/HTpy/).
 
