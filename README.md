@@ -7,7 +7,7 @@
 
 #### Usage Example
 
-Currently, HTpy supports a basic `msgbox` command. Here's an example of HTpy syntax:
+So far HTpy supports a basic `msgbox` command. Here's an example of HTpy syntax:
 
 ```plaintext
 msgbox, Hello HTpy!
