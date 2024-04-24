@@ -19,40 +19,40 @@ HTpy currently supports a subset of commands similar to AutoHotkey:
 
 Here's an example of HTpy syntax:
 
-```plaintext
+```ahk
 var1 := "Python is not so bad!"
-msgbox, %var1%
+MsgBox, %var1%
 num := 42
 var%num% := num
-msgbox, %var42%
+MsgBox, %var42%
 
 var23 := (55 + 3) - 1 . var%num%
-msgbox, %var23%
+MsgBox, %var23%
 Sleep, 600
 var1 := true
 var2 := false
-msgbox, %var1%
-msgbox, %var2%
+MsgBox, %var1%
+MsgBox, %var2%
 
 somNumber := 55
 somNumber += somNumber
 somNumber += somNumber
 somNumber += somNumber
 somNumber += somNumber
-msgbox, %somNumber%
+MsgBox, %somNumber%
 
 Random, someRandomNums, 1, 20
-msgbox, %someRandomNums%
+MsgBox, %someRandomNums%
 Random, someRandomNums, 1, 20
-msgbox, %someRandomNums%
+MsgBox, %someRandomNums%
 Random, someRandomNums, 1, 20
-msgbox, %someRandomNums%
+MsgBox, %someRandomNums%
 Random, someRandomNums, 1, 20
-msgbox, %someRandomNums%
+MsgBox, %someRandomNums%
 Random, someRandomNums, 1, 20
-msgbox, %someRandomNums%
+MsgBox, %someRandomNums%
 Random, someRandomNums, 1, 20
-msgbox, %someRandomNums%
+MsgBox, %someRandomNums%
 Random, someRandomNums, 1, 20
-msgbox, %someRandomNums%
+MsgBox, %someRandomNums%
 ```
