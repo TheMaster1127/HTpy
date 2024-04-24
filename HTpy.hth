@@ -39,9 +39,10 @@ StringTrimRight, HTpyCode, HTpyCodeD1, 1
 
 
 
-
+functionNames := ""
 
 onceImportTime := 0
+weUseRandomAtLeastOnce := 0
 weEverUseVars := ""
 usedLib := ""
 Loop, Parse, HTpyCode, `n, `r
@@ -62,6 +63,25 @@ else
 {
 out := "print(" . Chr(34) . var1 . Chr(34) . ")"
 }
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("Random, "))
+{
+varr1 := StrSplit(A_LoopField, ",", 2)
+varr2 := StrSplit(A_LoopField, ",", 3)
+varr3 := StrSplit(A_LoopField, ",", 4)
+
+outt1 := Trim(transpileVar(varr1))
+outt2 := Trim(transpileVar(varr2))
+outt3 := Trim(transpileVar(varr3))
+weUseRandomAtLeastOnce++
+if (weUseRandomAtLeastOnce = 1)
+{
+usedLib .= "import random`n"
+}
+out := outt1 . " = " . "random.randint(" . outt2 . ", " . outt3 . ")"
 
 lineDone := 1
 pyCode .= out . "`n"
@@ -154,6 +174,7 @@ normalVarNo34 := 1
 var2 := StrReplace(var2, Chr(34), "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")
 var2 := StrReplace(var2, Chr(40), " ( ")
 var2 := StrReplace(var2, Chr(41), " ) ")
+var2 := StrReplace(var2, Chr(44), " , ")
 
 Loop, Parse, var2, " "
 {
@@ -210,6 +231,15 @@ weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = 
 
 out := var1 . whatVarWeUse . outVar2
 
+out := StrReplace(out, "variables['True']", "True")
+out := StrReplace(out, "variables['False']", "False")
+out := StrReplace(out, "variables['true']", "True")
+out := StrReplace(out, "variables['false']", "False")
+
+Loop, Parse, functionNames, "|"
+{
+out := StrReplace(out, "variables['" . A_LoopField . "']", A_LoopField)
+}
 
 
 pyCode .= out . "`n"
@@ -227,11 +257,99 @@ pyCode .= A_LoopField . "`n"
 
 pyCode := usedLib . "`n" . weEverUseVars . "`n" . pyCode
 
-
 GuiControl, Text, codeBox, %pyCode%
 
 Return
 
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+transpileVar(str)
+{
+
+outVar2 := ""
+chr34 := 0
+normalVarNo34 := 1
+var2 := str
+;MsgBox, % var2
+
+var2 := StrReplace(var2, Chr(34), "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")
+var2 := StrReplace(var2, Chr(40), " ( ")
+var2 := StrReplace(var2, Chr(41), " ) ")
+var2 := StrReplace(var2, Chr(44), " , ")
+
+Loop, Parse, var2, " "
+{
+varVar := A_LoopField
+;MsgBox, % varVar
+if (!(InStr(varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")))
+{
+if (normalVarNo34 = 1)
+{
+if (InStr(varVar, "%"))
+{
+varVar1 := Trim(StrSplit(varVar, "%", 1))
+varVar2 := Trim(StrSplit(varVar, "%", 2))
+
+
+varVar := "variables[f'" . varVar1 . "{variables[" . Chr(34) . varVar2 . Chr(34) . "]}']"
+
+}
+else
+{
+if !(ifOnlyNum(varVar))
+{
+varVar := "variables['" . varVar . "']"
+}
+}
+if (A_LoopField = ".")
+{
+varVar := "+"
+}
+
+
+}
+}
+
+if (InStr(varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback"))
+{
+chr34++
+normalVarNo34 := 0
+}
+
+if (chr34 = 2)
+{
+normalVarNo34 := 1
+chr34 := 0
+}
+
+outVar2 .= varVar . A_Space
+}
+StringTrimRight, outVar2, outVar2, 1
+outVar2 := StrReplace(outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", Chr(34))
+
+weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n"
+
+
+out := outVar2
+
+out := StrReplace(out, "variables['True']", "True")
+out := StrReplace(out, "variables['False']", "False")
+out := StrReplace(out, "variables['true']", "True")
+out := StrReplace(out, "variables['false']", "False")
+
+Loop, Parse, functionNames, "|"
+{
+out := StrReplace(out, "variables['" . A_LoopField . "']", A_LoopField)
+}
+return out
+}
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ifOnlyNum(str)
@@ -247,7 +365,7 @@ numOfStr++
 
 Loop, Parse, str
 {
-if (InStr(A_LoopField, "0")) or (InStr(A_LoopField, "1")) or (InStr(A_LoopField, "2")) or (InStr(A_LoopField, "3")) or (InStr(A_LoopField, "4")) or (InStr(A_LoopField, "5")) or (InStr(A_LoopField, "6")) or (InStr(A_LoopField, "7")) or (InStr(A_LoopField, "8")) or (InStr(A_LoopField, "9")) or (InStr(A_LoopField, Chr(40))) or (InStr(A_LoopField, Chr(41))) or (InStr(A_LoopField, Chr(42))) or (InStr(A_LoopField, Chr(43))) or (InStr(A_LoopField, Chr(45))) or (InStr(A_LoopField, Chr(46))) or (InStr(A_LoopField, Chr(47)))
+if (InStr(A_LoopField, "0")) or (InStr(A_LoopField, "1")) or (InStr(A_LoopField, "2")) or (InStr(A_LoopField, "3")) or (InStr(A_LoopField, "4")) or (InStr(A_LoopField, "5")) or (InStr(A_LoopField, "6")) or (InStr(A_LoopField, "7")) or (InStr(A_LoopField, "8")) or (InStr(A_LoopField, "9")) or (InStr(A_LoopField, Chr(40))) or (InStr(A_LoopField, Chr(41))) or (InStr(A_LoopField, Chr(42))) or (InStr(A_LoopField, Chr(43))) or (InStr(A_LoopField, Chr(45))) or (InStr(A_LoopField, Chr(46))) or (InStr(A_LoopField, Chr(47))) or (InStr(A_LoopField, Chr(44)))
 {
 foundAnum++
 }

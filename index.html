@@ -22,11 +22,9 @@
           sans-serif;
       }
     </style>
-    
   </head>
   <body>
     <script>
-
       // JavaScript equivalent code with variables
 
       function changeFaviconAtTheBeginning(faviconUrl) {
@@ -293,632 +291,623 @@
       // Single async function to structure the entire script
       async function runScript() {
         // Declare and assign a variable
-let variables = {
-  A_Index: null,
-  A_LoopField: null,
-  allowPos: null,
-  characters: null,
-  chr34: null,
-  editBoxX2: null,
-  editBoxX: null,
-  editBoxY: null,
-  foundAnum: null,
-  HTpyCode: null,
-  HTpyCodeD1: null,
-  ifOnlyNum: null,
-  lineDone: null,
-  normalVarNo34: null,
-  numOfStr: null,
-  onceImportTime: null,
-  out: null,
-  outVar2: null,
-  pos: null,
-  posNum: null,
-  pyCode: null,
-  sendButtonX: null,
-  sendButtonY: null,
-  str: null,
-  StrSplit: null,
-  usedLib: null,
-  var1: null,
-  var2: null,
-  varVar1: null,
-  varVar2: null,
-  varVar: null,
-  weEverUseVars: null,
-  whatVarWeUse: null,
-};
-
-let funcs = {
-  ifOnlyNum: ifOnlyNum,
-  StrSplit: StrSplit,
-}
-
-let Gui1 = {};
-Gui1 = document.createElement("div");
-
-// HTpy
-
-Gui1.style.position = "absolute";
-Gui1.style.width = window.innerWidth + "px"; // Set the width
-Gui1.style.height = "" + BuildInVars("A_ScreenHeight") + "px"; // Set the height
-Gui1.style.background = "linear-gradient(90deg, " + "#121212" + " 0%, " + "#121212" + " 100%)";
-Gui1.style.backgroundColor = "linear-gradient(90deg, " + "#121212" + " 0%, " + "#121212" + " 100%)";
-Gui1.style.color = "white";
-Gui1.style.fontSize = "15px";
-Gui1.style.padding = "0px";
-Gui1.style.borderRadius = "0px";
-Gui1.style.fontFamily = ", sans-serif"; // Specify your desired font here
-Gui1.style.zIndex = "100";
-
-document.body.appendChild(Gui1) // Append the GUI window to the body
-Gui1.style.display = "block";
-
-document.documentElement.setAttribute("style", "padding: 0; margin: 0;")
-document.head.setAttribute("style", "padding: 0; margin: 0;")
-document.body.setAttribute("style", "overflow-x: hidden;padding: 0; margin: 0;")
-
-variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - 500 )  / 2;
-
-variables.editBoxY =   ( BuildInVars("A_ScreenHeight") - 500 )  / 2;
-
-variables.editBoxX =  variables.editBoxX - 250;
-
-variables.editBoxX2 =  variables.editBoxX + 550;
-
-Gui1editBox = document.createElement("textarea")
-Gui1editBox.id = "Gui1" + "editBox"; // Set ID for referencing
-Gui1editBox.placeholder = "put or type your HTpy code here...";
-Gui1editBox.style.fontSize = "19px"; // Set font size
-Gui1editBox.style.resize = "none"; // Disable resizing
-Gui1editBox.style.position = "absolute"; // Set position to absolute
-Gui1editBox.style.left = "" + variables.editBoxX + "px"; // Set initial x position
-Gui1editBox.style.top = "" + variables.editBoxY + "px"; // Set initial y position
-Gui1editBox.style.width = "500px"; // Set width
-Gui1editBox.style.height = "500px"; // Set height
-Gui1editBox.style.border = ""
-Gui1editBox.style.color = "#ffffff"
-Gui1editBox.style.background = ""
-Gui1editBox.style.backgroundColor = "#303030"
-Gui1editBox.style.borderRadius = ""
-Gui1editBox.style.fontFamily = ", sans-serif"; // Specify your desired font here
-Gui1editBox.addEventListener("input", function () {
-A_GuiControl = Gui1editBox.value
-CodeTextEditBox(A_GuiControl)
-})
-Gui1.appendChild(Gui1editBox)
-
-Gui1codeBox = document.createElement("textarea")
-Gui1codeBox.id = "Gui1" + "codeBox"; // Set ID for referencing
-Gui1codeBox.placeholder = "";
-Gui1codeBox.style.fontSize = "19px"; // Set font size
-Gui1codeBox.style.resize = "none"; // Disable resizing
-Gui1codeBox.style.position = "absolute"; // Set position to absolute
-Gui1codeBox.style.left = "" + variables.editBoxX2 + "px"; // Set initial x position
-Gui1codeBox.style.top = "" + variables.editBoxY + "px"; // Set initial y position
-Gui1codeBox.style.width = "500px"; // Set width
-Gui1codeBox.style.height = "500px"; // Set height
-Gui1codeBox.style.border = ""
-Gui1codeBox.style.color = "#ffffff"
-Gui1codeBox.style.background = ""
-Gui1codeBox.style.backgroundColor = "#303030"
-Gui1codeBox.style.borderRadius = ""
-Gui1codeBox.style.fontFamily = ", sans-serif"; // Specify your desired font here
-Gui1.appendChild(Gui1codeBox)
+        let variables = {
+          A_Index: null,
+          A_LoopField: null,
+          allowPos: null,
+          characters: null,
+          chr34: null,
+          editBoxX2: null,
+          editBoxX: null,
+          editBoxY: null,
+          foundAnum: null,
+          functionNames: null,
+          HTpyCode: null,
+          HTpyCodeD1: null,
+          ifOnlyNum: null,
+          lineDone: null,
+          normalVarNo34: null,
+          numOfStr: null,
+          onceImportTime: null,
+          out: null,
+          outt1: null,
+          outt2: null,
+          outt3: null,
+          outVar2: null,
+          pos: null,
+          posNum: null,
+          pyCode: null,
+          sendButtonX: null,
+          sendButtonY: null,
+          str: null,
+          StrSplit: null,
+          transpileVar: null,
+          usedLib: null,
+          var1: null,
+          var2: null,
+          varr1: null,
+          varr2: null,
+          varr3: null,
+          varVar1: null,
+          varVar2: null,
+          varVar: null,
+          weEverUseVars: null,
+          weUseRandomAtLeastOnce: null,
+          whatVarWeUse: null,
+        };
+
+        let funcs = {
+          transpileVar: transpileVar,
+          ifOnlyNum: ifOnlyNum,
+          StrSplit: StrSplit,
+        };
+
+        let Gui1 = {};
+        Gui1 = document.createElement("div");
+
+        // HTpy
+
+        Gui1.style.position = "absolute";
+        Gui1.style.width = window.innerWidth + "px"; // Set the width
+        Gui1.style.height = "" + BuildInVars("A_ScreenHeight") + "px"; // Set the height
+        Gui1.style.background = "linear-gradient(90deg, " + "#121212" + " 0%, " + "#121212" + " 100%)";
+        Gui1.style.backgroundColor = "linear-gradient(90deg, " + "#121212" + " 0%, " + "#121212" + " 100%)";
+        Gui1.style.color = "white";
+        Gui1.style.fontSize = "15px";
+        Gui1.style.padding = "0px";
+        Gui1.style.borderRadius = "0px";
+        Gui1.style.fontFamily = ", sans-serif"; // Specify your desired font here
+        Gui1.style.zIndex = "100";
+
+        document.body.appendChild(Gui1); // Append the GUI window to the body
+        Gui1.style.display = "block";
+
+        document.documentElement.setAttribute("style", "padding: 0; margin: 0;");
+        document.head.setAttribute("style", "padding: 0; margin: 0;");
+        document.body.setAttribute("style", "overflow-x: hidden;padding: 0; margin: 0;");
+
+        variables.editBoxX = (BuildInVars("A_ScreenWidth") - 500) / 2;
+
+        variables.editBoxY = (BuildInVars("A_ScreenHeight") - 500) / 2;
+
+        variables.editBoxX = variables.editBoxX - 250;
+
+        variables.editBoxX2 = variables.editBoxX + 550;
+
+        Gui1editBox = document.createElement("textarea");
+        Gui1editBox.id = "Gui1" + "editBox"; // Set ID for referencing
+        Gui1editBox.placeholder = "put or type your HTpy code here...";
+        Gui1editBox.style.fontSize = "19px"; // Set font size
+        Gui1editBox.style.resize = "none"; // Disable resizing
+        Gui1editBox.style.position = "absolute"; // Set position to absolute
+        Gui1editBox.style.left = "" + variables.editBoxX + "px"; // Set initial x position
+        Gui1editBox.style.top = "" + variables.editBoxY + "px"; // Set initial y position
+        Gui1editBox.style.width = "500px"; // Set width
+        Gui1editBox.style.height = "500px"; // Set height
+        Gui1editBox.style.border = "";
+        Gui1editBox.style.color = "#ffffff";
+        Gui1editBox.style.background = "";
+        Gui1editBox.style.backgroundColor = "#303030";
+        Gui1editBox.style.borderRadius = "";
+        Gui1editBox.style.fontFamily = ", sans-serif"; // Specify your desired font here
+        Gui1editBox.addEventListener("input", function () {
+          A_GuiControl = Gui1editBox.value;
+          CodeTextEditBox(A_GuiControl);
+        });
+        Gui1.appendChild(Gui1editBox);
 
-variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
+        Gui1codeBox = document.createElement("textarea");
+        Gui1codeBox.id = "Gui1" + "codeBox"; // Set ID for referencing
+        Gui1codeBox.placeholder = "";
+        Gui1codeBox.style.fontSize = "19px"; // Set font size
+        Gui1codeBox.style.resize = "none"; // Disable resizing
+        Gui1codeBox.style.position = "absolute"; // Set position to absolute
+        Gui1codeBox.style.left = "" + variables.editBoxX2 + "px"; // Set initial x position
+        Gui1codeBox.style.top = "" + variables.editBoxY + "px"; // Set initial y position
+        Gui1codeBox.style.width = "500px"; // Set width
+        Gui1codeBox.style.height = "500px"; // Set height
+        Gui1codeBox.style.border = "";
+        Gui1codeBox.style.color = "#ffffff";
+        Gui1codeBox.style.background = "";
+        Gui1codeBox.style.backgroundColor = "#303030";
+        Gui1codeBox.style.borderRadius = "";
+        Gui1codeBox.style.fontFamily = ", sans-serif"; // Specify your desired font here
+        Gui1.appendChild(Gui1codeBox);
 
-variables.sendButtonY =   (  ( BuildInVars("A_ScreenHeight") - 40 )  / 2 )  + 280;
+        variables.sendButtonX = (BuildInVars("A_ScreenWidth") - 140) / 2;
 
-Gui1Button1 = document.createElement("button")
-Gui1Button1.id = "Gui1" + "Button" + "1"; // Set ID for referencing
-Gui1Button1.textContent = "Transpile";
-Gui1Button1.style.fontSize = "19px"; // Set font size
-Gui1Button1.style.position = "absolute"; // Set position to absolute
-Gui1Button1.style.left = "" + variables.sendButtonX + "px"; // Set initial x position
-Gui1Button1.style.top = "" + variables.sendButtonY + "px"; // Set initial y position
-Gui1Button1.style.width = "140px"; // Set width
-Gui1Button1.style.height = "40px"; // Set height
-Gui1Button1.style.cursor = "pointer"; // Change cursor on hover
-Gui1Button1.style.border = "";
-Gui1Button1.style.background = "";
-Gui1Button1.style.backgroundColor = "";
-Gui1Button1.style.borderRadius = "";
-Gui1Button1.style.color = "";
-Gui1Button1.style.fontFamily = ", sans-serif"; // Specify your desired font here
-Gui1Button1.onclick = function (event) {
-A_GuiControl = event.target.textContent
-Button(A_GuiControl)
-};
-Gui1.appendChild(Gui1Button1)
+        variables.sendButtonY = (BuildInVars("A_ScreenHeight") - 40) / 2 + 280;
 
-GuiControl("focus", "Gui1editBox")
+        Gui1Button1 = document.createElement("button");
+        Gui1Button1.id = "Gui1" + "Button" + "1"; // Set ID for referencing
+        Gui1Button1.textContent = "Transpile";
+        Gui1Button1.style.fontSize = "19px"; // Set font size
+        Gui1Button1.style.position = "absolute"; // Set position to absolute
+        Gui1Button1.style.left = "" + variables.sendButtonX + "px"; // Set initial x position
+        Gui1Button1.style.top = "" + variables.sendButtonY + "px"; // Set initial y position
+        Gui1Button1.style.width = "140px"; // Set width
+        Gui1Button1.style.height = "40px"; // Set height
+        Gui1Button1.style.cursor = "pointer"; // Change cursor on hover
+        Gui1Button1.style.border = "";
+        Gui1Button1.style.background = "";
+        Gui1Button1.style.backgroundColor = "";
+        Gui1Button1.style.borderRadius = "";
+        Gui1Button1.style.color = "";
+        Gui1Button1.style.fontFamily = ", sans-serif"; // Specify your desired font here
+        Gui1Button1.onclick = function (event) {
+          A_GuiControl = event.target.textContent;
+          Button(A_GuiControl);
+        };
+        Gui1.appendChild(Gui1Button1);
 
-return
+        GuiControl("focus", "Gui1editBox");
 
-async function CodeTextEditBox(A_GuiControl)
-{
+        return;
 
-variables.HTpyCode =  A_GuiControl;
+        async function CodeTextEditBox(A_GuiControl) {
+          variables.HTpyCode = A_GuiControl;
+        }
 
-}
+        async function Button(A_GuiControl) {
+          variables.pyCode = "";
 
-async function Button(A_GuiControl)
-{
+          variables.out = "";
 
-variables.pyCode =  ""
+          variables.HTpyCodeD1 = "";
 
-variables.out =  ""
+          variables.characters1 = variables.HTpyCode.split(/[\n\r]/);
+          variables.charLength1 = variables.characters1.length;
 
-variables.HTpyCodeD1 =  ""
+          for (/* Loop parse */ variables.A_Index1 = 1; variables.A_Index1 <= variables.charLength1; variables.A_Index1++) {
+            variables.A_LoopField1 = variables.characters1[variables.A_Index1 - 1]; // Using array notation to access characters
 
-variables.characters1 = variables.HTpyCode.split(/[\n\r]/)
-variables.charLength1 = variables.characters1.length
+            variables.HTpyCodeD1 += Trim(variables.A_LoopField1) + "\n";
+          }
 
-for (/* Loop parse */ variables.A_Index1 = 1; variables.A_Index1 <= variables.charLength1; variables.A_Index1++) {
-variables.A_LoopField1 = variables.characters1[variables.A_Index1 - 1]; // Using array notation to access characters
+          variables.HTpyCode = StringTrimRight(variables.HTpyCodeD1, 1);
 
-variables.HTpyCodeD1 +=  Trim( variables.A_LoopField1 )  + "\n";
+          variables.functionNames = "";
 
-}
+          variables.onceImportTime = 0;
 
-variables.HTpyCode = StringTrimRight(variables.HTpyCodeD1, 1)
+          variables.weUseRandomAtLeastOnce = 0;
 
-variables.onceImportTime =  0;
+          variables.weEverUseVars = "";
 
-variables.weEverUseVars =  ""
+          variables.usedLib = "";
 
-variables.usedLib =  ""
+          variables.characters2 = variables.HTpyCode.split(/[\n\r]/);
+          variables.charLength2 = variables.characters2.length;
 
-variables.characters2 = variables.HTpyCode.split(/[\n\r]/)
-variables.charLength2 = variables.characters2.length
+          for (/* Loop parse */ variables.A_Index2 = 1; variables.A_Index2 <= variables.charLength2; variables.A_Index2++) {
+            variables.A_LoopField2 = variables.characters2[variables.A_Index2 - 1]; // Using array notation to access characters
 
-for (/* Loop parse */ variables.A_Index2 = 1; variables.A_Index2 <= variables.charLength2; variables.A_Index2++) {
-variables.A_LoopField2 = variables.characters2[variables.A_Index2 - 1]; // Using array notation to access characters
+            variables.lineDone = 0;
 
-variables.lineDone =  0;
+            if (SubStr(Trim(await StrLower(variables.A_LoopField2)), 1, 8) == (await StrLower("msgbox, "))) {
+              variables.var1 = StringTrimLeft(variables.A_LoopField2, 8);
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 8 ) == await StrLower ( "msgbox, " ) )
+              if (await InStr(variables.var1, "%")) {
+                variables.var2 = await StrSplit(variables.var1, "%", 2);
 
-{
+                variables.out = "print(variables['" + variables.var2 + "'])";
+              } else {
+                variables.out = "print(" + String.fromCharCode(34) + variables.var1 + String.fromCharCode(34) + ")";
+              }
 
-variables.var1 = StringTrimLeft(variables.A_LoopField2, 8)
+              variables.lineDone = 1;
 
-if ( await InStr ( variables.var1, "%" ) )
+              variables.pyCode += variables.out + "\n";
+            }
 
-{
+            if (SubStr(Trim(await StrLower(variables.A_LoopField2)), 1, 8) == (await StrLower("Random, "))) {
+              variables.varr1 = await StrSplit(variables.A_LoopField2, ",", 2);
 
-variables.var2 =  await StrSplit ( variables.var1, "%", 2 )
+              variables.varr2 = await StrSplit(variables.A_LoopField2, ",", 3);
 
-variables.out =  "print(variables['" + variables.var2 + "'])";
+              variables.varr3 = await StrSplit(variables.A_LoopField2, ",", 4);
 
-}
+              variables.outt1 = Trim(await transpileVar(variables.varr1));
 
-else
+              variables.outt2 = Trim(await transpileVar(variables.varr2));
 
-{
+              variables.outt3 = Trim(await transpileVar(variables.varr3));
 
-variables.out =  "print(" + String.fromCharCode( 34 )  + variables.var1 + String.fromCharCode( 34 )  + ")";
+              variables.weUseRandomAtLeastOnce++;
 
-}
+              if (variables.weUseRandomAtLeastOnce == 1) {
+                variables.usedLib += "import random\n";
+              }
 
-variables.lineDone =  1;
+              variables.out = variables.outt1 + " = " + "random.randint(" + variables.outt2 + ", " + variables.outt3 + ")";
 
-variables.pyCode +=  variables.out + "\n";
+              variables.lineDone = 1;
 
-}
+              variables.pyCode += variables.out + "\n";
+            }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 7 ) == await StrLower ( "sleep, " ) )
+            if (SubStr(Trim(await StrLower(variables.A_LoopField2)), 1, 7) == (await StrLower("sleep, "))) {
+              variables.var1 = StringTrimLeft(variables.A_LoopField2, 7);
 
-{
+              if (await InStr(variables.var1, "%")) {
+                variables.var2 = await StrSplit(variables.var1, "%", 2);
 
-variables.var1 = StringTrimLeft(variables.A_LoopField2, 7)
+                variables.out = "time.sleep(" + variables.var2 + " / 1000" + ")";
+              } else {
+                variables.out = "time.sleep(" + variables.var1 + " / 1000" + ")";
+              }
 
-if ( await InStr ( variables.var1, "%" ) )
+              variables.lineDone = 1;
 
-{
+              variables.onceImportTime++;
 
-variables.var2 =  await StrSplit ( variables.var1, "%", 2 )
+              if (variables.onceImportTime == 1) {
+                variables.usedLib += "import time\n";
+              }
 
-variables.out =  "time.sleep(" + variables.var2 + " / 1000" + ")";
+              variables.pyCode += variables.out + "\n";
+            }
 
-}
+            if ((await InStr(variables.A_LoopField2, " := ")) || (await InStr(variables.A_LoopField2, " .= ")) || (await InStr(variables.A_LoopField2, " += ")) || (await InStr(variables.A_LoopField2, " -= ")) || ((await InStr(variables.A_LoopField2, " *= ")) && variables.lineDone == 0)) {
+              variables.lineDone = 1;
 
-else
+              variables.str = variables.A_LoopField2;
 
-{
+              variables.whatVarWeUse = "";
 
-variables.out =  "time.sleep(" + variables.var1 + " / 1000" + ")";
+              if (await InStr(variables.A_LoopField2, " := ")) {
+                variables.whatVarWeUse = " = ";
+              }
 
-}
+              if (await InStr(variables.A_LoopField2, " .= ")) {
+                variables.whatVarWeUse = " += ";
+              }
 
-variables.lineDone =  1;
+              if (await InStr(variables.A_LoopField2, " += ")) {
+                variables.whatVarWeUse = " += ";
+              }
 
-variables.onceImportTime++
+              if (await InStr(variables.A_LoopField2, " -= ")) {
+                variables.whatVarWeUse = " -= ";
+              }
 
-if ( variables.onceImportTime == 1 )
+              if (await InStr(variables.A_LoopField2, " *= ")) {
+                variables.whatVarWeUse = " *= ";
+              }
 
-{
+              variables.str = StrReplace(variables.str, ":=", "=");
 
-variables.usedLib +=  "import time\n";
+              variables.str = StrReplace(variables.str, ".=", "=");
 
-}
+              variables.str = StrReplace(variables.str, "+=", "=");
 
-variables.pyCode +=  variables.out + "\n";
+              variables.str = StrReplace(variables.str, "-=", "=");
 
-}
+              variables.str = StrReplace(variables.str, "*=", "=");
 
-if ( await InStr ( variables.A_LoopField2, " := " )  ||  await InStr ( variables.A_LoopField2, " .= " )  ||  await InStr ( variables.A_LoopField2, " += " )  ||  await InStr ( variables.A_LoopField2, " -= " )  ||  await InStr ( variables.A_LoopField2, " *= " )  &&  variables.lineDone == 0 )
+              variables.var1 = Trim(await StrSplit(variables.str, "=", 1));
 
-{
+              variables.var2 = Trim(await StrSplit(variables.str, "=", 2));
 
-variables.lineDone =  1;
+              if (await InStr(variables.var1, "%")) {
+                variables.varVar1 = Trim(await StrSplit(variables.var1, "%", 1));
 
-variables.str =  variables.A_LoopField2;
+                variables.varVar2 = Trim(await StrSplit(variables.var1, "%", 2));
 
-variables.whatVarWeUse =  ""
+                variables.var1 = "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode(34) + variables.varVar2 + String.fromCharCode(34) + "]}']";
+              } else {
+                variables.var1 = "variables['" + variables.var1 + "']";
+              }
 
-if ( await InStr ( variables.A_LoopField2, " := " ) )
+              variables.outVar2 = "";
 
-{
+              variables.chr34 = 0;
 
-variables.whatVarWeUse =  " = ";
+              variables.normalVarNo34 = 1;
 
-}
+              variables.var2 = StrReplace(variables.var2, String.fromCharCode(34), "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback");
 
-if ( await InStr ( variables.A_LoopField2, " .= " ) )
+              variables.var2 = StrReplace(variables.var2, String.fromCharCode(40), " ( ");
 
-{
+              variables.var2 = StrReplace(variables.var2, String.fromCharCode(41), " ) ");
 
-variables.whatVarWeUse =  " += ";
+              variables.var2 = StrReplace(variables.var2, String.fromCharCode(44), " , ");
 
-}
+              variables.characters3 = variables.var2.split(/[" "]/);
+              variables.charLength3 = variables.characters3.length;
 
-if ( await InStr ( variables.A_LoopField2, " += " ) )
+              for (/* Loop parse */ variables.A_Index3 = 1; variables.A_Index3 <= variables.charLength3; variables.A_Index3++) {
+                variables.A_LoopField3 = variables.characters3[variables.A_Index3 - 1]; // Using array notation to access characters
 
-{
+                variables.varVar = variables.A_LoopField3;
 
-variables.whatVarWeUse =  " += ";
+                //MsgBox, % varVar
 
-}
+                if (!(await InStr(variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback"))) {
+                  if (variables.normalVarNo34 == 1) {
+                    if (await InStr(variables.varVar, "%")) {
+                      variables.varVar1 = Trim(await StrSplit(variables.varVar, "%", 1));
 
-if ( await InStr ( variables.A_LoopField2, " -= " ) )
+                      variables.varVar2 = Trim(await StrSplit(variables.varVar, "%", 2));
 
-{
+                      variables.varVar = "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode(34) + variables.varVar2 + String.fromCharCode(34) + "]}']";
+                    } else {
+                      if (!(await ifOnlyNum(variables.varVar))) {
+                        variables.varVar = "variables['" + variables.varVar + "']";
+                      }
+                    }
 
-variables.whatVarWeUse =  " -= ";
+                    if (variables.A_LoopField3 == ".") {
+                      variables.varVar = "+";
+                    }
+                  }
+                }
 
-}
+                if (await InStr(variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")) {
+                  variables.chr34++;
 
-if ( await InStr ( variables.A_LoopField2, " *= " ) )
+                  variables.normalVarNo34 = 0;
+                }
 
-{
+                if (variables.chr34 == 2) {
+                  variables.normalVarNo34 = 1;
 
-variables.whatVarWeUse =  " *= ";
+                  variables.chr34 = 0;
+                }
 
-}
+                variables.outVar2 += variables.varVar + BuildInVars("A_Space");
+              }
 
-variables.str =  StrReplace( variables.str, ":=", "=" )
+              variables.outVar2 = StringTrimRight(variables.outVar2, 1);
 
-variables.str =  StrReplace( variables.str, ".=", "=" )
+              variables.outVar2 = StrReplace(variables.outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", String.fromCharCode(34));
 
-variables.str =  StrReplace( variables.str, "+=", "=" )
+              variables.weEverUseVars = "# Define a dictionary to store dynamic variables\nvariables = {}\n";
 
-variables.str =  StrReplace( variables.str, "-=", "=" )
+              variables.out = variables.var1 + variables.whatVarWeUse + variables.outVar2;
 
-variables.str =  StrReplace( variables.str, "*=", "=" )
+              variables.out = StrReplace(variables.out, "variables['True']", "True");
 
-variables.var1 =  Trim( await StrSplit ( variables.str, "=", 1 )  )
+              variables.out = StrReplace(variables.out, "variables['False']", "False");
 
-variables.var2 =  Trim( await StrSplit ( variables.str, "=", 2 )  )
+              variables.out = StrReplace(variables.out, "variables['true']", "True");
 
-if ( await InStr ( variables.var1, "%" ) )
+              variables.out = StrReplace(variables.out, "variables['false']", "False");
 
-{
+              variables.characters4 = variables.functionNames.split(/["|"]/);
+              variables.charLength4 = variables.characters4.length;
 
-variables.varVar1 =  Trim( await StrSplit ( variables.var1, "%", 1 )  )
+              for (/* Loop parse */ variables.A_Index4 = 1; variables.A_Index4 <= variables.charLength4; variables.A_Index4++) {
+                variables.A_LoopField4 = variables.characters4[variables.A_Index4 - 1]; // Using array notation to access characters
 
-variables.varVar2 =  Trim( await StrSplit ( variables.var1, "%", 2 )  )
+                variables.out = StrReplace(variables.out, "variables['" + variables.A_LoopField4 + "']", variables.A_LoopField4);
+              }
 
-variables.var1 =  "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode( 34 )  + variables.varVar2 + String.fromCharCode( 34 )  + "]}']";
+              variables.pyCode += variables.out + "\n";
+            } else {
+              if (variables.lineDone !== 1) {
+                variables.pyCode += variables.A_LoopField2 + "\n";
+              }
+            }
+          } // end of the parsing loop
 
-}
+          variables.pyCode = variables.usedLib + "\n" + variables.weEverUseVars + "\n" + variables.pyCode;
 
-else
+          GuiControl("text", "Gui1codeBox", variables.pyCode);
+        }
 
-{
+        //;;;;;;;;;;;;;;;;;;;;;;;
 
-variables.var1 =  "variables['" + variables.var1 + "']";
+        //;;;;;;;;;;;;;;;;;;;;;;;
 
-}
+        //;;;;;;;;;;;;;;;;;;;;;;;
 
-variables.outVar2 =  ""
+        async function transpileVar(str) {
+          variables.str = str;
 
-variables.chr34 =  0;
+          variables.outVar2 = "";
 
-variables.normalVarNo34 =  1;
+          variables.chr34 = 0;
 
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 34 ) , "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" )
+          variables.normalVarNo34 = 1;
 
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 40 ) , " ( " )
+          variables.var2 = variables.str;
 
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 41 ) , " ) " )
+          //MsgBox, % var2
 
-variables.characters3 = variables.var2.split(/[" "]/)
-variables.charLength3 = variables.characters3.length
+          variables.var2 = StrReplace(variables.var2, String.fromCharCode(34), "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback");
 
-for (/* Loop parse */ variables.A_Index3 = 1; variables.A_Index3 <= variables.charLength3; variables.A_Index3++) {
-variables.A_LoopField3 = variables.characters3[variables.A_Index3 - 1]; // Using array notation to access characters
+          variables.var2 = StrReplace(variables.var2, String.fromCharCode(40), " ( ");
 
-variables.varVar =  variables.A_LoopField3;
+          variables.var2 = StrReplace(variables.var2, String.fromCharCode(41), " ) ");
 
-//MsgBox, % varVar
+          variables.var2 = StrReplace(variables.var2, String.fromCharCode(44), " , ");
 
-if ( ! ( await InStr ( variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" ) ) )
+          variables.characters5 = variables.var2.split(/[" "]/);
+          variables.charLength5 = variables.characters5.length;
 
-{
+          for (/* Loop parse */ variables.A_Index5 = 1; variables.A_Index5 <= variables.charLength5; variables.A_Index5++) {
+            variables.A_LoopField5 = variables.characters5[variables.A_Index5 - 1]; // Using array notation to access characters
 
-if ( variables.normalVarNo34 == 1 )
+            variables.varVar = variables.A_LoopField5;
 
-{
+            //MsgBox, % varVar
 
-if ( await InStr ( variables.varVar, "%" ) )
+            if (!(await InStr(variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback"))) {
+              if (variables.normalVarNo34 == 1) {
+                if (await InStr(variables.varVar, "%")) {
+                  variables.varVar1 = Trim(await StrSplit(variables.varVar, "%", 1));
 
-{
+                  variables.varVar2 = Trim(await StrSplit(variables.varVar, "%", 2));
 
-variables.varVar1 =  Trim( await StrSplit ( variables.varVar, "%", 1 )  )
+                  variables.varVar = "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode(34) + variables.varVar2 + String.fromCharCode(34) + "]}']";
+                } else {
+                  if (!(await ifOnlyNum(variables.varVar))) {
+                    variables.varVar = "variables['" + variables.varVar + "']";
+                  }
+                }
 
-variables.varVar2 =  Trim( await StrSplit ( variables.varVar, "%", 2 )  )
+                if (variables.A_LoopField5 == ".") {
+                  variables.varVar = "+";
+                }
+              }
+            }
 
-variables.varVar =  "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode( 34 )  + variables.varVar2 + String.fromCharCode( 34 )  + "]}']";
+            if (await InStr(variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")) {
+              variables.chr34++;
 
-}
+              variables.normalVarNo34 = 0;
+            }
 
-else
+            if (variables.chr34 == 2) {
+              variables.normalVarNo34 = 1;
 
-{
+              variables.chr34 = 0;
+            }
 
-if (!( await ifOnlyNum ( variables.varVar ) ))
+            variables.outVar2 += variables.varVar + BuildInVars("A_Space");
+          }
 
-{
+          variables.outVar2 = StringTrimRight(variables.outVar2, 1);
 
-variables.varVar =  "variables['" + variables.varVar + "']";
+          variables.outVar2 = StrReplace(variables.outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", String.fromCharCode(34));
 
-}
+          variables.weEverUseVars = "# Define a dictionary to store dynamic variables\nvariables = {}\n";
 
-}
+          variables.out = variables.outVar2;
 
-if ( variables.A_LoopField3 == "." )
+          variables.out = StrReplace(variables.out, "variables['True']", "True");
 
-{
+          variables.out = StrReplace(variables.out, "variables['False']", "False");
 
-variables.varVar =  "+";
+          variables.out = StrReplace(variables.out, "variables['true']", "True");
 
-}
+          variables.out = StrReplace(variables.out, "variables['false']", "False");
 
-}
+          variables.characters6 = variables.functionNames.split(/["|"]/);
+          variables.charLength6 = variables.characters6.length;
 
-}
+          for (/* Loop parse */ variables.A_Index6 = 1; variables.A_Index6 <= variables.charLength6; variables.A_Index6++) {
+            variables.A_LoopField6 = variables.characters6[variables.A_Index6 - 1]; // Using array notation to access characters
 
-if ( await InStr ( variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" ) )
+            variables.out = StrReplace(variables.out, "variables['" + variables.A_LoopField6 + "']", variables.A_LoopField6);
+          }
 
-{
+          return variables.out;
+        }
 
-variables.chr34++
+        //;;;;;;;;;;;;;;;;;;;;;;;
 
-variables.normalVarNo34 =  0;
+        //;;;;;;;;;;;;;;;;;;;;;;;
 
-}
+        //;;;;;;;;;;;;;;;;;;;;;;;
 
-if ( variables.chr34 == 2 )
+        async function ifOnlyNum(str) {
+          variables.str = str;
 
-{
+          variables.foundAnum = 0;
 
-variables.normalVarNo34 =  1;
+          variables.str = Trim(variables.str);
 
-variables.chr34 =  0;
+          variables.numOfStr = 0;
 
-}
+          variables.characters7 = variables.str.split("");
+          variables.charLength7 = variables.characters7.length;
 
-variables.outVar2 +=  variables.varVar + BuildInVars("A_Space");
+          for (/* Loop parse */ variables.A_Index7 = 1; variables.A_Index7 <= variables.charLength7; variables.A_Index7++) {
+            variables.A_LoopField7 = variables.characters7[variables.A_Index7 - 1]; // Using array notation to access characters
 
-}
+            variables.numOfStr++;
+          }
 
-variables.outVar2 = StringTrimRight(variables.outVar2, 1)
+          variables.characters8 = variables.str.split("");
+          variables.charLength8 = variables.characters8.length;
 
-variables.outVar2 =  StrReplace( variables.outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", String.fromCharCode( 34 )  )
+          for (/* Loop parse */ variables.A_Index8 = 1; variables.A_Index8 <= variables.charLength8; variables.A_Index8++) {
+            variables.A_LoopField8 = variables.characters8[variables.A_Index8 - 1]; // Using array notation to access characters
 
-variables.weEverUseVars =  "# Define a dictionary to store dynamic variables\nvariables = {}\n";
+            if ((await InStr(variables.A_LoopField8, "0")) || (await InStr(variables.A_LoopField8, "1")) || (await InStr(variables.A_LoopField8, "2")) || (await InStr(variables.A_LoopField8, "3")) || (await InStr(variables.A_LoopField8, "4")) || (await InStr(variables.A_LoopField8, "5")) || (await InStr(variables.A_LoopField8, "6")) || (await InStr(variables.A_LoopField8, "7")) || (await InStr(variables.A_LoopField8, "8")) || (await InStr(variables.A_LoopField8, "00")) || (await InStr(variables.A_LoopField8, String.fromCharCode(40))) || (await InStr(variables.A_LoopField8, String.fromCharCode(41))) || (await InStr(variables.A_LoopField8, String.fromCharCode(42))) || (await InStr(variables.A_LoopField8, String.fromCharCode(43))) || (await InStr(variables.A_LoopField8, String.fromCharCode(45))) || (await InStr(variables.A_LoopField8, String.fromCharCode(46))) || (await InStr(variables.A_LoopField8, String.fromCharCode(47))) || (await InStr(variables.A_LoopField8, String.fromCharCode(44)))) {
+              variables.foundAnum++;
+            }
+          }
 
-variables.out =  variables.var1 + variables.whatVarWeUse + variables.outVar2;
+          if (variables.foundAnum == variables.numOfStr) {
+            return true;
+          }
 
-variables.pyCode +=  variables.out + "\n";
+          return false;
+        }
 
-}
+        async function StrSplit(str, delimiter, num) {
+          variables.str = str;
 
-else
+          variables.delimiter = delimiter;
 
-{
+          variables.num = num;
 
-if ( variables.lineDone !== 1 )
+          if (variables.num == 1) {
+            variables.out = "";
 
-{
+            variables.characters9 = variables.str.split("");
+            variables.charLength9 = variables.characters9.length;
 
-variables.pyCode +=  variables.A_LoopField2 + "\n";
+            for (/* Loop parse */ variables.A_Index9 = 1; variables.A_Index9 <= variables.charLength9; variables.A_Index9++) {
+              variables.A_LoopField9 = variables.characters9[variables.A_Index9 - 1]; // Using array notation to access characters
 
-}
+              variables.out += variables.A_LoopField9;
 
-}
+              if (variables.A_LoopField9 == variables.delimiter) {
+                variables.out = StringTrimRight(variables.out, 1);
 
-}  // end of the parsing loop
+                break;
+              }
+            }
 
-variables.pyCode =  variables.usedLib + "\n" + variables.weEverUseVars + "\n" + variables.pyCode;
+            return variables.out;
+          } else {
+            variables.str = variables.delimiter + variables.str;
 
-GuiControl("text", "Gui1codeBox", variables.pyCode)
+            variables.posNum = 0;
 
-}
+            variables.allowPos = 0;
 
-async function ifOnlyNum(str)
-{
+            variables.out = "";
 
-variables.str = str
+            variables.characters10 = variables.str.split("");
+            variables.charLength10 = variables.characters10.length;
 
-variables.foundAnum =  0;
+            for (/* Loop parse */ variables.A_Index10 = 1; variables.A_Index10 <= variables.charLength10; variables.A_Index10++) {
+              variables.A_LoopField10 = variables.characters10[variables.A_Index10 - 1]; // Using array notation to access characters
 
-variables.str =  Trim( variables.str )
+              if (variables.allowPos == 1) {
+                variables.out += variables.A_LoopField10;
+              }
 
-variables.numOfStr =  0;
+              if (variables.A_LoopField10 == variables.delimiter && variables.allowPos == 1) {
+                if (variables.pos == variables.num) {
+                  variables.out = StringTrimRight(variables.out, 1);
 
-variables.characters4 = variables.str.split("")
-variables.charLength4 = variables.characters4.length
+                  break;
+                } else {
+                  variables.allowPos = 0;
 
-for (/* Loop parse */ variables.A_Index4 = 1; variables.A_Index4 <= variables.charLength4; variables.A_Index4++) {
-variables.A_LoopField4 = variables.characters4[variables.A_Index4 - 1]; // Using array notation to access characters
+                  variables.out = "";
+                }
+              }
 
-variables.numOfStr++
+              if (variables.A_LoopField10 == variables.delimiter && variables.allowPos == 0) {
+                variables.allowPos = 1;
 
-}
+                variables.posNum++;
 
-variables.characters5 = variables.str.split("")
-variables.charLength5 = variables.characters5.length
+                variables.pos = variables.posNum;
+              }
+            } // end of Loop
 
-for (/* Loop parse */ variables.A_Index5 = 1; variables.A_Index5 <= variables.charLength5; variables.A_Index5++) {
-variables.A_LoopField5 = variables.characters5[variables.A_Index5 - 1]; // Using array notation to access characters
-
-if ( await InStr ( variables.A_LoopField5, "0" )  ||  await InStr ( variables.A_LoopField5, "1" )  ||  await InStr ( variables.A_LoopField5, "2" )  ||  await InStr ( variables.A_LoopField5, "3" )  ||  await InStr ( variables.A_LoopField5, "4" )  ||  await InStr ( variables.A_LoopField5, "5" )  ||  await InStr ( variables.A_LoopField5, "6" )  ||  await InStr ( variables.A_LoopField5, "7" )  ||  await InStr ( variables.A_LoopField5, "8" )  ||  await InStr ( variables.A_LoopField5, "00" )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 40 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 41 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 42 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 43 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 45 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 46 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 47 ) ) )
-
-{
-
-variables.foundAnum++
-
-}
-
-}
-
-if ( variables.foundAnum == variables.numOfStr )
-
-{
-
-return true
-
-}
-
-return false
-
-}
-
-async function StrSplit(str, delimiter, num)
-{
-
-variables.str = str
-
-variables.delimiter = delimiter
-
-variables.num = num
-
-if ( variables.num == 1 )
-
-{
-
-variables.out =  ""
-
-variables.characters6 = variables.str.split("")
-variables.charLength6 = variables.characters6.length
-
-for (/* Loop parse */ variables.A_Index6 = 1; variables.A_Index6 <= variables.charLength6; variables.A_Index6++) {
-variables.A_LoopField6 = variables.characters6[variables.A_Index6 - 1]; // Using array notation to access characters
-
-variables.out +=  variables.A_LoopField6;
-
-if ( variables.A_LoopField6 == variables.delimiter )
-
-{
-
-variables.out = StringTrimRight(variables.out, 1)
-
-break
-
-}
-
-}
-
-return variables.out
-
-}
-
-else
-
-{
-
-variables.str =  variables.delimiter + variables.str;
-
-variables.posNum =  0;
-
-variables.allowPos =  0;
-
-variables.out =  ""
-
-variables.characters7 = variables.str.split("")
-variables.charLength7 = variables.characters7.length
-
-for (/* Loop parse */ variables.A_Index7 = 1; variables.A_Index7 <= variables.charLength7; variables.A_Index7++) {
-variables.A_LoopField7 = variables.characters7[variables.A_Index7 - 1]; // Using array notation to access characters
-
-if ( variables.allowPos == 1 )
-
-{
-
-variables.out +=  variables.A_LoopField7;
-
-}
-
-if ( variables.A_LoopField7 == variables.delimiter  &&  variables.allowPos == 1 )
-
-{
-
-if ( variables.pos == variables.num )
-
-{
-
-variables.out = StringTrimRight(variables.out, 1)
-
-break
-
-}
-
-else
-
-{
-
-variables.allowPos =  0;
-
-variables.out =  ""
-
-}
-
-}
-
-if ( variables.A_LoopField7 == variables.delimiter  &&  variables.allowPos == 0 )
-
-{
-
-variables.allowPos =  1;
-
-variables.posNum++
-
-variables.pos =  variables.posNum;
-
-}
-
-}  // end of Loop
-
-return variables.out
-
-}
-
-}  // end of func
-
- }
+            return variables.out;
+          }
+        } // end of func
+      }
 
       // Call the async function to start the script
       runScript();
