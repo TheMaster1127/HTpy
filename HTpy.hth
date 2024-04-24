@@ -132,7 +132,6 @@ str := StrReplace(str, "*=", "=")
 
 var1 := Trim(StrSplit(str, "=", 1))
 var2 := Trim(StrSplit(str, "=", 2))
-
 if (InStr(var1, "%"))
 {
 varVar1 := Trim(StrSplit(var1, "%", 1))
@@ -147,10 +146,69 @@ else
 var1 := "variables['" . var1 . "']"
 }
 
+
+outVar2 := ""
+chr34 := 0
+normalVarNo34 := 1
+
+var2 := StrReplace(var2, Chr(34), "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")
+var2 := StrReplace(var2, Chr(40), " ( ")
+var2 := StrReplace(var2, Chr(41), " ) ")
+
+Loop, Parse, var2, " "
+{
+varVar := A_LoopField
+;MsgBox, % varVar
+if (!(InStr(varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")))
+{
+if (normalVarNo34 = 1)
+{
+if (InStr(varVar, "%"))
+{
+varVar1 := Trim(StrSplit(varVar, "%", 1))
+varVar2 := Trim(StrSplit(varVar, "%", 2))
+
+
+varVar := "variables[f'" . varVar1 . "{variables[" . Chr(34) . varVar2 . Chr(34) . "]}']"
+
+}
+else
+{
+if !(ifOnlyNum(varVar))
+{
+varVar := "variables['" . varVar . "']"
+}
+}
+if (A_LoopField = ".")
+{
+varVar := "+"
+}
+
+
+}
+}
+
+if (InStr(varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback"))
+{
+chr34++
+normalVarNo34 := 0
+}
+
+if (chr34 = 2)
+{
+normalVarNo34 := 1
+chr34 := 0
+}
+
+outVar2 .= varVar . A_Space
+}
+StringTrimRight, outVar2, outVar2, 1
+outVar2 := StrReplace(outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", Chr(34))
+
 weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n"
 
 
-out := var1 . whatVarWeUse . var2
+out := var1 . whatVarWeUse . outVar2
 
 
 
@@ -176,7 +234,32 @@ Return
 
 
 
+ifOnlyNum(str)
+{
+foundAnum := 0
 
+str := Trim(str)
+numOfStr := 0
+Loop, Parse, str
+{
+numOfStr++
+}
+
+Loop, Parse, str
+{
+if (InStr(A_LoopField, "0")) or (InStr(A_LoopField, "1")) or (InStr(A_LoopField, "2")) or (InStr(A_LoopField, "3")) or (InStr(A_LoopField, "4")) or (InStr(A_LoopField, "5")) or (InStr(A_LoopField, "6")) or (InStr(A_LoopField, "7")) or (InStr(A_LoopField, "8")) or (InStr(A_LoopField, "9")) or (InStr(A_LoopField, Chr(40))) or (InStr(A_LoopField, Chr(41))) or (InStr(A_LoopField, Chr(42))) or (InStr(A_LoopField, Chr(43))) or (InStr(A_LoopField, Chr(45))) or (InStr(A_LoopField, Chr(46))) or (InStr(A_LoopField, Chr(47)))
+{
+foundAnum++
+}
+}
+
+if (foundAnum = numOfStr)
+{
+return true
+}
+
+return false
+}
 
 
 StrSplit(str, delimiter, num)

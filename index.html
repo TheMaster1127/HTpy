@@ -298,14 +298,20 @@ let variables = {
   A_LoopField: null,
   allowPos: null,
   characters: null,
+  chr34: null,
   editBoxX2: null,
   editBoxX: null,
   editBoxY: null,
+  foundAnum: null,
   HTpyCode: null,
   HTpyCodeD1: null,
+  ifOnlyNum: null,
   lineDone: null,
+  normalVarNo34: null,
+  numOfStr: null,
   onceImportTime: null,
   out: null,
+  outVar2: null,
   pos: null,
   posNum: null,
   pyCode: null,
@@ -318,11 +324,13 @@ let variables = {
   var2: null,
   varVar1: null,
   varVar2: null,
+  varVar: null,
   weEverUseVars: null,
   whatVarWeUse: null,
 };
 
 let funcs = {
+  ifOnlyNum: ifOnlyNum,
   StrSplit: StrSplit,
 }
 
@@ -624,9 +632,105 @@ variables.var1 =  "variables['" + variables.var1 + "']";
 
 }
 
+variables.outVar2 =  ""
+
+variables.chr34 =  0;
+
+variables.normalVarNo34 =  1;
+
+variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 34 ) , "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" )
+
+variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 40 ) , " ( " )
+
+variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 41 ) , " ) " )
+
+variables.characters3 = variables.var2.split(/[" "]/)
+variables.charLength3 = variables.characters3.length
+
+for (/* Loop parse */ variables.A_Index3 = 1; variables.A_Index3 <= variables.charLength3; variables.A_Index3++) {
+variables.A_LoopField3 = variables.characters3[variables.A_Index3 - 1]; // Using array notation to access characters
+
+variables.varVar =  variables.A_LoopField3;
+
+//MsgBox, % varVar
+
+if ( ! ( await InStr ( variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" ) ) )
+
+{
+
+if ( variables.normalVarNo34 == 1 )
+
+{
+
+if ( await InStr ( variables.varVar, "%" ) )
+
+{
+
+variables.varVar1 =  Trim( await StrSplit ( variables.varVar, "%", 1 )  )
+
+variables.varVar2 =  Trim( await StrSplit ( variables.varVar, "%", 2 )  )
+
+variables.varVar =  "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode( 34 )  + variables.varVar2 + String.fromCharCode( 34 )  + "]}']";
+
+}
+
+else
+
+{
+
+if (!( await ifOnlyNum ( variables.varVar ) ))
+
+{
+
+variables.varVar =  "variables['" + variables.varVar + "']";
+
+}
+
+}
+
+if ( variables.A_LoopField3 == "." )
+
+{
+
+variables.varVar =  "+";
+
+}
+
+}
+
+}
+
+if ( await InStr ( variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" ) )
+
+{
+
+variables.chr34++
+
+variables.normalVarNo34 =  0;
+
+}
+
+if ( variables.chr34 == 2 )
+
+{
+
+variables.normalVarNo34 =  1;
+
+variables.chr34 =  0;
+
+}
+
+variables.outVar2 +=  variables.varVar + BuildInVars("A_Space");
+
+}
+
+variables.outVar2 = StringTrimRight(variables.outVar2, 1)
+
+variables.outVar2 =  StrReplace( variables.outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", String.fromCharCode( 34 )  )
+
 variables.weEverUseVars =  "# Define a dictionary to store dynamic variables\nvariables = {}\n";
 
-variables.out =  variables.var1 + variables.whatVarWeUse + variables.var2;
+variables.out =  variables.var1 + variables.whatVarWeUse + variables.outVar2;
 
 variables.pyCode +=  variables.out + "\n";
 
@@ -654,6 +758,55 @@ GuiControl("text", "Gui1codeBox", variables.pyCode)
 
 }
 
+async function ifOnlyNum(str)
+{
+
+variables.str = str
+
+variables.foundAnum =  0;
+
+variables.str =  Trim( variables.str )
+
+variables.numOfStr =  0;
+
+variables.characters4 = variables.str.split("")
+variables.charLength4 = variables.characters4.length
+
+for (/* Loop parse */ variables.A_Index4 = 1; variables.A_Index4 <= variables.charLength4; variables.A_Index4++) {
+variables.A_LoopField4 = variables.characters4[variables.A_Index4 - 1]; // Using array notation to access characters
+
+variables.numOfStr++
+
+}
+
+variables.characters5 = variables.str.split("")
+variables.charLength5 = variables.characters5.length
+
+for (/* Loop parse */ variables.A_Index5 = 1; variables.A_Index5 <= variables.charLength5; variables.A_Index5++) {
+variables.A_LoopField5 = variables.characters5[variables.A_Index5 - 1]; // Using array notation to access characters
+
+if ( await InStr ( variables.A_LoopField5, "0" )  ||  await InStr ( variables.A_LoopField5, "1" )  ||  await InStr ( variables.A_LoopField5, "2" )  ||  await InStr ( variables.A_LoopField5, "3" )  ||  await InStr ( variables.A_LoopField5, "4" )  ||  await InStr ( variables.A_LoopField5, "5" )  ||  await InStr ( variables.A_LoopField5, "6" )  ||  await InStr ( variables.A_LoopField5, "7" )  ||  await InStr ( variables.A_LoopField5, "8" )  ||  await InStr ( variables.A_LoopField5, "00" )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 40 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 41 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 42 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 43 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 45 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 46 ) )  ||  await InStr ( variables.A_LoopField5, String.fromCharCode( 47 ) ) )
+
+{
+
+variables.foundAnum++
+
+}
+
+}
+
+if ( variables.foundAnum == variables.numOfStr )
+
+{
+
+return true
+
+}
+
+return false
+
+}
+
 async function StrSplit(str, delimiter, num)
 {
 
@@ -669,15 +822,15 @@ if ( variables.num == 1 )
 
 variables.out =  ""
 
-variables.characters3 = variables.str.split("")
-variables.charLength3 = variables.characters3.length
+variables.characters6 = variables.str.split("")
+variables.charLength6 = variables.characters6.length
 
-for (/* Loop parse */ variables.A_Index3 = 1; variables.A_Index3 <= variables.charLength3; variables.A_Index3++) {
-variables.A_LoopField3 = variables.characters3[variables.A_Index3 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index6 = 1; variables.A_Index6 <= variables.charLength6; variables.A_Index6++) {
+variables.A_LoopField6 = variables.characters6[variables.A_Index6 - 1]; // Using array notation to access characters
 
-variables.out +=  variables.A_LoopField3;
+variables.out +=  variables.A_LoopField6;
 
-if ( variables.A_LoopField3 == variables.delimiter )
+if ( variables.A_LoopField6 == variables.delimiter )
 
 {
 
@@ -705,21 +858,21 @@ variables.allowPos =  0;
 
 variables.out =  ""
 
-variables.characters4 = variables.str.split("")
-variables.charLength4 = variables.characters4.length
+variables.characters7 = variables.str.split("")
+variables.charLength7 = variables.characters7.length
 
-for (/* Loop parse */ variables.A_Index4 = 1; variables.A_Index4 <= variables.charLength4; variables.A_Index4++) {
-variables.A_LoopField4 = variables.characters4[variables.A_Index4 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index7 = 1; variables.A_Index7 <= variables.charLength7; variables.A_Index7++) {
+variables.A_LoopField7 = variables.characters7[variables.A_Index7 - 1]; // Using array notation to access characters
 
 if ( variables.allowPos == 1 )
 
 {
 
-variables.out +=  variables.A_LoopField4;
+variables.out +=  variables.A_LoopField7;
 
 }
 
-if ( variables.A_LoopField4 == variables.delimiter  &&  variables.allowPos == 1 )
+if ( variables.A_LoopField7 == variables.delimiter  &&  variables.allowPos == 1 )
 
 {
 
@@ -745,7 +898,7 @@ variables.out =  ""
 
 }
 
-if ( variables.A_LoopField4 == variables.delimiter  &&  variables.allowPos == 0 )
+if ( variables.A_LoopField7 == variables.delimiter  &&  variables.allowPos == 0 )
 
 {
 
