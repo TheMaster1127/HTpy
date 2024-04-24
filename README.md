@@ -56,3 +56,49 @@ MsgBox, %someRandomNums%
 Random, someRandomNums, 1, 20
 MsgBox, %someRandomNums%
 ```
+
+-----> in python
+
+```py
+import time
+import random
+
+# Define a dictionary to store dynamic variables
+variables = {}
+
+variables['var1'] = "Python is not so bad!"
+print(variables['var1'])
+variables['num'] = 42
+variables[f'var{variables["num"]}'] = variables['num']
+print(variables['var42'])
+
+variables['var23'] =  ( 55 + 3 )  - 1 + variables[f'var{variables["num"]}']
+print(variables['var23'])
+time.sleep(600 / 1000)
+variables['var1'] = True
+variables['var2'] = False
+print(variables['var1'])
+print(variables['var2'])
+
+variables['somNumber'] = 55
+variables['somNumber'] += variables['somNumber']
+variables['somNumber'] += variables['somNumber']
+variables['somNumber'] += variables['somNumber']
+variables['somNumber'] += variables['somNumber']
+print(variables['somNumber'])
+
+variables['someRandomNums'] = random.randint(1, 20)
+print(variables['someRandomNums'])
+variables['someRandomNums'] = random.randint(1, 20)
+print(variables['someRandomNums'])
+variables['someRandomNums'] = random.randint(1, 20)
+print(variables['someRandomNums'])
+variables['someRandomNums'] = random.randint(1, 20)
+print(variables['someRandomNums'])
+variables['someRandomNums'] = random.randint(1, 20)
+print(variables['someRandomNums'])
+variables['someRandomNums'] = random.randint(1, 20)
+print(variables['someRandomNums'])
+variables['someRandomNums'] = random.randint(1, 20)
+print(variables['someRandomNums'])
+```
