@@ -1,3 +1,4 @@
+Your README for HTpy is off to a good start! Here are a few suggestions to enhance and expand your documentation:
 
 ### HTpy: Early Development Preview
 
@@ -5,14 +6,18 @@
 
 **Note:** This project is still in its early stages of development.
 
+#### Try It Out
+
+You can experiment with HTpy syntax using the [HTpy online editor](https://themaster1127.github.io/HTpy/). Note that this editor provides only a subset of HTpy functionality.
+
 #### Usage Example
 
-So far HTpy supports:
+HTpy currently supports a subset of commands similar to AutoHotkey:
 
-- msgbox
-- sleep
-- variables
-- Random
+- `msgbox`: Display a message box.
+- `sleep`: Pause script execution for a specified duration.
+- Variables: Declare and manipulate variables.
+- `Random`: Generate random numbers within specified ranges.
 
 Here's an example of HTpy syntax:
 
@@ -53,8 +58,3 @@ msgbox, %someRandomNums%
 Random, someRandomNums, 1, 20
 msgbox, %someRandomNums%
 ```
-
-#### Try It Out
-
-You can experiment with HTpy syntax [here](https://themaster1127.github.io/HTpy/).
-
