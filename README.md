@@ -44,6 +44,6 @@ HTpy supports a limited set of commands. Currently, you can use `msgbox` to disp
 Example HTpy script (`example.htpy`):
 
 ```plaintext
-msgbox, "Hello, HTpy!"
+msgbox, Hello HTpy!
 ```
 
