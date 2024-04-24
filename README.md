@@ -17,8 +17,6 @@ HTpy currently supports a subset of commands similar to AutoHotkey:
 - Variables: Declare and manipulate variables.
 - `Random`: Generate random numbers within specified ranges.
 
-HTpy will automatically import the python library we need. 
-
 Here's an example of HTpy syntax:
 
 ```ahk
@@ -60,6 +58,7 @@ MsgBox, %someRandomNums%
 ```
 
 -----> in python
+HTpy will automatically import the python library we need. 
 
 ```py
 import time
