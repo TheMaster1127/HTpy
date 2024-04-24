@@ -1,5 +1,3 @@
-Your README for HTpy is off to a good start! Here are a few suggestions to enhance and expand your documentation:
-
 ### HTpy: Early Development Preview
 
 **HTpy** is a custom scripting language designed to transpile AHK-like syntax files into Python scripts. It allows users to write scripts using HTpy syntax and convert them into executable Python code.
