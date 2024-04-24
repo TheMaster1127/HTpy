@@ -135,10 +135,9 @@
         }
       }
 
-      // Base-10 logarithm
-      function Log(num) {
-        if (num === null || isNaN(num)) return null;
-        return Math.log10(num);
+      // Function to simulate Sleep
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
       // InStr
@@ -195,6 +194,19 @@
           return ""; // Return an empty string if inputString is null or undefined
         }
         return inputString.replace(/^\s+|\s+$/g, ""); // Removes leading and trailing whitespace
+      }
+
+      function StrReplace(originalString, find, replaceWith) {
+        // Check if originalString is a string
+        if (typeof originalString !== "string") {
+          return originalString; // Return originalString as is
+        }
+
+        // Escape special characters in the 'find' string to be used literally
+        const escapedFind = find.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        // Use replace method to replace all occurrences of 'find' with 'replaceWith'
+        return originalString.replace(new RegExp(escapedFind, "g"), replaceWith);
       }
 
       // Function to trim specified number of characters from the left side of a string
@@ -291,6 +303,8 @@ let variables = {
   editBoxY: null,
   HTpyCode: null,
   HTpyCodeD1: null,
+  lineDone: null,
+  onceImportTime: null,
   out: null,
   pos: null,
   posNum: null,
@@ -299,8 +313,13 @@ let variables = {
   sendButtonY: null,
   str: null,
   StrSplit: null,
+  usedLib: null,
+  var1: null,
   var2: null,
-  webMode: null,
+  varVar1: null,
+  varVar2: null,
+  weEverUseVars: null,
+  whatVarWeUse: null,
 };
 
 let funcs = {
@@ -311,12 +330,6 @@ let Gui1 = {};
 Gui1 = document.createElement("div");
 
 // HTpy
-
-variables.webMode =  1;
-
-if ( variables.webMode == 1 )
-
-{
 
 Gui1.style.position = "absolute";
 Gui1.style.width = window.innerWidth + "px"; // Set the width
@@ -422,30 +435,12 @@ variables.HTpyCode =  A_GuiControl;
 
 }
 
-}
-
-else
-
-{
-
-await Button()
-
-}
-
-return
-
 async function Button(A_GuiControl)
 {
 
-if ( variables.webMode == 0 )
-
-{
-
-eval("variables.HTpyCode = input;")
-
-}
-
 variables.pyCode =  ""
+
+variables.out =  ""
 
 variables.HTpyCodeD1 =  ""
 
@@ -461,11 +456,19 @@ variables.HTpyCodeD1 +=  Trim( variables.A_LoopField1 )  + "\n";
 
 variables.HTpyCode = StringTrimRight(variables.HTpyCodeD1, 1)
 
+variables.onceImportTime =  0;
+
+variables.weEverUseVars =  ""
+
+variables.usedLib =  ""
+
 variables.characters2 = variables.HTpyCode.split(/[\n\r]/)
 variables.charLength2 = variables.characters2.length
 
 for (/* Loop parse */ variables.A_Index2 = 1; variables.A_Index2 <= variables.charLength2; variables.A_Index2++) {
 variables.A_LoopField2 = variables.characters2[variables.A_Index2 - 1]; // Using array notation to access characters
+
+variables.lineDone =  0;
 
 if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 8 ) == await StrLower ( "msgbox, " ) )
 
@@ -479,7 +482,7 @@ if ( await InStr ( variables.var1, "%" ) )
 
 variables.var2 =  await StrSplit ( variables.var1, "%", 2 )
 
-variables.out =  "print(" + variables.var2 + ")";
+variables.out =  "print(variables['" + variables.var2 + "'])";
 
 }
 
@@ -491,17 +494,25 @@ variables.out =  "print(" + String.fromCharCode( 34 )  + variables.var1 + String
 
 }
 
+variables.lineDone =  1;
+
 variables.pyCode +=  variables.out + "\n";
 
 }
 
-}
-
-if ( variables.webMode == 1 )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 7 ) == await StrLower ( "sleep, " ) )
 
 {
 
-GuiControl("text", "Gui1codeBox", variables.pyCode)
+variables.var1 = StringTrimLeft(variables.A_LoopField2, 7)
+
+if ( await InStr ( variables.var1, "%" ) )
+
+{
+
+variables.var2 =  await StrSplit ( variables.var1, "%", 2 )
+
+variables.out =  "time.sleep(" + variables.var2 + " / 1000" + ")";
 
 }
 
@@ -509,9 +520,137 @@ else
 
 {
 
-console.log("" + variables.pyCode + " ")
+variables.out =  "time.sleep(" + variables.var1 + " / 1000" + ")";
 
 }
+
+variables.lineDone =  1;
+
+variables.onceImportTime++
+
+if ( variables.onceImportTime == 1 )
+
+{
+
+variables.usedLib +=  "import time\n";
+
+}
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( await InStr ( variables.A_LoopField2, " := " )  ||  await InStr ( variables.A_LoopField2, " .= " )  ||  await InStr ( variables.A_LoopField2, " += " )  ||  await InStr ( variables.A_LoopField2, " -= " )  ||  await InStr ( variables.A_LoopField2, " *= " )  &&  variables.lineDone == 0 )
+
+{
+
+variables.lineDone =  1;
+
+variables.str =  variables.A_LoopField2;
+
+variables.whatVarWeUse =  ""
+
+if ( await InStr ( variables.A_LoopField2, " := " ) )
+
+{
+
+variables.whatVarWeUse =  " = ";
+
+}
+
+if ( await InStr ( variables.A_LoopField2, " .= " ) )
+
+{
+
+variables.whatVarWeUse =  " += ";
+
+}
+
+if ( await InStr ( variables.A_LoopField2, " += " ) )
+
+{
+
+variables.whatVarWeUse =  " += ";
+
+}
+
+if ( await InStr ( variables.A_LoopField2, " -= " ) )
+
+{
+
+variables.whatVarWeUse =  " -= ";
+
+}
+
+if ( await InStr ( variables.A_LoopField2, " *= " ) )
+
+{
+
+variables.whatVarWeUse =  " *= ";
+
+}
+
+variables.str =  StrReplace( variables.str, ":=", "=" )
+
+variables.str =  StrReplace( variables.str, ".=", "=" )
+
+variables.str =  StrReplace( variables.str, "+=", "=" )
+
+variables.str =  StrReplace( variables.str, "-=", "=" )
+
+variables.str =  StrReplace( variables.str, "*=", "=" )
+
+variables.var1 =  Trim( await StrSplit ( variables.str, "=", 1 )  )
+
+variables.var2 =  Trim( await StrSplit ( variables.str, "=", 2 )  )
+
+if ( await InStr ( variables.var1, "%" ) )
+
+{
+
+variables.varVar1 =  Trim( await StrSplit ( variables.var1, "%", 1 )  )
+
+variables.varVar2 =  Trim( await StrSplit ( variables.var1, "%", 2 )  )
+
+variables.var1 =  "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode( 34 )  + variables.varVar2 + String.fromCharCode( 34 )  + "]}']";
+
+}
+
+else
+
+{
+
+variables.var1 =  "variables['" + variables.var1 + "']";
+
+}
+
+variables.weEverUseVars =  "# Define a dictionary to store dynamic variables\nvariables = {}\n";
+
+variables.out =  variables.var1 + variables.whatVarWeUse + variables.var2;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+else
+
+{
+
+if ( variables.lineDone !== 1 )
+
+{
+
+variables.pyCode +=  variables.A_LoopField2 + "\n";
+
+}
+
+}
+
+}  // end of the parsing loop
+
+variables.pyCode =  variables.usedLib + "\n" + variables.weEverUseVars + "\n" + variables.pyCode;
+
+GuiControl("text", "Gui1codeBox", variables.pyCode)
 
 }
 

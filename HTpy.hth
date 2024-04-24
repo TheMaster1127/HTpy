@@ -1,7 +1,5 @@
 ; HTpy
-webMode := 0
-if (webMode = 1)
-{
+
 Gui, Font, s19
 Gui, Show, +websiteMode w%A_ScreenWidth% h%A_ScreenHeight%
 
@@ -24,21 +22,12 @@ CodeTextEditBox:
 HTpyCode := A_GuiControl
 Return
 
-}
-else
-{
-gosub, Button
-}
-return
 Button:
-if (webMode = 0)
-{
-eval("variables.HTpyCode = input;")
-}
+
 
 
 pyCode := ""
-
+out := ""
 HTpyCodeD1 := ""
 
 Loop, Parse, HTpyCode, `n, `r
@@ -48,9 +37,16 @@ HTpyCodeD1 .= Trim(A_LoopField) . "`n"
 StringTrimRight, HTpyCode, HTpyCodeD1, 1
 
 
+
+
+
+
+onceImportTime := 0
+weEverUseVars := ""
+usedLib := ""
 Loop, Parse, HTpyCode, `n, `r
 {
-
+lineDone := 0
 if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("msgbox, "))
 {
 StringTrimLeft, var1, A_LoopField, 8
@@ -59,7 +55,7 @@ if (InStr(var1, "%"))
 {
 var2 := StrSplit(var1, "%", 2)
 
-out := "print(" . var2 . ")"
+out := "print(variables['" . var2 . "'])"
 
 }
 else
@@ -67,23 +63,121 @@ else
 out := "print(" . Chr(34) . var1 . Chr(34) . ")"
 }
 
+lineDone := 1
 pyCode .= out . "`n"
 }
-
-
-
-}
-
-
-if (webMode = 1)
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 7) = StrLower("sleep, "))
 {
-GuiControl, Text, codeBox, %pyCode%
+
+StringTrimLeft, var1, A_LoopField, 7
+
+if (InStr(var1, "%"))
+{
+var2 := StrSplit(var1, "%", 2)
+
+out := "time.sleep(" . var2 . " / 1000" . ")"
+
 }
 else
 {
-OutputDebug, %pyCode%
+out := "time.sleep(" . var1 . " / 1000" . ")"
 }
+lineDone := 1
+onceImportTime++
+if (onceImportTime = 1)
+{
+usedLib .= "import time`n"
+}
+pyCode .= out . "`n"
+
+}
+else if (InStr(A_LoopField, " := ")) or (InStr(A_LoopField, " .= ")) or (InStr(A_LoopField, " += ")) or (InStr(A_LoopField, " -= ")) or (InStr(A_LoopField, " *= ")) && (lineDone = 0)
+{
+lineDone := 1
+str := A_LoopField
+
+whatVarWeUse := ""
+if (InStr(A_LoopField, " := "))
+{
+
+whatVarWeUse := " = "
+
+}
+if (InStr(A_LoopField, " .= "))
+{
+whatVarWeUse := " += "
+}
+if (InStr(A_LoopField, " += "))
+{
+whatVarWeUse := " += "
+}
+if (InStr(A_LoopField, " -= "))
+{
+whatVarWeUse := " -= "
+}
+if (InStr(A_LoopField, " *= "))
+{
+whatVarWeUse := " *= "
+}
+
+
+
+
+str := StrReplace(str, ":=", "=")
+str := StrReplace(str, ".=", "=")
+str := StrReplace(str, "+=", "=")
+str := StrReplace(str, "-=", "=")
+str := StrReplace(str, "*=", "=")
+
+
+var1 := Trim(StrSplit(str, "=", 1))
+var2 := Trim(StrSplit(str, "=", 2))
+
+if (InStr(var1, "%"))
+{
+varVar1 := Trim(StrSplit(var1, "%", 1))
+varVar2 := Trim(StrSplit(var1, "%", 2))
+
+
+var1 := "variables[f'" . varVar1 . "{variables[" . Chr(34) . varVar2 . Chr(34) . "]}']"
+
+}
+else
+{
+var1 := "variables['" . var1 . "']"
+}
+
+weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n"
+
+
+out := var1 . whatVarWeUse . var2
+
+
+
+pyCode .= out . "`n"
+
+}
+else
+{
+if (lineDone != 1)
+{
+pyCode .= A_LoopField . "`n"
+}
+}
+
+} ; end of the parsing loop
+
+pyCode := usedLib . "`n" . weEverUseVars . "`n" . pyCode
+
+
+GuiControl, Text, codeBox, %pyCode%
+
 Return
+
+
+
+
+
 
 StrSplit(str, delimiter, num)
 {
