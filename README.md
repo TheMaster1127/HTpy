@@ -7,10 +7,23 @@
 
 #### Usage Example
 
-So far HTpy supports a basic `msgbox` command. Here's an example of HTpy syntax:
+So far HTpy supports:
+
+- msgbox
+- sleep
+- variables
+
+Here's an example of HTpy syntax:
 
 ```plaintext
-msgbox, Hello HTpy!
+msgbox, hello
+sleep, 500
+msgbox, hello
+var1 := "werfg"
+msgbox, %var1%
+num := 1
+var%num% := "hi"
+msgbox, %var1%
 ```
 
 #### Try It Out
