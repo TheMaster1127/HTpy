@@ -6,7 +6,7 @@ HTpy is a custom scripting language that transpiles `.htpy` files into Python sc
 
 To use HTpy, follow these steps:
 
-1. **Install Node.js**
+1. **Install Node.js (if you dont have it alredy)**
 you can do it here https://nodejs.org/en/download
 
 2. **Clone the Repository**
