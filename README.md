@@ -28,5 +28,5 @@ msgbox, %var1%
 
 #### Try It Out
 
-You can experiment with HTpy syntax using the online demo [here](https://themaster1127.github.io/HTpy/).
+You can experiment with HTpy syntax [here](https://themaster1127.github.io/HTpy/).
 
