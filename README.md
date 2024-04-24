@@ -6,18 +6,21 @@ HTpy is a custom scripting language that transpiles `.htpy` files into Python sc
 
 To use HTpy, follow these steps:
 
-1. **Clone the Repository**
+1. **Install Node.js**
+you can do it here https://nodejs.org/en/download
+
+2. **Clone the Repository**
 
    ```bash
    git clone https://github.com/TheMaster1127/HTpy.git
    cd HTpy
    ```
 
-2. **Write HTpy Script**
+3. **Write HTpy Script**
 
    Create a `.htpy` file and write HTpy code using the supported syntax (e.g., `msgbox, Hello World!`).
 
-3. **Run Transpiler**
+4. **Run Transpiler**
 
    Use the `HTpy.py` script to transpile your `.htpy` file into a Python script.
 
@@ -27,7 +30,7 @@ To use HTpy, follow these steps:
 
    This command will transpile `your_script.htpy` into `your_script.py`.
 
-4. **Execute Python Script**
+5. **Execute Python Script**
 
    Execute the generated Python script.
 
