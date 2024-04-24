@@ -1,3 +1,5 @@
+### this is still in very early development
+
 # HTpy
 
 HTpy is a custom scripting language that transpiles `.htpy` files into Python scripts. It enables users to write simple scripts using HTpy syntax and convert them into executable Python code.
