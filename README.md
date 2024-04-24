@@ -15,7 +15,7 @@ To use HTpy, follow these steps:
 
 2. **Write HTpy Script**
 
-   Create a `.htpy` file and write HTpy code using the supported syntax (e.g., `msgbox, "Hello, World!"`).
+   Create a `.htpy` file and write HTpy code using the supported syntax (e.g., `msgbox, Hello World!`).
 
 3. **Run Transpiler**
 
