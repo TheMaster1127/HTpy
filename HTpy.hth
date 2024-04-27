@@ -1,28 +1,112 @@
 ; HTpy
 
-Gui, Font, s19
+Gui, Font, s18
 Gui, Show, +websiteMode w%A_ScreenWidth% h%A_ScreenHeight%
 
-editBoxX := (A_ScreenWidth - 500) / 2
-editBoxY := (A_ScreenHeight - 500) / 2
+if (isMobileDevice())
+{
+WidthOfBoxes := (A_ScreenWidth) - 20
+editBoxX := (A_ScreenWidth - WidthOfBoxes) / 2
+editH1 := A_ScreenHeight - 10
+editBoxY1 := (A_ScreenHeight - editH1) / 2
+editBoxY2 := (A_ScreenHeight / 2) + 65
 
-editBoxX := editBoxX - 250
-editBoxX2 := editBoxX + 550
-Gui, Add, Edit, x%editBoxX% y%editBoxY% w500 h500 veditBox gCodeTextEditBox cffffff bg303030, put or type your HTpy code here...
-Gui, Add, Edit, x%editBoxX2% y%editBoxY% w500 h500 vcodeBox bg303030 cffffff
+
+editH1 := (A_ScreenHeight / 2)
+editH2 := editH1 - 70
+
+editBoxX := 10
+editBoxX2 := 10
+Gui, Add, Edit, x%editBoxX% y%editBoxY1% w%WidthOfBoxes% h%editH1% veditBox gCodeTextEditBox cffffff bg303030, put or type your HTpy code here...
+Gui, Add, Edit, x%editBoxX2% y%editBoxY2% w%WidthOfBoxes% h%editH2% vcodeBox bg303030 cffffff
+eval("Gui1codeBox.setReadOnly(true);")
+eval("Gui1editBox.setBehavioursEnabled(false);")
+
 
 sendButtonX := (A_ScreenWidth - 140) / 2
-sendButtonY := ((A_ScreenHeight - 40) / 2) + 280
-Gui, Add, Button, x%sendButtonX% y%sendButtonY% w140 h40 gButton, Transpile
+sendButtonY := editBoxY2 - 60
+Gui, Add, Button, x%sendButtonX% y%sendButtonY% w140 h40 gButton vButtonID, Transpile
 
 GuiControl, Focus, editBox
+
+oldA_ScreenWidth := A_ScreenWidth
+oldA_ScreenHeight := A_ScreenHeight
+}
+else
+{
+
+WidthOfBoxes := (A_ScreenWidth / 2) - 20
+editBoxX := (A_ScreenWidth - WidthOfBoxes) / 2
+editH1 := A_ScreenHeight - 10
+editBoxY := (A_ScreenHeight - editH1) / 2
+
+editH1 := A_ScreenHeight - 60
+editH2 := editH1
+
+editBoxX := 10
+editBoxX2 := WidthOfBoxes + 25
+Gui, Add, Edit, x%editBoxX% y%editBoxY% w%WidthOfBoxes% h%editH1% veditBox gCodeTextEditBox cffffff bg303030, put or type your HTpy code here...
+Gui, Add, Edit, x%editBoxX2% y%editBoxY% w%WidthOfBoxes% h%editH2% vcodeBox bg303030 cffffff
+eval("Gui1codeBox.setReadOnly(true);")
+eval("Gui1editBox.setBehavioursEnabled(false);")
+
+
+sendButtonX := (A_ScreenWidth - 140) / 2
+sendButtonY := (A_ScreenHeight - 40) - 10
+Gui, Add, Button, x%sendButtonX% y%sendButtonY% w140 h40 gButton vButtonID, Transpile
+
+GuiControl, Focus, editBox
+
+oldA_ScreenWidth := A_ScreenWidth
+oldA_ScreenHeight := A_ScreenHeight
+SetTimer, onScreenSizeChange, 100
+}
+
 return
+
+onScreenSizeChange:
+if (oldA_ScreenWidth != A_ScreenWidth) or (oldA_ScreenHeight != A_ScreenHeight)
+{
+
+WidthOfBoxes := (A_ScreenWidth / 2) - 20
+
+editBoxX := (A_ScreenWidth - WidthOfBoxes) / 2
+editH1 := A_ScreenHeight - 100
+editBoxY := (A_ScreenHeight - editH1) / 2
+
+editH1 := A_ScreenHeight - 120
+editH2 := editH1
+
+editBoxX := 10
+editBoxX2 := WidthOfBoxes + 25
+GuiControl, Move, editBox, x%editBoxX% y%editBoxY% w%WidthOfBoxes% h%editH1%
+GuiControl, Move, codeBox, x%editBoxX2% y%editBoxY% w%WidthOfBoxes% h%editH2%
+eval("Gui1codeBox.readOnly = true;")
+
+sendButtonX := (A_ScreenWidth - 140) / 2
+sendButtonY := (A_ScreenHeight - 40) - 10
+GuiControl, Move, ButtonID, x%sendButtonX% y%sendButtonY% w140 h40
+
+GuiControl, Focus, editBox
+oldA_ScreenWidth := A_ScreenWidth
+oldA_ScreenHeight := A_ScreenHeight
+}
+Return
 
 CodeTextEditBox:
 HTpyCode := A_GuiControl
+gosub, Button
 Return
 
+;here;here;here;here;here;here;here;here;here;here;here;here;here;here;here;here
+
+^Enter::
+gosub, Button
+Return
+
+
 Button:
+
 
 
 
@@ -37,9 +121,17 @@ HTpyCodeD1 .= Trim(A_LoopField) . "`n"
 StringTrimRight, HTpyCode, HTpyCodeD1, 1
 
 
+CheckIFandElsesss1 := "if ("
+CheckIFandElsesss2 := "if("
+CheckIFandElsesss3 := "if !("
+CheckIFandElsesss4 := "if!("
+CheckIFandElsesss5 := "else if ("
+CheckIFandElsesss6 := "else if("
+CheckIFandElsesss7 := "else if !("
+CheckIFandElsesss8 := "else if!("
+CheckIFandElsesssNum := 0
 
-
-functionNames := ""
+functionNames := "input|int|chr"
 
 onceImportTime := 0
 weUseRandomAtLeastOnce := 0
@@ -48,21 +140,46 @@ usedLib := ""
 Loop, Parse, HTpyCode, `n, `r
 {
 lineDone := 0
-if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("msgbox, "))
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = StrLower("msgbox, % "))
+{
+StringTrimLeft, var1, A_LoopField, 10
+
+
+var2 := Trim(transpileVar(var1))
+
+
+
+out := "print(" . out . ")"
+
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("msgbox, ")) && (lineDone = 0)
 {
 StringTrimLeft, var1, A_LoopField, 8
 
-if (InStr(var1, "%"))
+
+var2 := ""
+Loop, Parse, var1, " "
 {
-var2 := StrSplit(var1, "%", 2)
 
-out := "print(variables['" . var2 . "'])"
+if (InStr(A_LoopField, "%"))
+{
 
+var3 := StrSplit(A_LoopField, "%", 2)
+
+var2 .= Chr(34) .  " + " . var3 . " + " . Chr(34) . A_Space
 }
 else
 {
-out := "print(" . Chr(34) . var1 . Chr(34) . ")"
+var2 .= A_LoopField . A_Space
 }
+}
+StringTrimRight, var2, var2, 1
+
+out := "print(" . Chr(34) . var2 . Chr(34) . ")"
+
 
 lineDone := 1
 pyCode .= out . "`n"
@@ -86,7 +203,23 @@ out := outt1 . " = " . "random.randint(" . outt2 . ", " . outt3 . ")"
 lineDone := 1
 pyCode .= out . "`n"
 }
-else if (SubStr(Trim(StrLower(A_LoopField)), 1, 7) = StrLower("sleep, "))
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower("sleep, % "))
+{
+
+StringTrimLeft, var1, A_LoopField, 8
+
+var1 := Trim(transpileVar(var1))
+out := "time.sleep(" . var1 . " / 1000" . ")"
+lineDone := 1
+onceImportTime++
+if (onceImportTime = 1)
+{
+usedLib .= "import time`n"
+}
+pyCode .= out . "`n"
+
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 7) = StrLower("sleep, ")) && (lineDone = 0)
 {
 
 StringTrimLeft, var1, A_LoopField, 7
@@ -111,6 +244,113 @@ usedLib .= "import time`n"
 pyCode .= out . "`n"
 
 }
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = StrLower("Loop, "))
+{
+
+var1 := A_LoopField
+StringTrimLeft, var1, var1, 6
+var1 := Trim(transpileVar(var1))
+
+
+
+out := "for variables['A" . Chr(95) . "Index'] in range(1, " . var1 . " + 1):"
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss1)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 3) = StrLower(CheckIFandElsesss2)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 5) = StrLower(CheckIFandElsesss3)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss4)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss5)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower(CheckIFandElsesss6)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = StrLower(CheckIFandElsesss7)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss8))
+{
+
+
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss1))
+{
+CheckIFandElsesssNum := 4
+CheckIFandElsesssNumNum := 1
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 3) = StrLower(CheckIFandElsesss2))
+{
+CheckIFandElsesssNum := 3
+CheckIFandElsesssNumNum := 2
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 5) = StrLower(CheckIFandElsesss3))
+{
+CheckIFandElsesssNum := 5
+CheckIFandElsesssNumNum := 3
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss4))
+{
+CheckIFandElsesssNum := 4
+CheckIFandElsesssNumNum := 4
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss5))
+{
+CheckIFandElsesssNum := 9
+CheckIFandElsesssNumNum := 5
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower(CheckIFandElsesss6))
+{
+CheckIFandElsesssNum := 8
+CheckIFandElsesssNumNum := 6
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = StrLower(CheckIFandElsesss7))
+{
+CheckIFandElsesssNum := 10
+CheckIFandElsesssNumNum := 7
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss8))
+{
+CheckIFandElsesssNum := 9
+CheckIFandElsesssNumNum := 8
+}
+
+StringTrimLeft, str, A_LoopField, variables.CheckIFandElsesssNum
+
+str := CheckIFandElsesss%CheckIFandElsesssNumNum% . A_Space . transpileVar(str)
+
+
+if (SubStr(Trim(StrLower(str)), 1, 7) = StrLower("else if"))
+{
+str := StrReplace(str, "else if", "elif")
+}
+else
+{
+str := str
+StringTrimLeft, str, str, 2
+str := "if" . str
+}
+
+str := StrReplace(str, "!", " not ")
+str := StrReplace(str, " && ", " and ")
+str := StrReplace(str, " || ", " or ")
+str := StrReplace(str, " < = ", " <= ")
+str := StrReplace(str, " > = ", " >= ")
+str := StrReplace(str, " = ", " == ")
+str := StrReplace(str, " = ", " == ")
+str := StrReplace(str, "  not == ", " != ")
+
+str := Trim(str) . ":"
+
+str := StrReplace(str, "if " . Chr(40) . A_Space, "if " . Chr(40))
+str := StrReplace(str, A_Space . Chr(41) . ":", Chr(41) . ":")
+
+
+out := str
+
+
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (StrLower(A_LoopField) = StrLower("else"))
+{
+
+out := "else:"
+
+
+
+lineDone := 1
+pyCode .= out . "`n"
+}
 else if (InStr(A_LoopField, " := ")) or (InStr(A_LoopField, " .= ")) or (InStr(A_LoopField, " += ")) or (InStr(A_LoopField, " -= ")) or (InStr(A_LoopField, " *= ")) && (lineDone = 0)
 {
 lineDone := 1
@@ -119,9 +359,7 @@ str := A_LoopField
 whatVarWeUse := ""
 if (InStr(A_LoopField, " := "))
 {
-
 whatVarWeUse := " = "
-
 }
 if (InStr(A_LoopField, " .= "))
 {
@@ -149,6 +387,33 @@ str := StrReplace(str, "+=", "=")
 str := StrReplace(str, "-=", "=")
 str := StrReplace(str, "*=", "=")
 
+str := StrReplace(str, Chr(34), "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")
+
+
+goForItChnageTheEqualSing := 0
+outSTR := ""
+;MsgBox, % str
+
+Loop, Parse, str, " "
+{
+
+str := A_LoopField
+
+if (goForItChnageTheEqualSing = 1)
+{
+str := StrReplace(str, Chr(61), "dghoesdhgidshgsdiosimefuxcomeonyouwillneveruesthisjustput2gagain" . " + chr(61) + " . "dghoesdhgidshgsdiosimefuxcomeonyouwillneveruesthisjustput2gagain")
+}
+
+
+if (InStr(A_LoopField, Chr(61))) && (goForItChnageTheEqualSingNOOOOOO != 1)
+{
+goForItChnageTheEqualSing := 1
+}
+
+outSTR .= str . A_Space
+}
+StringTrimRight, str, outSTR, 1
+;MsgBox, % str
 
 var1 := Trim(StrSplit(str, "=", 1))
 var2 := Trim(StrSplit(str, "=", 2))
@@ -157,8 +422,16 @@ if (InStr(var1, "%"))
 varVar1 := Trim(StrSplit(var1, "%", 1))
 varVar2 := Trim(StrSplit(var1, "%", 2))
 
-
+if (varVar2 = "")
+{
+var1 := transpileVar(varVar2)
+}
+else
+{
 var1 := "variables[f'" . varVar1 . "{variables[" . Chr(34) . varVar2 . Chr(34) . "]}']"
+}
+
+
 
 }
 else
@@ -171,10 +444,6 @@ outVar2 := ""
 chr34 := 0
 normalVarNo34 := 1
 
-var2 := StrReplace(var2, Chr(34), "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")
-var2 := StrReplace(var2, Chr(40), " ( ")
-var2 := StrReplace(var2, Chr(41), " ) ")
-var2 := StrReplace(var2, Chr(44), " , ")
 
 Loop, Parse, var2, " "
 {
@@ -190,7 +459,16 @@ varVar1 := Trim(StrSplit(varVar, "%", 1))
 varVar2 := Trim(StrSplit(varVar, "%", 2))
 
 
+if (varVar2 = "")
+{
+varVar := transpileVar(varVar2)
+}
+else
+{
 varVar := "variables[f'" . varVar1 . "{variables[" . Chr(34) . varVar2 . Chr(34) . "]}']"
+}
+
+
 
 }
 else
@@ -205,7 +483,18 @@ if (A_LoopField = ".")
 varVar := "+"
 }
 
+varVar := StrReplace(varVar, Chr(40), " ( ")
+varVar := StrReplace(varVar, Chr(41), " ) ")
+varVar := StrReplace(varVar, Chr(44), " , ")
+varVar := StrReplace(varVar, Chr(60), " < ")
+varVar := StrReplace(varVar, Chr(62), " > ")
 
+varVar := StrReplace(varVar, "variables['True']", "True")
+varVar := StrReplace(varVar, "variables['False']", "False")
+varVar := StrReplace(varVar, "variables['true']", "True")
+varVar := StrReplace(varVar, "variables['false']", "False")
+varVar := StrReplace(varVar, "variables['if']", "if")
+varVar := StrReplace(varVar, "variables['else']", "else")
 }
 }
 
@@ -226,21 +515,20 @@ outVar2 .= varVar . A_Space
 StringTrimRight, outVar2, outVar2, 1
 outVar2 := StrReplace(outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", Chr(34))
 
-weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n"
+weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n`n"
 
 
+;MsgBox, before |%outVar2%|
+outVar2 := fixVarNums(outVar2)
+;MsgBox, after |%outVar2%|
 out := var1 . whatVarWeUse . outVar2
-
-out := StrReplace(out, "variables['True']", "True")
-out := StrReplace(out, "variables['False']", "False")
-out := StrReplace(out, "variables['true']", "True")
-out := StrReplace(out, "variables['false']", "False")
 
 Loop, Parse, functionNames, "|"
 {
 out := StrReplace(out, "variables['" . A_LoopField . "']", A_LoopField)
 }
 
+out := StrReplace(out, "dghoesdhgidshgsdiosimefuxcomeonyouwillneveruesthisjustput2gagain", Chr(34))
 
 pyCode .= out . "`n"
 
@@ -255,15 +543,190 @@ pyCode .= A_LoopField . "`n"
 
 } ; end of the parsing loop
 
-pyCode := usedLib . "`n" . weEverUseVars . "`n" . pyCode
+pyCode := indent_nested_curly_braces(pyCode)
 
-GuiControl, Text, codeBox, %pyCode%
+
+pyCodeOut1234565432 := ""
+Loop, Parse, pyCode, `n, `r
+{
+
+if (Trim(A_LoopField) != Chr(123)) && (Trim(A_LoopField) != Chr(125))
+{
+out := A_LoopField
+
+StringTrimLeft, out, out, 1
+
+pyCodeOut1234565432 .= out . "`n"
+}
+
+}
+
+StringTrimRight, pyCode, pyCodeOut1234565432, 1
+pyCodeFinal := pyCode
+;~ FileRead, upCode, upCode.txt
+;~ FileRead, downCode, downCode.txt
+;~ pyCode := upCode . "`n" . usedLib . "`n" . weEverUseVars . "`n" . pyCode . "`n" . downCode
+
+if (usedLib = "")
+{
+pyCode := weEverUseVars . "`n" . pyCodeFinal
+
+if (weEverUseVars = "")
+{
+pyCode := pyCodeFinal
+}
+else
+{
+pyCode := weEverUseVars . "`n" . pyCodeFinal
+}
+
+}
+else
+{
+pyCode := usedLib . "`n" . weEverUseVars . "`n" . pyCodeFinal
+}
+
+
+
+pyCode := StrReplace(pyCode, "`n`n", "`n")
+
+
+
+eval("Gui1codeBox.session.setValue(variables.pyCode);")
 
 Return
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;
+
+indent_nested_curly_braces(input_string)
+{
+indent_size := 4
+current_indent := 0
+result := ""
+;MsgBox, % input_string
+input_string := input_string
+Loop, Parse, input_string, `n, `r
+{
+
+trimmed_line := Trim(A_LoopField)
+
+if (trimmed_line = Chr(123))
+{
+
+result .= ((A_Space . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+current_indent := current_indent + indent_size
+}
+else if (trimmed_line = Chr(125))
+{
+
+current_indent := current_indent - indent_size
+result .= ((A_Space . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+}
+else
+{
+
+result .= ((A_Space . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+}
+
+}
+
+; Return the result
+return result
+}
+
+RepeatSpaces(count)
+{
+spaces := ""
+Loop, %count%
+{
+spaces .= A_Space
+}
+return spaces
+}
+
+
+fixVarNums(str)
+{
+
+str1 := Trim(str)
+
+if !(SubStr(Trim(StrLower(str1)), 1, 11) = StrLower("variables['"))
+{
+return str1
+}
+
+;MsgBox, bbbbbbbbbbbbbbbb|%str1%|
+StringTrimLeft, str1, str1, 11
+StringTrimRight, str1, str1, 2
+;MsgBox, afafafafafafa|%str1%|
+str1 := Trim(str1)
+numStrNums := 0
+Loop, Parse, str1
+{
+numStrNums++
+}
+numStrNums2 := 0
+
+Loop, Parse, str1
+{
+;MsgBox, A_LoopField %A_LoopField%
+if (A_LoopField = Chr(48)) or (A_LoopField = Chr(49)) or (A_LoopField = Chr(50)) or (A_LoopField = Chr(51)) or (A_LoopField = Chr(52)) or (A_LoopField = Chr(53)) or (A_LoopField = Chr(54)) or (A_LoopField = Chr(55)) or (A_LoopField = Chr(56)) or (A_LoopField = Chr(57))
+{
+numStrNums2++
+;MsgBox, % A_LoopField
+}
+
+
+}
+
+
+if (numStrNums2 = numStrNums)
+{
+return str1
+}
+else
+{
+return str
+}
+
+}
 
 transpileVar(str)
 {
@@ -275,9 +738,20 @@ var2 := str
 ;MsgBox, % var2
 
 var2 := StrReplace(var2, Chr(34), "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback")
+
+
 var2 := StrReplace(var2, Chr(40), " ( ")
 var2 := StrReplace(var2, Chr(41), " ) ")
 var2 := StrReplace(var2, Chr(44), " , ")
+var2 := StrReplace(var2, Chr(60), " < ")
+var2 := StrReplace(var2, Chr(62), " > ")
+
+var2 := StrReplace(var2, "variables['True']", "True")
+var2 := StrReplace(var2, "variables['False']", "False")
+var2 := StrReplace(var2, "variables['true']", "True")
+var2 := StrReplace(var2, "variables['false']", "False")
+var2 := StrReplace(var2, "variables['if']", "if")
+var2 := StrReplace(var2, "variables['else']", "else")
 
 Loop, Parse, var2, " "
 {
@@ -293,7 +767,16 @@ varVar1 := Trim(StrSplit(varVar, "%", 1))
 varVar2 := Trim(StrSplit(varVar, "%", 2))
 
 
+if (varVar2 = "")
+{
+varVar := transpileVar(varVar2)
+}
+else
+{
 varVar := "variables[f'" . varVar1 . "{variables[" . Chr(34) . varVar2 . Chr(34) . "]}']"
+}
+
+
 
 }
 else
@@ -329,15 +812,14 @@ outVar2 .= varVar . A_Space
 StringTrimRight, outVar2, outVar2, 1
 outVar2 := StrReplace(outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", Chr(34))
 
-weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n"
+weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n`n"
 
-
+;MsgBox, before |%outVar2%|
+outVar2 := fixVarNums(outVar2)
+;MsgBox, after |%outVar2%|
 out := outVar2
 
-out := StrReplace(out, "variables['True']", "True")
-out := StrReplace(out, "variables['False']", "False")
-out := StrReplace(out, "variables['true']", "True")
-out := StrReplace(out, "variables['false']", "False")
+
 
 Loop, Parse, functionNames, "|"
 {
@@ -365,7 +847,7 @@ numOfStr++
 
 Loop, Parse, str
 {
-if (InStr(A_LoopField, "0")) or (InStr(A_LoopField, "1")) or (InStr(A_LoopField, "2")) or (InStr(A_LoopField, "3")) or (InStr(A_LoopField, "4")) or (InStr(A_LoopField, "5")) or (InStr(A_LoopField, "6")) or (InStr(A_LoopField, "7")) or (InStr(A_LoopField, "8")) or (InStr(A_LoopField, "9")) or (InStr(A_LoopField, Chr(40))) or (InStr(A_LoopField, Chr(41))) or (InStr(A_LoopField, Chr(42))) or (InStr(A_LoopField, Chr(43))) or (InStr(A_LoopField, Chr(45))) or (InStr(A_LoopField, Chr(46))) or (InStr(A_LoopField, Chr(47))) or (InStr(A_LoopField, Chr(44)))
+if (InStr(A_LoopField, Chr(48))) or (InStr(A_LoopField, Chr(49))) or (InStr(A_LoopField, Chr(50))) or (InStr(A_LoopField, Chr(51))) or (InStr(A_LoopField, Chr(52))) or (InStr(A_LoopField, Chr(53))) or (InStr(A_LoopField, Chr(54))) or (InStr(A_LoopField, Chr(55))) or (InStr(A_LoopField, Chr(56))) or (InStr(A_LoopField, Chr(57))) or (InStr(A_LoopField, Chr(40))) or (InStr(A_LoopField, Chr(41))) or (InStr(A_LoopField, Chr(42))) or (InStr(A_LoopField, Chr(43))) or (InStr(A_LoopField, Chr(45))) or (InStr(A_LoopField, Chr(46))) or (InStr(A_LoopField, Chr(47))) or (InStr(A_LoopField, Chr(44))) or (InStr(A_LoopField, Chr(33))) or (InStr(A_LoopField, Chr(61))) or (InStr(A_LoopField, Chr(60))) or (InStr(A_LoopField, Chr(62)))
 {
 foundAnum++
 }
