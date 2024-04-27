@@ -16,6 +16,8 @@ HTpy currently supports a subset of commands similar to AutoHotkey:
 - `sleep`: Pause script execution for a specified duration.
 - Variables: Declare and manipulate variables.
 - `Random`: Generate random numbers within specified ranges.
+- `if`, `else if`, `else`
+- `Loop, `
 
 Here's an example of HTpy syntax:
 
