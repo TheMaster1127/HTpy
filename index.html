@@ -659,6 +659,10 @@
                 HotKeyCalledCtrlEnter();
               });
 
+              MakeHotKey("Ctrl+V", function (hotkey) {
+                HotKeyCalledCtrlV();
+              });
+
               // HTpy
 
               Gui1.style.position = "absolute";
@@ -958,6 +962,16 @@
       async function HotKeyCalledCtrlEnter()
       {
       // console.log("HotKeyCalled CtrlEnter")
+
+      await Button()
+
+      }
+
+      async function HotKeyCalledCtrlV()
+      {
+      // console.log("HotKeyCalled CtrlV")
+
+      await sleep(111)
 
       await Button()
 

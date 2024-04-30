@@ -659,6 +659,10 @@ let funcs = {
           HotKeyCalledCtrlEnter();
         });
 
+        MakeHotKey("Ctrl+V", function (hotkey) {
+          HotKeyCalledCtrlV();
+        });
+
         // HTpy
 
         Gui1.style.position = "absolute";

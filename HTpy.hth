@@ -104,6 +104,12 @@ Return
 gosub, Button
 Return
 
+^V::
+Sleep, 111
+gosub, Button
+Return
+
+
 
 Button:
 
