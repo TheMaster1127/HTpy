@@ -940,8 +940,15 @@ let funcs = {
           }
         }
 
-        async function CodeTextEditBox(A_GuiControl) {
-          variables.HTpyCode = A_GuiControl;
-	await Button();
-        }
+          async function CodeTextEditBox(A_GuiControl) {
+          	// Remove carriage return characters (ASCII 13) from A_GuiControl
+          	let sanitizedText = A_GuiControl.replace(/\r/g, '');
+
+	          // Append sanitized text to variables.HTpyCode
+        	  variables.HTpyCode = sanitizedText;
+
+	          // Call Button function (assuming it returns a Promise)
+        	  await Button();
+      		}
+
 
