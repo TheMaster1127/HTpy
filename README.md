@@ -7,6 +7,7 @@
 #### Try It Out
 
 You can experiment with HTpy syntax using the [HTpy online editor](https://themaster1127.github.io/HTpy/). Note that this editor provides only a subset of HTpy functionality.
+The transpiler processes the code in real time. If you encounter any glitches or the transpiled code doesn't work correctly, simply click on 'Transpile' or press Ctrl+Enter, and it should resolve the issue. Otherwise, it could be an error in your code or possibly an issue with the transpiler itself.
 
 #### Usage Example
 
