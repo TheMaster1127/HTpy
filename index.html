@@ -552,7 +552,6 @@
         });
       }
 
-
       function isMobileDevice() {
         return /Mobi|Android/i.test(navigator.userAgent);
       }
@@ -646,14 +645,12 @@
           WidthOfBoxes: null,
         };
 
-        let funcs = {
-          indent_nested_curly_braces: indent_nested_curly_braces,
-          RepeatSpaces: RepeatSpaces,
-          fixVarNums: fixVarNums,
-          transpileVar: transpileVar,
-          ifOnlyNum: ifOnlyNum,
-          StrSplit: StrSplit,
-        };
+let funcs = {
+  transpileVariables: transpileVariables,
+  isVarAnumKindaVar: isVarAnumKindaVar,
+  varDetect: varDetect,
+  StrSplit: StrSplit,
+}
 
         let Gui1 = {};
         Gui1 = document.createElement("div");
@@ -968,17 +965,59 @@ variables.out =  ""
 
 variables.HTpyCodeD1 =  ""
 
+variables.eavbnsalvbaslv =  0;
+
 variables.characters1 = variables.HTpyCode.split(/[\n\r]/)
 variables.charLength1 = variables.characters1.length
 
 for (/* Loop parse */ variables.A_Index1 = 1; variables.A_Index1 <= variables.charLength1; variables.A_Index1++) {
 variables.A_LoopField1 = variables.characters1[variables.A_Index1 - 1]; // Using array notation to access characters
 
+if ( variables.A_Index1 == 1 )
+
+{
+
 variables.HTpyCodeD1 +=  Trim( variables.A_LoopField1 )  + "\n";
 
 }
 
+else
+
+{
+
+if ( Trim( variables.A_LoopField1 ) == String.fromCharCode( 123 )  &&  variables.eavbnsalvbaslv == 1 )
+
+{
+
+// nothing
+
+}
+
+else
+
+{
+
+variables.HTpyCodeD1 +=  Trim( variables.A_LoopField1 )  + "\n";
+
+}
+
+variables.eavbnsalvbaslv =  0;
+
+if ( Trim( variables.A_LoopField1 ) == "" )
+
+{
+
+variables.eavbnsalvbaslv =  1;
+
+}
+
+}
+
+}
+
 variables.HTpyCode = StringTrimRight(variables.HTpyCodeD1, 1)
+
+variables.str23IfFuncInNAMEnum =  0;
 
 variables.CheckIFandElsesss1 =  "if (";
 
@@ -998,7 +1037,103 @@ variables.CheckIFandElsesss8 =  "else if!(";
 
 variables.CheckIFandElsesssNum =  0;
 
-variables.functionNames =  "input|int|chr";
+variables.functionNames =  "input|int|chr|str";
+
+variables.willNextLineBeCurlyBracee =  0;
+
+variables.theFuncWeFound =  ""
+
+variables.theFuncWeFoundAllNames =  ""
+
+//OutputDebug, %HTpyCode%
+
+variables.characters2 = variables.HTpyCode.split(/[\n\r]/)
+variables.charLength2 = variables.characters2.length
+
+for (/* Loop parse */ variables.A_Index2 = 1; variables.A_Index2 <= variables.charLength2; variables.A_Index2++) {
+variables.A_LoopField2 = variables.characters2[variables.A_Index2 - 1]; // Using array notation to access characters
+
+if ( variables.willNextLineBeCurlyBracee == 1 )
+
+{
+
+// 123 is {
+
+if ( variables.A_LoopField2 == String.fromCharCode( 123 ) )
+
+{
+
+variables.willNextLineBeCurlyBracee =  0;
+
+variables.functionNames +=  "|" + variables.lastFuncName;
+
+//lastFuncFullName
+
+variables.theFuncWeFound +=  variables.lastFuncFullName + "\n";
+
+variables.theFuncWeFoundAllNames +=  variables.lastFuncName + String.fromCharCode( 40 )  + "\n";
+
+}
+
+}
+
+if ( SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 4 ) == variables.CheckIFandElsesss1  ||  SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 3 ) == variables.CheckIFandElsesss2  ||  SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 5 ) == variables.CheckIFandElsesss3  ||  SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 4 ) == variables.CheckIFandElsesss4  ||  SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 9 ) == variables.CheckIFandElsesss5  ||  SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 8 ) == variables.CheckIFandElsesss6  ||  SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 10 ) == variables.CheckIFandElsesss7  ||  SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 9 ) == variables.CheckIFandElsesss8  ||  SubStr( await StrLower ( variables.A_LoopField2 ) , 1, 5 ) == "loop," )
+
+{
+
+// not a func
+
+variables.willNextLineBeCurlyBracee =  0;
+
+//OutputDebug, %A_LoopField2%
+
+}
+
+else
+
+{
+
+//OutputDebug, ||%A_LoopField2%||
+
+variables.strForCheckIfFunc =  await StrSplit ( variables.A_LoopField2, String.fromCharCode( 40 ) , 1 )
+
+//OutputDebug, |%strForCheckIfFunc%|
+
+if ( await funcToChecIfVaidNameForFunc ( Trim( variables.strForCheckIfFunc ) )  &&  variables.strForCheckIfFunc !== ""  &&  await InStr ( variables.A_LoopField2, String.fromCharCode( 40 ) ) )
+
+{
+
+variables.willNextLineBeCurlyBracee =  1;
+
+variables.lastFuncName =  variables.strForCheckIfFunc;
+
+variables.lastFuncFullName =  variables.A_LoopField2;
+
+//OutputDebug, %lastFuncFullName%
+
+}
+
+else
+
+{
+
+variables.willNextLineBeCurlyBracee =  0;
+
+}
+
+}
+
+}
+
+variables.theFuncWeFound = StringTrimRight(variables.theFuncWeFound, 1)
+
+variables.theFuncWeFoundAllNames = StringTrimRight(variables.theFuncWeFoundAllNames, 1)
+
+//OutputDebug, %theFuncWeFound%
+
+//OutputDebug, %functionNames%
+
+//OutputDebug, %theFuncWeFoundAllNames%
 
 variables.onceImportTime =  0;
 
@@ -1008,67 +1143,23 @@ variables.weEverUseVars =  ""
 
 variables.usedLib =  ""
 
-variables.characters2 = variables.HTpyCode.split(/[\n\r]/)
-variables.charLength2 = variables.characters2.length
-
-for (/* Loop parse */ variables.A_Index2 = 1; variables.A_Index2 <= variables.charLength2; variables.A_Index2++) {
-variables.A_LoopField2 = variables.characters2[variables.A_Index2 - 1]; // Using array notation to access characters
-
-variables.lineDone =  0;
-
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 10 ) == await StrLower ( "msgbox, % " ) )
-
-{
-
-variables.var1 = StringTrimLeft(variables.A_LoopField2, 10)
-
-variables.var2 =  Trim( await transpileVar ( variables.var1 )  )
-
-variables.out =  "print(" + variables.out + ")";
-
-variables.lineDone =  1;
-
-variables.pyCode +=  variables.out + "\n";
-
-}
-
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 8 ) == await StrLower ( "msgbox, " )  &&  variables.lineDone == 0 )
-
-{
-
-variables.var1 = StringTrimLeft(variables.A_LoopField2, 8)
-
-variables.var2 =  ""
-
-variables.characters3 = variables.var1.split(/[" "]/)
+variables.characters3 = variables.HTpyCode.split(/[\n\r]/)
 variables.charLength3 = variables.characters3.length
 
 for (/* Loop parse */ variables.A_Index3 = 1; variables.A_Index3 <= variables.charLength3; variables.A_Index3++) {
 variables.A_LoopField3 = variables.characters3[variables.A_Index3 - 1]; // Using array notation to access characters
 
-if ( await InStr ( variables.A_LoopField3, "%" ) )
+variables.lineDone =  0;
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 10 ) == await StrLower ( "msgbox, % " ) )
 
 {
 
-variables.var3 =  await StrSplit ( variables.A_LoopField3, "%", 2 )
+variables.var1 = StringTrimLeft(variables.A_LoopField3, 10)
 
-variables.var2 +=  String.fromCharCode( 34 )  +  " + " + variables.var3 + " + " + String.fromCharCode( 34 )  + BuildInVars("A_Space");
+variables.var2 =  Trim( await transpileVariables ( variables.var1, variables.functionNames )  )
 
-}
-
-else
-
-{
-
-variables.var2 +=  variables.A_LoopField3 + BuildInVars("A_Space");
-
-}
-
-}
-
-variables.var2 = StringTrimRight(variables.var2, 1)
-
-variables.out =  "print(" + String.fromCharCode( 34 )  + variables.var2 + String.fromCharCode( 34 )  + ")";
+variables.out =  "print(" + variables.var2 + ")";
 
 variables.lineDone =  1;
 
@@ -1076,21 +1167,37 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 8 ) == await StrLower ( "Random, " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 8 ) == await StrLower ( "msgbox, " )  &&  variables.lineDone == 0 )
 
 {
 
-variables.varr1 =  await StrSplit ( variables.A_LoopField2, ",", 2 )
+variables.var1 = StringTrimLeft(variables.A_LoopField3, 8)
 
-variables.varr2 =  await StrSplit ( variables.A_LoopField2, ",", 3 )
+variables.OUTvarMsgLow =  await transpileLowVariables ( variables.var1 )
 
-variables.varr3 =  await StrSplit ( variables.A_LoopField2, ",", 4 )
+variables.out =  "print(" + variables.OUTvarMsgLow + ")";
 
-variables.outt1 =  Trim( await transpileVar ( variables.varr1 )  )
+variables.lineDone =  1;
 
-variables.outt2 =  Trim( await transpileVar ( variables.varr2 )  )
+variables.pyCode +=  variables.out + "\n";
 
-variables.outt3 =  Trim( await transpileVar ( variables.varr3 )  )
+}
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 8 ) == await StrLower ( "Random, " ) )
+
+{
+
+variables.varr1 =  await StrSplit ( variables.A_LoopField3, ",", 2 )
+
+variables.varr2 =  await StrSplit ( variables.A_LoopField3, ",", 3 )
+
+variables.varr3 =  await StrSplit ( variables.A_LoopField3, ",", 4 )
+
+variables.outt1 =  Trim( await transpileVariables ( variables.varr1, variables.functionNames )  )
+
+variables.outt2 =  Trim( await transpileVariables ( variables.varr2, variables.functionNames )  )
+
+variables.outt3 =  Trim( await transpileVariables ( variables.varr3, variables.functionNames )  )
 
 variables.weUseRandomAtLeastOnce++
 
@@ -1110,13 +1217,13 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 9 ) == await StrLower ( "sleep, % " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 7 ) == await StrLower ( "sleep, " ) )
 
 {
 
-variables.var1 = StringTrimLeft(variables.A_LoopField2, 8)
+variables.var1 = StringTrimLeft(variables.A_LoopField3, 7)
 
-variables.var1 =  Trim( await transpileVar ( variables.var1 )  )
+variables.var1 =  Trim( await transpileVariables ( variables.var1, variables.functionNames )  )
 
 variables.out =  "time.sleep(" + variables.var1 + " / 1000" + ")";
 
@@ -1136,55 +1243,15 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 7 ) == await StrLower ( "sleep, " )  &&  variables.lineDone == 0 )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 6 ) == await StrLower ( "Loop, " ) )
 
 {
 
-variables.var1 = StringTrimLeft(variables.A_LoopField2, 7)
-
-if ( await InStr ( variables.var1, "%" ) )
-
-{
-
-variables.var2 =  await StrSplit ( variables.var1, "%", 2 )
-
-variables.out =  "time.sleep(" + variables.var2 + " / 1000" + ")";
-
-}
-
-else
-
-{
-
-variables.out =  "time.sleep(" + variables.var1 + " / 1000" + ")";
-
-}
-
-variables.lineDone =  1;
-
-variables.onceImportTime++
-
-if ( variables.onceImportTime == 1 )
-
-{
-
-variables.usedLib +=  "import time\n";
-
-}
-
-variables.pyCode +=  variables.out + "\n";
-
-}
-
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 6 ) == await StrLower ( "Loop, " ) )
-
-{
-
-variables.var1 =  variables.A_LoopField2;
+variables.var1 =  variables.A_LoopField3;
 
 variables.var1 = StringTrimLeft(variables.var1, 6)
 
-variables.var1 =  Trim( await transpileVar ( variables.var1 )  )
+variables.var1 =  Trim( await transpileVariables ( variables.var1, variables.functionNames )  )
 
 variables.out =  "for variables['A" + String.fromCharCode( 95 )  + "Index'] in range(1, " + variables.var1 + " + 1):";
 
@@ -1194,11 +1261,167 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
+if ( await ifTheLineIsAFuncDec ( Trim( variables.A_LoopField3 ) , variables.theFuncWeFound ) )
 
 {
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 ) )
+console.log("" + variables.A_LoopField3 + " ")
+
+variables.str23IfFuncIn =  variables.A_LoopField3;
+
+variables.str23IfFuncInNAME =  await StrSplit ( variables.str23IfFuncIn, String.fromCharCode( 40 ) , 1 )
+
+variables.str23IfFuncIn =  await StrSplit ( variables.str23IfFuncIn, String.fromCharCode( 40 ) , 2 )
+
+variables.nothing =  ""
+
+variables.str23IfFuncInALL =  StrReplace( variables.str23IfFuncIn, String.fromCharCode( 40 ) , variables.nothing )
+
+variables.str23IfFuncInALL =  StrReplace( variables.str23IfFuncInALL, String.fromCharCode( 41 ) , variables.nothing )
+
+variables.wasHereInfuncAndgetingVar1 =  0;
+
+variables.theVarsPArmFormTheFunc =  ""
+
+if ( variables.str23IfFuncInALL !== "" )
+
+{
+
+variables.characters4 = variables.str23IfFuncInALL.split(/[\,]/)
+variables.charLength4 = variables.characters4.length
+
+for (/* Loop parse */ variables.A_Index4 = 1; variables.A_Index4 <= variables.charLength4; variables.A_Index4++) {
+variables.A_LoopField4 = variables.characters4[variables.A_Index4 - 1]; // Using array notation to access characters
+
+variables.wasHereInfuncAndgetingVar1 =  1;
+
+variables.var1 =  Trim( variables.A_LoopField4 )
+
+variables.theVarsPArmFormTheFunc +=  "variables['" + variables.var1 + "'] = " + variables.var1 + "\n";
+
+}
+
+}
+
+variables.skipLeftCuleyForFuncPLS =  0;
+
+if ( variables.str23IfFuncInALL !== "" )
+
+{
+
+variables.str234567 =  "def " + variables.str23IfFuncInNAME + String.fromCharCode( 40 )  + variables.str23IfFuncInALL + String.fromCharCode( 41 )  + ":\n{\n" + variables.theVarsPArmFormTheFunc;
+
+variables.skipLeftCuleyForFuncPLS =  1;
+
+}
+
+else
+
+{
+
+variables.str234567 =  "def " + variables.str23IfFuncInNAME + String.fromCharCode( 40 )  + variables.str23IfFuncInALL + String.fromCharCode( 41 )  + ":";
+
+}
+
+for (/* Normal Loop */ variables.A_Index5 = 1; variables.A_Index5 <= variables.str23IfFuncInNAMEnum; variables.A_Index5++)
+
+{
+
+if ( variables["str23IfFuncInNAME" + variables.A_Index5] == variables.str23IfFuncInNAME )
+
+{
+
+variables.var12312 =  ""
+
+if ( variables.str23IfFuncInALL !== "" )
+
+{
+
+variables.characters6 = variables.str23IfFuncInALL.split(/[\,]/)
+variables.charLength6 = variables.characters6.length
+
+for (/* Loop parse */ variables.A_Index6 = 1; variables.A_Index6 <= variables.charLength6; variables.A_Index6++) {
+variables.A_LoopField6 = variables.characters6[variables.A_Index6 - 1]; // Using array notation to access characters
+
+variables.wasHereInfuncAndgetingVar1 =  1;
+
+variables.var1 =  Trim( variables.A_LoopField6 )
+
+variables.var12312 +=  await transpileVariables ( variables.var1, variables.functionNames )  + ", ";
+
+}
+
+variables.var12312 = StringTrimRight(variables.var12312, 2)
+
+}
+
+if ( variables.wasHereInfuncAndgetingVar1 == 0 )
+
+{
+
+variables.str2345678 =  variables.str23IfFuncInNAME + String.fromCharCode( 40 )  + String.fromCharCode( 41 )
+
+}
+
+else
+
+{
+
+variables.str2345678 =  variables.str23IfFuncInNAME + String.fromCharCode( 40 )  + variables.var12312 + String.fromCharCode( 41 )
+
+}
+
+variables.lineDone =  1;
+
+}
+
+}
+
+variables.str23IfFuncInNAMEnum++
+
+variables["str23IfFuncInNAME" + variables.str23IfFuncInNAMEnum] =  variables.str23IfFuncInNAME;
+
+if ( variables.lineDone == 1 )
+
+{
+
+variables.pyCode +=  variables.str2345678 + "\n";
+
+}
+
+else
+
+{
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.str234567 + "\n";
+
+}
+
+}
+
+if ( SubStr( Trim( variables.A_LoopField3 ) , 1, 7 ) == "return " )
+
+{
+
+variables.strFormReturn = StringTrimLeft(variables.A_LoopField3, 7)
+
+variables.var12312 =  await transpileVariables ( variables.strFormReturn, variables.functionNames )
+
+variables.out =  "return " + variables.var12312;
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
+
+{
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 ) )
 
 {
 
@@ -1208,7 +1431,7 @@ variables.CheckIFandElsesssNumNum =  1;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 ) )
 
 {
 
@@ -1218,7 +1441,7 @@ variables.CheckIFandElsesssNumNum =  2;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 ) )
 
 {
 
@@ -1228,7 +1451,7 @@ variables.CheckIFandElsesssNumNum =  3;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 ) )
 
 {
 
@@ -1238,7 +1461,7 @@ variables.CheckIFandElsesssNumNum =  4;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 ) )
 
 {
 
@@ -1248,7 +1471,7 @@ variables.CheckIFandElsesssNumNum =  5;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 ) )
 
 {
 
@@ -1258,7 +1481,7 @@ variables.CheckIFandElsesssNumNum =  6;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 ) )
 
 {
 
@@ -1268,7 +1491,7 @@ variables.CheckIFandElsesssNumNum =  7;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField2 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
 
 {
 
@@ -1278,9 +1501,9 @@ variables.CheckIFandElsesssNumNum =  8;
 
 }
 
-variables.str = StringTrimLeft(variables.A_LoopField2, variables.CheckIFandElsesssNum)
+variables.str = StringTrimLeft(variables.A_LoopField3, variables.CheckIFandElsesssNum)
 
-variables.str =  variables["CheckIFandElsesss" + variables.CheckIFandElsesssNumNum] + BuildInVars("A_Space") + await transpileVar ( variables.str )
+variables.str =  variables["CheckIFandElsesss" + variables.CheckIFandElsesssNumNum] + BuildInVars("A_Space") + await transpileVariables ( variables.str, variables.functionNames )
 
 if ( SubStr( Trim( await StrLower ( variables.str ) ) , 1, 7 ) == await StrLower ( "else if" ) )
 
@@ -1302,22 +1525,6 @@ variables.str =  "if" + variables.str;
 
 }
 
-variables.str =  StrReplace( variables.str, "!", " not " )
-
-variables.str =  StrReplace( variables.str, " && ", " and " )
-
-variables.str =  StrReplace( variables.str, " || ", " or " )
-
-variables.str =  StrReplace( variables.str, " < = ", " <= " )
-
-variables.str =  StrReplace( variables.str, " > = ", " >= " )
-
-variables.str =  StrReplace( variables.str, " = ", " == " )
-
-variables.str =  StrReplace( variables.str, " = ", " == " )
-
-variables.str =  StrReplace( variables.str, "  not == ", " != " )
-
 variables.str =  Trim( variables.str )  + ":";
 
 variables.str =  StrReplace( variables.str, "if " + String.fromCharCode( 40 )  + BuildInVars("A_Space"), "if " + String.fromCharCode( 40 )  )
@@ -1326,13 +1533,17 @@ variables.str =  StrReplace( variables.str, BuildInVars("A_Space") + String.from
 
 variables.out =  variables.str;
 
+variables.out =  StrReplace( variables.out, "!", " not " )
+
+variables.out =  StrReplace( variables.out, "  not ", " not " )
+
 variables.lineDone =  1;
 
 variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( await StrLower ( variables.A_LoopField2 ) == await StrLower ( "else" ) )
+if ( await StrLower ( variables.A_LoopField3 ) == await StrLower ( "else" ) )
 
 {
 
@@ -1344,17 +1555,17 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( await InStr ( variables.A_LoopField2, " := " )  ||  await InStr ( variables.A_LoopField2, " .= " )  ||  await InStr ( variables.A_LoopField2, " += " )  ||  await InStr ( variables.A_LoopField2, " -= " )  ||  await InStr ( variables.A_LoopField2, " *= " )  &&  variables.lineDone == 0 )
+if ( await InStr ( variables.A_LoopField3, " := " )  ||  await InStr ( variables.A_LoopField3, " .= " )  ||  await InStr ( variables.A_LoopField3, " += " )  ||  await InStr ( variables.A_LoopField3, " -= " )  ||  await InStr ( variables.A_LoopField3, " *= " )  &&  variables.lineDone == 0 )
 
 {
 
 variables.lineDone =  1;
 
-variables.str =  variables.A_LoopField2;
+variables.str =  variables.A_LoopField3;
 
 variables.whatVarWeUse =  ""
 
-if ( await InStr ( variables.A_LoopField2, " := " ) )
+if ( await InStr ( variables.A_LoopField3, " := " ) )
 
 {
 
@@ -1362,7 +1573,7 @@ variables.whatVarWeUse =  " = ";
 
 }
 
-if ( await InStr ( variables.A_LoopField2, " .= " ) )
+if ( await InStr ( variables.A_LoopField3, " .= " ) )
 
 {
 
@@ -1370,7 +1581,7 @@ variables.whatVarWeUse =  " += ";
 
 }
 
-if ( await InStr ( variables.A_LoopField2, " += " ) )
+if ( await InStr ( variables.A_LoopField3, " += " ) )
 
 {
 
@@ -1378,7 +1589,7 @@ variables.whatVarWeUse =  " += ";
 
 }
 
-if ( await InStr ( variables.A_LoopField2, " -= " ) )
+if ( await InStr ( variables.A_LoopField3, " -= " ) )
 
 {
 
@@ -1386,7 +1597,7 @@ variables.whatVarWeUse =  " -= ";
 
 }
 
-if ( await InStr ( variables.A_LoopField2, " *= " ) )
+if ( await InStr ( variables.A_LoopField3, " *= " ) )
 
 {
 
@@ -1404,231 +1615,17 @@ variables.str =  StrReplace( variables.str, "-=", "=" )
 
 variables.str =  StrReplace( variables.str, "*=", "=" )
 
-variables.str =  StrReplace( variables.str, String.fromCharCode( 34 ) , "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" )
-
-variables.goForItChnageTheEqualSing =  0;
-
-variables.outSTR =  ""
-
-//MsgBox, % str
-
-variables.characters4 = variables.str.split(/[" "]/)
-variables.charLength4 = variables.characters4.length
-
-for (/* Loop parse */ variables.A_Index4 = 1; variables.A_Index4 <= variables.charLength4; variables.A_Index4++) {
-variables.A_LoopField4 = variables.characters4[variables.A_Index4 - 1]; // Using array notation to access characters
-
-variables.str =  variables.A_LoopField4;
-
-if ( variables.goForItChnageTheEqualSing == 1 )
-
-{
-
-variables.str =  StrReplace( variables.str, String.fromCharCode( 61 ) , "dghoesdhgidshgsdiosimefuxcomeonyouwillneveruesthisjustput2gagain" + " + chr(61) + " + "dghoesdhgidshgsdiosimefuxcomeonyouwillneveruesthisjustput2gagain" )
-
-}
-
-if ( await InStr ( variables.A_LoopField4, String.fromCharCode( 61 ) )  &&  variables.goForItChnageTheEqualSingNOOOOOO !== 1 )
-
-{
-
-variables.goForItChnageTheEqualSing =  1;
-
-}
-
-variables.outSTR +=  variables.str + BuildInVars("A_Space");
-
-}
-
-variables.str = StringTrimRight(variables.outSTR, 1)
-
-//MsgBox, % str
-
 variables.var1 =  Trim( await StrSplit ( variables.str, "=", 1 )  )
 
 variables.var2 =  Trim( await StrSplit ( variables.str, "=", 2 )  )
 
-if ( await InStr ( variables.var1, "%" ) )
+//OutputDebug, ||||||||||||%var2%||||||||||||
 
-{
+variables.varOUT1 =  await transpileVariables ( variables.var1, variables.functionNames )
 
-variables.varVar1 =  Trim( await StrSplit ( variables.var1, "%", 1 )  )
+variables.varOUT2 =  await transpileVariables ( variables.var2, variables.functionNames )
 
-variables.varVar2 =  Trim( await StrSplit ( variables.var1, "%", 2 )  )
-
-if ( variables.varVar2 == "" )
-
-{
-
-variables.var1 =  await transpileVar ( variables.varVar2 )
-
-}
-
-else
-
-{
-
-variables.var1 =  "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode( 34 )  + variables.varVar2 + String.fromCharCode( 34 )  + "]}']";
-
-}
-
-}
-
-else
-
-{
-
-variables.var1 =  "variables['" + variables.var1 + "']";
-
-}
-
-variables.outVar2 =  ""
-
-variables.chr34 =  0;
-
-variables.normalVarNo34 =  1;
-
-variables.characters5 = variables.var2.split(/[" "]/)
-variables.charLength5 = variables.characters5.length
-
-for (/* Loop parse */ variables.A_Index5 = 1; variables.A_Index5 <= variables.charLength5; variables.A_Index5++) {
-variables.A_LoopField5 = variables.characters5[variables.A_Index5 - 1]; // Using array notation to access characters
-
-variables.varVar =  variables.A_LoopField5;
-
-//MsgBox, % varVar
-
-if ( ! ( await InStr ( variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" ) ) )
-
-{
-
-if ( variables.normalVarNo34 == 1 )
-
-{
-
-if ( await InStr ( variables.varVar, "%" ) )
-
-{
-
-variables.varVar1 =  Trim( await StrSplit ( variables.varVar, "%", 1 )  )
-
-variables.varVar2 =  Trim( await StrSplit ( variables.varVar, "%", 2 )  )
-
-if ( variables.varVar2 == "" )
-
-{
-
-variables.varVar =  await transpileVar ( variables.varVar2 )
-
-}
-
-else
-
-{
-
-variables.varVar =  "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode( 34 )  + variables.varVar2 + String.fromCharCode( 34 )  + "]}']";
-
-}
-
-}
-
-else
-
-{
-
-if (!( await ifOnlyNum ( variables.varVar ) ))
-
-{
-
-variables.varVar =  "variables['" + variables.varVar + "']";
-
-}
-
-}
-
-if ( variables.A_LoopField5 == "." )
-
-{
-
-variables.varVar =  "+";
-
-}
-
-variables.varVar =  StrReplace( variables.varVar, String.fromCharCode( 40 ) , " ( " )
-
-variables.varVar =  StrReplace( variables.varVar, String.fromCharCode( 41 ) , " ) " )
-
-variables.varVar =  StrReplace( variables.varVar, String.fromCharCode( 44 ) , " , " )
-
-variables.varVar =  StrReplace( variables.varVar, String.fromCharCode( 60 ) , " < " )
-
-variables.varVar =  StrReplace( variables.varVar, String.fromCharCode( 62 ) , " > " )
-
-variables.varVar =  StrReplace( variables.varVar, "variables['True']", "True" )
-
-variables.varVar =  StrReplace( variables.varVar, "variables['False']", "False" )
-
-variables.varVar =  StrReplace( variables.varVar, "variables['true']", "True" )
-
-variables.varVar =  StrReplace( variables.varVar, "variables['false']", "False" )
-
-variables.varVar =  StrReplace( variables.varVar, "variables['if']", "if" )
-
-variables.varVar =  StrReplace( variables.varVar, "variables['else']", "else" )
-
-}
-
-}
-
-if ( await InStr ( variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" ) )
-
-{
-
-variables.chr34++
-
-variables.normalVarNo34 =  0;
-
-}
-
-if ( variables.chr34 == 2 )
-
-{
-
-variables.normalVarNo34 =  1;
-
-variables.chr34 =  0;
-
-}
-
-variables.outVar2 +=  variables.varVar + BuildInVars("A_Space");
-
-}
-
-variables.outVar2 = StringTrimRight(variables.outVar2, 1)
-
-variables.outVar2 =  StrReplace( variables.outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", String.fromCharCode( 34 )  )
-
-variables.weEverUseVars =  "# Define a dictionary to store dynamic variables\nvariables = {}\n\n";
-
-//MsgBox, before |%outVar2%|
-
-variables.outVar2 =  await fixVarNums ( variables.outVar2 )
-
-//MsgBox, after |%outVar2%|
-
-variables.out =  variables.var1 + variables.whatVarWeUse + variables.outVar2;
-
-variables.characters6 = variables.functionNames.split(/["|"]/)
-variables.charLength6 = variables.characters6.length
-
-for (/* Loop parse */ variables.A_Index6 = 1; variables.A_Index6 <= variables.charLength6; variables.A_Index6++) {
-variables.A_LoopField6 = variables.characters6[variables.A_Index6 - 1]; // Using array notation to access characters
-
-variables.out =  StrReplace( variables.out, "variables['" + variables.A_LoopField6 + "']", variables.A_LoopField6 )
-
-}
-
-variables.out =  StrReplace( variables.out, "dghoesdhgidshgsdiosimefuxcomeonyouwillneveruesthisjustput2gagain", String.fromCharCode( 34 )  )
+variables.out =  variables.varOUT1 + variables.whatVarWeUse + variables.varOUT2;
 
 variables.pyCode +=  variables.out + "\n";
 
@@ -1642,7 +1639,21 @@ if ( variables.lineDone !== 1 )
 
 {
 
-variables.pyCode +=  variables.A_LoopField2 + "\n";
+if ( variables.skipLeftCuleyForFuncPLS !== 1 )
+
+{
+
+variables.pyCode +=  variables.A_LoopField3 + "\n";
+
+}
+
+else
+
+{
+
+variables.skipLeftCuleyForFuncPLS =  0;
+
+}
 
 }
 
@@ -1876,292 +1887,42 @@ return variables.spaces
 
 }
 
-async function fixVarNums(str)
+async function ifTheLineIsAFuncDec(strgjvkh, theFuncWeFound)
 {
 
-variables.str = str
+variables.strgjvkh = strgjvkh
 
-variables.str1 =  Trim( variables.str )
+variables.theFuncWeFound = theFuncWeFound
 
-if (!( SubStr( Trim( await StrLower ( variables.str1 ) ) , 1, 11 ) == await StrLower ( "variables['" ) ))
-
-{
-
-return variables.str1
-
-}
-
-//MsgBox, bbbbbbbbbbbbbbbb|%str1%|
-
-variables.str1 = StringTrimLeft(variables.str1, 11)
-
-variables.str1 = StringTrimRight(variables.str1, 2)
-
-//MsgBox, afafafafafafa|%str1%|
-
-variables.str1 =  Trim( variables.str1 )
-
-variables.numStrNums =  0;
-
-variables.characters10 = variables.str1.split("")
+variables.characters10 = variables.theFuncWeFound.split(/[\n\r]/)
 variables.charLength10 = variables.characters10.length
 
 for (/* Loop parse */ variables.A_Index10 = 1; variables.A_Index10 <= variables.charLength10; variables.A_Index10++) {
 variables.A_LoopField10 = variables.characters10[variables.A_Index10 - 1]; // Using array notation to access characters
 
-variables.numStrNums++
+variables.numOfChars =  0;
 
-}
-
-variables.numStrNums2 =  0;
-
-variables.characters11 = variables.str1.split("")
+variables.characters11 = variables.A_LoopField10.split("")
 variables.charLength11 = variables.characters11.length
 
 for (/* Loop parse */ variables.A_Index11 = 1; variables.A_Index11 <= variables.charLength11; variables.A_Index11++) {
 variables.A_LoopField11 = variables.characters11[variables.A_Index11 - 1]; // Using array notation to access characters
 
-//MsgBox, A_LoopField11 %A_LoopField11%
-
-if ( variables.A_LoopField11 == String.fromCharCode( 48 )  ||  variables.A_LoopField11 == String.fromCharCode( 49 )  ||  variables.A_LoopField11 == String.fromCharCode( 50 )  ||  variables.A_LoopField11 == String.fromCharCode( 51 )  ||  variables.A_LoopField11 == String.fromCharCode( 52 )  ||  variables.A_LoopField11 == String.fromCharCode( 53 )  ||  variables.A_LoopField11 == String.fromCharCode( 54 )  ||  variables.A_LoopField11 == String.fromCharCode( 55 )  ||  variables.A_LoopField11 == String.fromCharCode( 56 )  ||  variables.A_LoopField11 == String.fromCharCode( 57 ) )
-
-{
-
-variables.numStrNums2++
-
-//MsgBox, % A_LoopField11
+variables.numOfChars++
 
 }
 
-}
+variables.A_LoopField10d =  await StrSplit ( variables.A_LoopField10, String.fromCharCode( 40 ) , 1 )
 
-if ( variables.numStrNums2 == variables.numStrNums )
+variables.A_LoopField10d2 =  await StrSplit ( variables.strgjvkh, String.fromCharCode( 40 ) , 1 )
 
-{
-
-return variables.str1
-
-}
-
-else
-
-{
-
-return variables.str
-
-}
-
-}
-
-async function transpileVar(str)
-{
-
-variables.str = str
-
-variables.outVar2 =  ""
-
-variables.chr34 =  0;
-
-variables.normalVarNo34 =  1;
-
-variables.var2 =  variables.str;
-
-//MsgBox, % var2
-
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 34 ) , "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" )
-
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 40 ) , " ( " )
-
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 41 ) , " ) " )
-
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 44 ) , " , " )
-
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 60 ) , " < " )
-
-variables.var2 =  StrReplace( variables.var2, String.fromCharCode( 62 ) , " > " )
-
-variables.var2 =  StrReplace( variables.var2, "variables['True']", "True" )
-
-variables.var2 =  StrReplace( variables.var2, "variables['False']", "False" )
-
-variables.var2 =  StrReplace( variables.var2, "variables['true']", "True" )
-
-variables.var2 =  StrReplace( variables.var2, "variables['false']", "False" )
-
-variables.var2 =  StrReplace( variables.var2, "variables['if']", "if" )
-
-variables.var2 =  StrReplace( variables.var2, "variables['else']", "else" )
-
-variables.characters12 = variables.var2.split(/[" "]/)
-variables.charLength12 = variables.characters12.length
-
-for (/* Loop parse */ variables.A_Index12 = 1; variables.A_Index12 <= variables.charLength12; variables.A_Index12++) {
-variables.A_LoopField12 = variables.characters12[variables.A_Index12 - 1]; // Using array notation to access characters
-
-variables.varVar =  variables.A_LoopField12;
-
-//MsgBox, % varVar
-
-if ( ! ( await InStr ( variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" ) ) )
-
-{
-
-if ( variables.normalVarNo34 == 1 )
-
-{
-
-if ( await InStr ( variables.varVar, "%" ) )
-
-{
-
-variables.varVar1 =  Trim( await StrSplit ( variables.varVar, "%", 1 )  )
-
-variables.varVar2 =  Trim( await StrSplit ( variables.varVar, "%", 2 )  )
-
-if ( variables.varVar2 == "" )
-
-{
-
-variables.varVar =  await transpileVar ( variables.varVar2 )
-
-}
-
-else
-
-{
-
-variables.varVar =  "variables[f'" + variables.varVar1 + "{variables[" + String.fromCharCode( 34 )  + variables.varVar2 + String.fromCharCode( 34 )  + "]}']";
-
-}
-
-}
-
-else
-
-{
-
-if (!( await ifOnlyNum ( variables.varVar ) ))
-
-{
-
-variables.varVar =  "variables['" + variables.varVar + "']";
-
-}
-
-}
-
-if ( variables.A_LoopField12 == "." )
-
-{
-
-variables.varVar =  "+";
-
-}
-
-}
-
-}
-
-if ( await InStr ( variables.varVar, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback" ) )
-
-{
-
-variables.chr34++
-
-variables.normalVarNo34 =  0;
-
-}
-
-if ( variables.chr34 == 2 )
-
-{
-
-variables.normalVarNo34 =  1;
-
-variables.chr34 =  0;
-
-}
-
-variables.outVar2 +=  variables.varVar + BuildInVars("A_Space");
-
-}
-
-variables.outVar2 = StringTrimRight(variables.outVar2, 1)
-
-variables.outVar2 =  StrReplace( variables.outVar2, "thoseasuvbasvasssaquatteigmaksrckandthemnscputthemback", String.fromCharCode( 34 )  )
-
-variables.weEverUseVars =  "# Define a dictionary to store dynamic variables\nvariables = {}\n\n";
-
-//MsgBox, before |%outVar2%|
-
-variables.outVar2 =  await fixVarNums ( variables.outVar2 )
-
-//MsgBox, after |%outVar2%|
-
-variables.out =  variables.outVar2;
-
-variables.characters13 = variables.functionNames.split(/["|"]/)
-variables.charLength13 = variables.characters13.length
-
-for (/* Loop parse */ variables.A_Index13 = 1; variables.A_Index13 <= variables.charLength13; variables.A_Index13++) {
-variables.A_LoopField13 = variables.characters13[variables.A_Index13 - 1]; // Using array notation to access characters
-
-variables.out =  StrReplace( variables.out, "variables['" + variables.A_LoopField13 + "']", variables.A_LoopField13 )
-
-}
-
-return variables.out
-
-}
-
-//;;;;;;;;;;;;;;;;;;;;;;;
-
-//;;;;;;;;;;;;;;;;;;;;;;;
-
-//;;;;;;;;;;;;;;;;;;;;;;;
-
-async function ifOnlyNum(str)
-{
-
-variables.str = str
-
-variables.foundAnum =  0;
-
-variables.str =  Trim( variables.str )
-
-variables.numOfStr =  0;
-
-variables.characters14 = variables.str.split("")
-variables.charLength14 = variables.characters14.length
-
-for (/* Loop parse */ variables.A_Index14 = 1; variables.A_Index14 <= variables.charLength14; variables.A_Index14++) {
-variables.A_LoopField14 = variables.characters14[variables.A_Index14 - 1]; // Using array notation to access characters
-
-variables.numOfStr++
-
-}
-
-variables.characters15 = variables.str.split("")
-variables.charLength15 = variables.characters15.length
-
-for (/* Loop parse */ variables.A_Index15 = 1; variables.A_Index15 <= variables.charLength15; variables.A_Index15++) {
-variables.A_LoopField15 = variables.characters15[variables.A_Index15 - 1]; // Using array notation to access characters
-
-if ( await InStr ( variables.A_LoopField15, String.fromCharCode( 48 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 49 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 50 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 51 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 52 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 53 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 54 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 55 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 56 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 57 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 40 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 41 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 42 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 43 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 45 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 46 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 47 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 44 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 33 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 61 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 60 ) )  ||  await InStr ( variables.A_LoopField15, String.fromCharCode( 62 ) ) )
-
-{
-
-variables.foundAnum++
-
-}
-
-}
-
-if ( variables.foundAnum == variables.numOfStr )
+if ( SubStr( variables.A_LoopField10d, 1, variables.numOfChars ) == variables.A_LoopField10d2  &&  await InStr ( variables.strgjvkh, String.fromCharCode( 40 ) ) )
 
 {
 
 return true
+
+}
 
 }
 
@@ -2184,15 +1945,15 @@ if ( variables.num == 1 )
 
 variables.out =  ""
 
-variables.characters16 = variables.str.split("")
-variables.charLength16 = variables.characters16.length
+variables.characters12 = variables.str.split("")
+variables.charLength12 = variables.characters12.length
 
-for (/* Loop parse */ variables.A_Index16 = 1; variables.A_Index16 <= variables.charLength16; variables.A_Index16++) {
-variables.A_LoopField16 = variables.characters16[variables.A_Index16 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index12 = 1; variables.A_Index12 <= variables.charLength12; variables.A_Index12++) {
+variables.A_LoopField12 = variables.characters12[variables.A_Index12 - 1]; // Using array notation to access characters
 
-variables.out +=  variables.A_LoopField16;
+variables.out +=  variables.A_LoopField12;
 
-if ( variables.A_LoopField16 == variables.delimiter )
+if ( variables.A_LoopField12 == variables.delimiter )
 
 {
 
@@ -2220,21 +1981,21 @@ variables.allowPos =  0;
 
 variables.out =  ""
 
-variables.characters17 = variables.str.split("")
-variables.charLength17 = variables.characters17.length
+variables.characters13 = variables.str.split("")
+variables.charLength13 = variables.characters13.length
 
-for (/* Loop parse */ variables.A_Index17 = 1; variables.A_Index17 <= variables.charLength17; variables.A_Index17++) {
-variables.A_LoopField17 = variables.characters17[variables.A_Index17 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index13 = 1; variables.A_Index13 <= variables.charLength13; variables.A_Index13++) {
+variables.A_LoopField13 = variables.characters13[variables.A_Index13 - 1]; // Using array notation to access characters
 
 if ( variables.allowPos == 1 )
 
 {
 
-variables.out +=  variables.A_LoopField17;
+variables.out +=  variables.A_LoopField13;
 
 }
 
-if ( variables.A_LoopField17 == variables.delimiter  &&  variables.allowPos == 1 )
+if ( variables.A_LoopField13 == variables.delimiter  &&  variables.allowPos == 1 )
 
 {
 
@@ -2260,7 +2021,7 @@ variables.out =  ""
 
 }
 
-if ( variables.A_LoopField17 == variables.delimiter  &&  variables.allowPos == 0 )
+if ( variables.A_LoopField13 == variables.delimiter  &&  variables.allowPos == 0 )
 
 {
 
@@ -2279,6 +2040,710 @@ return variables.out
 }
 
 }  // end of func
+
+async function transpileVariables(str, functionNames)
+{
+
+variables.str = str
+
+variables.functionNames = functionNames
+
+Trim(variables.str)
+
+variables.numOfStrings =  0;
+
+variables.str =  StrReplace( variables.str, String.fromCharCode( 34 )  + String.fromCharCode( 34 ) , "cyiasasasasstAYtheummonlyemlpystringya-a-" + String.fromCharCode( 100 )  )
+
+if ( await InStr ( variables.str, String.fromCharCode( 34 ) ) )
+
+{
+
+//OutputDebug, |||%str%|||
+
+variables.characters14 = variables.str.split(/[" "]/)
+variables.charLength14 = variables.characters14.length
+
+for (/* Loop parse */ variables.A_Index14 = 1; variables.A_Index14 <= variables.charLength14; variables.A_Index14++) {
+variables.A_LoopField14 = variables.characters14[variables.A_Index14 - 1]; // Using array notation to access characters
+
+variables["theString" + variables.A_Index14] =  ""
+
+}
+
+variables.theString1 =  ""
+
+variables.theString2 =  ""
+
+variables.theString3 =  ""
+
+variables.theString4 =  ""
+
+variables.theString5 =  ""
+
+variables.posStartToGetString =  0;
+
+variables.numGetStringTheSatring =  0;
+
+variables.outOfstr11 =  ""
+
+variables.str =  String.fromCharCode( 34 )  + String.fromCharCode( 34 )  + variables.str + String.fromCharCode( 34 )
+
+variables.characters15 = variables.str.split("")
+variables.charLength15 = variables.characters15.length
+
+for (/* Loop parse */ variables.A_Index15 = 1; variables.A_Index15 <= variables.charLength15; variables.A_Index15++) {
+variables.A_LoopField15 = variables.characters15[variables.A_Index15 - 1]; // Using array notation to access characters
+
+//OutputDebug, |?|%A_LoopField15%|?|
+
+if ( variables.posStartToGetString == 2 )
+
+{
+
+variables.posStartToGetString =  0;
+
+variables.ONCEposStartToGetString =  0;
+
+}
+
+if ( variables.posStartToGetString == 1  &&  variables.A_LoopField15 !== String.fromCharCode( 34 ) )
+
+{
+
+variables["theString" + variables.numGetStringTheSatring] +=  variables.A_LoopField15;
+
+variables.ONCEposStartToGetString++
+
+if ( variables.ONCEposStartToGetString == 1 )
+
+{
+
+variables.outOfstr11 +=  "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.numOfStrings;
+
+}
+
+}
+
+else
+
+{
+
+if ( variables.A_LoopField15 !== String.fromCharCode( 34 ) )
+
+{
+
+variables.outOfstr11 +=  variables.A_LoopField15;
+
+}
+
+}
+
+if ( variables.A_LoopField15 == String.fromCharCode( 34 ) )
+
+{
+
+variables.posStartToGetString++
+
+if ( variables.posStartToGetString == 1 )
+
+{
+
+variables.numGetStringTheSatring++
+
+variables.numOfStrings++
+
+}
+
+}
+
+}  // loop
+
+}
+
+else
+
+{
+
+variables.outOfstr11 =  variables.str;
+
+}
+
+//OutputDebug, |%outOfstr11%|
+
+variables.outOftranspileVariables =  ""
+
+variables.outOftranspileVariablesOut =  Trim( variables.outOfstr11 )
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 40 ) , " ( " )
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 41 ) , " ) " )
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 44 ) , " , " )
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 60 ) , " < " )
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 62 ) , " > " )
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 91 ) , " [ " )
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 93 ) , " ] " )
+
+variables.wasHereVarTryUhBug =  1;
+
+variables.characters16 = variables.outOftranspileVariablesOut.split(/[" "]/)
+variables.charLength16 = variables.characters16.length
+
+for (/* Loop parse */ variables.A_Index16 = 1; variables.A_Index16 <= variables.charLength16; variables.A_Index16++) {
+variables.A_LoopField16 = variables.characters16[variables.A_Index16 - 1]; // Using array notation to access characters
+
+variables.howManyCharIfVar =  0;
+
+variables.characters17 = variables.A_LoopField16.split("")
+variables.charLength17 = variables.characters17.length
+
+for (/* Loop parse */ variables.A_Index17 = 1; variables.A_Index17 <= variables.charLength17; variables.A_Index17++) {
+variables.A_LoopField17 = variables.characters17[variables.A_Index17 - 1]; // Using array notation to access characters
+
+if ( await varDetect ( variables.A_LoopField17 ) )
+
+{
+
+variables.howManyCharIfVar++
+
+}
+
+}
+
+variables.howManyCharIfVar2 =  0;
+
+variables.characters18 = variables.A_LoopField16.split("")
+variables.charLength18 = variables.characters18.length
+
+for (/* Loop parse */ variables.A_Index18 = 1; variables.A_Index18 <= variables.charLength18; variables.A_Index18++) {
+variables.A_LoopField18 = variables.characters18[variables.A_Index18 - 1]; // Using array notation to access characters
+
+variables.howManyCharIfVar2++
+
+}
+
+variables.istAvar =  0;
+
+if ( variables.howManyCharIfVar == variables.howManyCharIfVar2 )
+
+{
+
+variables.istAvar =  1;
+
+}
+
+if ( variables.istAvar == 1 )
+
+{
+
+variables.howManyCharIfVar =  0;
+
+variables.characters19 = variables.A_LoopField16.split("")
+variables.charLength19 = variables.characters19.length
+
+for (/* Loop parse */ variables.A_Index19 = 1; variables.A_Index19 <= variables.charLength19; variables.A_Index19++) {
+variables.A_LoopField19 = variables.characters19[variables.A_Index19 - 1]; // Using array notation to access characters
+
+if ( await isVarAnumKindaVar ( variables.A_LoopField19 ) )
+
+{
+
+variables.howManyCharIfVar++
+
+}
+
+}
+
+variables.howManyCharIfVar2 =  0;
+
+variables.characters20 = variables.A_LoopField16.split("")
+variables.charLength20 = variables.characters20.length
+
+for (/* Loop parse */ variables.A_Index20 = 1; variables.A_Index20 <= variables.charLength20; variables.A_Index20++) {
+variables.A_LoopField20 = variables.characters20[variables.A_Index20 - 1]; // Using array notation to access characters
+
+variables.howManyCharIfVar2++
+
+}
+
+variables.isNumKindaVar =  0;
+
+if ( variables.howManyCharIfVar2 == variables.howManyCharIfVar )
+
+{
+
+variables.isNumKindaVar =  1;
+
+}
+
+if ( variables.isNumKindaVar == 1 )
+
+{
+
+variables.outOftranspileVariables +=  variables.A_LoopField16 + BuildInVars("A_Space");
+
+}
+
+else
+
+{
+
+if ( await InStr ( variables.A_LoopField16, "%" ) )
+
+{
+
+variables.var1 =  await StrSplit ( variables.A_LoopField16, "%", 1 )
+
+variables.var2 =  await StrSplit ( variables.A_LoopField16, "%", 2 )
+
+variables.out1 =  "variables[f" + String.fromCharCode( 39 )  + variables.var1 + "{variables[" + String.fromCharCode( 34 )  + variables.var2 + String.fromCharCode( 34 )  + "]}" + String.fromCharCode( 39 )  + "]";
+
+variables.outOftranspileVariables +=  variables.out1 + BuildInVars("A_Space");
+
+}
+
+else
+
+{
+
+variables.out1 =  "variables[" + String.fromCharCode( 39 )  + variables.A_LoopField16 + String.fromCharCode( 39 )  + "]";
+
+variables.outOftranspileVariables +=  variables.out1 + BuildInVars("A_Space");
+
+}
+
+}
+
+}
+
+else
+
+{
+
+variables.outOftranspileVariables +=  variables.A_LoopField16 + BuildInVars("A_Space");
+
+}
+
+variables.wasHereVarTryUhBug =  0;
+
+}
+
+if ( variables.wasHereVarTryUhBug == 1 )
+
+{
+
+variables.outOftranspileVariables =  variables.outOftranspileVariablesOut;
+
+}
+
+//OutputDebug, |%outOftranspileVariables%|
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['True']", "True" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['False']", "False" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['true']", "True" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['false']", "False" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['if']", "if" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['else']", "else" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['and']", "and" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['or']", "or" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "!", " not " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " && ", " and " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " || ", " or " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " < = ", " <= " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " > = ", " >= " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " = ", " == " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " = ", " == " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "  not == ", " != " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " ( ", String.fromCharCode( 40 )  )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " ) ", String.fromCharCode( 41 )  )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " )", String.fromCharCode( 41 )  )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " < ", String.fromCharCode( 60 )  )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " > ", String.fromCharCode( 62 )  )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "  >= ", " >= " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "  <= ", " <= " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " . ", " + " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " ,  ", ", " )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " [ ", "[" )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " ] ", "]" )
+
+variables.characters21 = variables.functionNames.split(/["|"]/)
+variables.charLength21 = variables.characters21.length
+
+for (/* Loop parse */ variables.A_Index21 = 1; variables.A_Index21 <= variables.charLength21; variables.A_Index21++) {
+variables.A_LoopField21 = variables.characters21[variables.A_Index21 - 1]; // Using array notation to access characters
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['" + variables.A_LoopField21 + "']", variables.A_LoopField21 )
+
+}
+
+for (/* Normal Loop */ variables.A_Index22 = 1; variables.A_Index22 <= variables.numOfStrings; variables.A_Index22++)
+
+{
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.A_Index22, String.fromCharCode( 34 )  + variables["theString" + variables.A_Index22] + String.fromCharCode( 34 )  )
+
+}
+
+variables.weEverUseVars =  "# Define a dictionary to store dynamic variables\nvariables = {}\n\n";
+
+//OutputDebug, |%outOftranspileVariables%|
+
+variables.outOftranspileVariables =  Trim( variables.outOftranspileVariables )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, String.fromCharCode( 96 ) , String.fromCharCode( 92 )  )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, String.fromCharCode( 92 )  + String.fromCharCode( 92 ) , String.fromCharCode( 96 )  )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "cyiasasasasstAYtheummonlyemlpystringya-a-" + String.fromCharCode( 100 ) , String.fromCharCode( 34 )  + String.fromCharCode( 34 )  )
+
+return variables.outOftranspileVariables
+
+}
+
+async function transpileLowVariables(str)
+{
+
+variables.str = str
+
+Trim(variables.str)
+
+variables.numOfStrings =  0;
+
+if ( await InStr ( variables.str, String.fromCharCode( 37 ) ) )
+
+{
+
+variables.characters23 = variables.str.split(/["%"]/)
+variables.charLength23 = variables.characters23.length
+
+for (/* Loop parse */ variables.A_Index23 = 1; variables.A_Index23 <= variables.charLength23; variables.A_Index23++) {
+variables.A_LoopField23 = variables.characters23[variables.A_Index23 - 1]; // Using array notation to access characters
+
+variables["theString" + variables.A_Index23] =  ""
+
+}
+
+variables.posStartToGetString =  0;
+
+variables.numGetStringTheSatring =  0;
+
+variables.outOfstr11 =  ""
+
+variables.characters24 = variables.str.split("")
+variables.charLength24 = variables.characters24.length
+
+for (/* Loop parse */ variables.A_Index24 = 1; variables.A_Index24 <= variables.charLength24; variables.A_Index24++) {
+variables.A_LoopField24 = variables.characters24[variables.A_Index24 - 1]; // Using array notation to access characters
+
+if ( variables.posStartToGetString == 2 )
+
+{
+
+variables.posStartToGetString =  0;
+
+variables.ONCEposStartToGetString =  0;
+
+}
+
+if ( variables.posStartToGetString == 1  &&  variables.A_LoopField24 !== String.fromCharCode( 37 ) )
+
+{
+
+variables["theString" + variables.numGetStringTheSatring] +=  variables.A_LoopField24;
+
+variables.ONCEposStartToGetString++
+
+if ( variables.ONCEposStartToGetString == 1 )
+
+{
+
+variables.outOfstr11 +=  "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.numOfStrings;
+
+}
+
+}
+
+else
+
+{
+
+if ( variables.A_LoopField24 !== String.fromCharCode( 37 ) )
+
+{
+
+variables.outOfstr11 +=  variables.A_LoopField24;
+
+}
+
+}
+
+if ( variables.A_LoopField24 == String.fromCharCode( 37 ) )
+
+{
+
+variables.posStartToGetString++
+
+if ( variables.posStartToGetString == 1 )
+
+{
+
+variables.numGetStringTheSatring++
+
+variables.numOfStrings++
+
+}
+
+}
+
+}  // loop
+
+}
+
+else
+
+{
+
+variables.outOfstr11 =  variables.str;
+
+}
+
+//OutputDebug, |%outOfstr11%|
+
+variables.outOftranspileVariables =  ""
+
+variables.outOftranspileVariablesOut =  String.fromCharCode( 34 )  + Trim( variables.outOfstr11 )
+
+for (/* Normal Loop */ variables.A_Index25 = 1; variables.A_Index25 <= variables.numOfStrings; variables.A_Index25++)
+
+{
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.A_Index25, String.fromCharCode( 34 )  + " + variables[" + String.fromCharCode( 39 )  + variables["theString" + variables.A_Index25] + String.fromCharCode( 39 )  + "] + " + String.fromCharCode( 34 )  )
+
+}
+
+variables.outOftranspileVariablesOut +=  String.fromCharCode( 34 )
+
+variables.nothing =  ""
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 34 )  + String.fromCharCode( 34 )  + " + ", variables.nothing )
+
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, " + " + String.fromCharCode( 34 )  + String.fromCharCode( 34 ) , variables.nothing )
+
+variables.weEverUseVars =  "# Define a dictionary to store dynamic variables\nvariables = {}\n\n";
+
+return variables.outOftranspileVariablesOut
+
+}
+
+async function isVarAnumKindaVar(str)
+{
+
+variables.str = str
+
+variables.strLettersStart =  48;
+
+for (/* Normal Loop */ variables.A_Index26 = 1; variables.A_Index26 <= 10; variables.A_Index26++)
+
+{
+
+if ( await InStr ( variables.str, String.fromCharCode( variables.strLettersStart ) ) )
+
+{
+
+return true
+
+}
+
+variables.strLettersStart++
+
+}
+
+if ( await InStr ( variables.str, String.fromCharCode( 95 ) ) )
+
+{
+
+return true
+
+}
+
+return false
+
+}
+
+async function varDetect(str)
+{
+
+variables.str = str
+
+variables.strLettersStart =  97;
+
+for (/* Normal Loop */ variables.A_Index27 = 1; variables.A_Index27 <= 26; variables.A_Index27++)
+
+{
+
+if ( await InStr ( variables.str, String.fromCharCode( variables.strLettersStart ) ) )
+
+{
+
+return true
+
+}
+
+variables.strLettersStart++
+
+}
+
+variables.strLettersStart =  65;
+
+for (/* Normal Loop */ variables.A_Index28 = 1; variables.A_Index28 <= 26; variables.A_Index28++)
+
+{
+
+if ( await InStr ( variables.str, String.fromCharCode( variables.strLettersStart ) ) )
+
+{
+
+return true
+
+}
+
+variables.strLettersStart++
+
+}
+
+variables.strLettersStart =  48;
+
+for (/* Normal Loop */ variables.A_Index29 = 1; variables.A_Index29 <= 10; variables.A_Index29++)
+
+{
+
+if ( await InStr ( variables.str, String.fromCharCode( variables.strLettersStart ) ) )
+
+{
+
+return true
+
+}
+
+variables.strLettersStart++
+
+}
+
+if ( await InStr ( variables.str, String.fromCharCode( 95 ) ) )
+
+{
+
+return true
+
+}
+
+if ( await InStr ( variables.str, String.fromCharCode( 37 ) ) )
+
+{
+
+return true
+
+}
+
+return false
+
+}
+
+async function funcToChecIfVaidNameForFunc(str)
+{
+
+variables.str = str
+
+// Check if the string is empty
+
+if ( ! ( variables.str ) )
+
+{
+
+//MsgBox, Invalid function name: %str% (empty string)
+
+return false
+
+}
+
+// Check if the first character is a digit (invalid for function name)
+
+variables.firstChar =  SubStr( variables.str, 1, 1 )
+
+if ( variables.firstChar >= "0" && variables.firstChar <= "9" )
+
+{
+
+//   MsgBox, Invalid function name: %str% (starts with a digit)
+
+return false
+
+}
+
+// Initialize a flag for validation
+
+variables.isValid =  true;
+
+// Loop through each character in the string using Loop, Parse
+
+for (/* Loop parse */ variables.A_Index30 = 1; variables.A_Index30 <= variables.charLength30; variables.A_Index30++) {
+variables.A_LoopField30 = variables.characters30[variables.A_Index30 - 1]; // Using array notation to access characters
+
+// Check the current parsed item (character)
+
+variables.char =  variables.A_LoopField30;
+
+// Check if the character is a valid letter, digit, or underscore
+
+if (!( variables.char >= "A" && variables.char <= "Z" || variables.char >= "a" && variables.char <= "z" || variables.char >= "0" && variables.char <= "9" || variables.char == "_" ))
+
+{
+
+// MsgBox, Invalid character %char% in function name: %str%
+
+variables.isValid =  false;
+
+break
+
+}
+
+}
+
+// If passed all checks, return true (valid function name)
+
+return variables.isValid
+
+}
 
  }
 

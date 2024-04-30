@@ -552,7 +552,6 @@
         });
       }
 
-
       function isMobileDevice() {
         return /Mobi|Android/i.test(navigator.userAgent);
       }
@@ -646,14 +645,12 @@
           WidthOfBoxes: null,
         };
 
-        let funcs = {
-          indent_nested_curly_braces: indent_nested_curly_braces,
-          RepeatSpaces: RepeatSpaces,
-          fixVarNums: fixVarNums,
-          transpileVar: transpileVar,
-          ifOnlyNum: ifOnlyNum,
-          StrSplit: StrSplit,
-        };
+let funcs = {
+  transpileVariables: transpileVariables,
+  isVarAnumKindaVar: isVarAnumKindaVar,
+  varDetect: varDetect,
+  StrSplit: StrSplit,
+}
 
         let Gui1 = {};
         Gui1 = document.createElement("div");
