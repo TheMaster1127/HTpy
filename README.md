@@ -18,45 +18,77 @@ HTpy currently supports a subset of commands similar to AutoHotkey:
 - `Random`: Generate random numbers within specified ranges.
 - `if`, `else if`, `else`
 - `Loop, `
+- Functions
 
 Here's an example of HTpy syntax:
 
 ```ahk
-var1 := "Python is not so bad!"
-MsgBox, %var1%
-num := 42
-var%num% := num
-MsgBox, %var42%
+gameLogic(randomNumber, userNumber, numOfGuesses)
+{
+    g := str(numOfGuesses)
+    if (randomNumber = userNumber)
+    {
+        MsgBox, You win in %g% guesses
+        Sleep, 500
+        return "end"
+    }
+    else if (randomNumber < userNumber)
+    {
+        msgbox, Lower
+    }
+    else
+    {
+        msgbox, Higher
+    }
+    return "not over"
+}
 
-var23 := (55 + 3) - 1 . var%num%
-MsgBox, %var23%
-Sleep, 600
-var1 := true
-var2 := false
-MsgBox, %var1%
-MsgBox, %var2%
 
-somNumber := 55
-somNumber += somNumber
-somNumber += somNumber
-somNumber += somNumber
-somNumber += somNumber
-MsgBox, %somNumber%
+Game()
+{
+    msgbox, Welcome to Guess the Number
+    Sleep, 700
+    Random, ran, 1, 100
+    guesses := 0
+    Loop, 999999999999999999999
+    {
+        userNum := int(input("enter a number form 1 to 100: "))
+        guesses := guesses + 1
+        out := gameLogic(ran, userNum, guesses)
+        if (out = "end")
+        {
+            msgbox, Thanks for playing
+            msgbox, exiting in 4
+            Sleep, 1000
+            msgbox, exiting in 3
+            Sleep, 1000
+            MsgBox, exiting in 2
+            Sleep, 1000
+            msgbox, exiting in 1
+            Sleep, 1000
+            Msgbox, bye
+            Sleep, 250
+            break
+        }
+    }
+}
 
-Random, someRandomNums, 1, 20
-MsgBox, %someRandomNums%
-Random, someRandomNums, 1, 20
-MsgBox, %someRandomNums%
-Random, someRandomNums, 1, 20
-MsgBox, %someRandomNums%
-Random, someRandomNums, 1, 20
-MsgBox, %someRandomNums%
-Random, someRandomNums, 1, 20
-MsgBox, %someRandomNums%
-Random, someRandomNums, 1, 20
-MsgBox, %someRandomNums%
-Random, someRandomNums, 1, 20
-MsgBox, %someRandomNums%
+
+msgbox, hello
+Sleep, 1000
+msgbox, wanna play a game
+answerToWannaPlay := input("y/n`n")
+
+
+if (answerToWannaPlay = "y")
+{
+    Game()
+}
+else 
+{
+    msgbox, oh ok bye
+    Sleep, 1000
+}
 ```
 
 -----> in python
@@ -67,43 +99,56 @@ HTpy will automatically import the python library we need.
 ```py
 import time
 import random
-
 # Define a dictionary to store dynamic variables
 variables = {}
 
-variables['var1'] = "Python is not so bad!"
-print(variables['var1'])
-variables['num'] = 42
-variables[f'var{variables["num"]}'] = variables['num']
-print(variables['var42'])
+def gameLogic(randomNumber, userNumber, numOfGuesses):
+    variables['randomNumber'] = randomNumber
+    variables['userNumber'] = userNumber
+    variables['numOfGuesses'] = numOfGuesses
+    
+    variables['g'] = str(variables['numOfGuesses'])
+    if (variables['randomNumber'] == variables['userNumber']):
+        print("You win in " + variables['g'] + " guesses")
+        time.sleep(500 / 1000)
+        return "end"
+    elif (variables['randomNumber'] < variables['userNumber']):
+        print("Lower")
+    else:
+        print("Higher")
+    return "not over"
 
-variables['var23'] =  ( 55 + 3 )  - 1 + variables[f'var{variables["num"]}']
-print(variables['var23'])
-time.sleep(600 / 1000)
-variables['var1'] = True
-variables['var2'] = False
-print(variables['var1'])
-print(variables['var2'])
+def Game():
+    print("Welcome to Guess the Number")
+    time.sleep(700 / 1000)
+    variables['ran'] = random.randint(1, 100)
+    variables['guesses'] = 0
+    for variables['A_Index'] in range(1, 999999999999999999999 + 1):
+        variables['userNum'] = int(input("enter a number form 1 to 100: "))
+        variables['guesses'] = variables['guesses'] + 1
+        variables['out'] = gameLogic(variables['ran'], variables['userNum'], variables['guesses'])
+        if (variables['out'] == "end"):
+            print("Thanks for playing")
+            print("exiting in 4")
+            time.sleep(1000 / 1000)
+            print("exiting in 3")
+            time.sleep(1000 / 1000)
+            print("exiting in 2")
+            time.sleep(1000 / 1000)
+            print("exiting in 1")
+            time.sleep(1000 / 1000)
+            print("bye")
+            time.sleep(250 / 1000)
+            break
 
-variables['somNumber'] = 55
-variables['somNumber'] += variables['somNumber']
-variables['somNumber'] += variables['somNumber']
-variables['somNumber'] += variables['somNumber']
-variables['somNumber'] += variables['somNumber']
-print(variables['somNumber'])
+print("hello")
+time.sleep(1000 / 1000)
+print("wanna play a game")
+variables['answerToWannaPlay'] = input("y/n\n")
 
-variables['someRandomNums'] = random.randint(1, 20)
-print(variables['someRandomNums'])
-variables['someRandomNums'] = random.randint(1, 20)
-print(variables['someRandomNums'])
-variables['someRandomNums'] = random.randint(1, 20)
-print(variables['someRandomNums'])
-variables['someRandomNums'] = random.randint(1, 20)
-print(variables['someRandomNums'])
-variables['someRandomNums'] = random.randint(1, 20)
-print(variables['someRandomNums'])
-variables['someRandomNums'] = random.randint(1, 20)
-print(variables['someRandomNums'])
-variables['someRandomNums'] = random.randint(1, 20)
-print(variables['someRandomNums'])
+if (variables['answerToWannaPlay'] == "y"):
+    Game()
+else:
+    print("oh ok bye")
+    time.sleep(1000 / 1000)
 ```
