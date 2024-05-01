@@ -1637,6 +1637,22 @@ else
 
 {
 
+if ( ! ( await InStr ( variables.line2, String.fromCharCode( 34 ) ) ) )
+
+{
+
+variables.line2 =  String.fromCharCode( 34 )  + variables.line2 + String.fromCharCode( 34 )
+
+}
+
+if ( ! ( await InStr ( variables.line3, String.fromCharCode( 34 ) ) ) )
+
+{
+
+variables.line3 =  String.fromCharCode( 34 )  + variables.line3 + String.fromCharCode( 34 )
+
+}
+
 if ( variables.line2 == ""  &&  variables.line3 == "" )
 
 {
@@ -1660,22 +1676,6 @@ if ( variables.line2 !== ""  &&  variables.line3 !== "" )
 {
 
 variables.itemsOut =  "items = LoopParseFunc(" + variables.line1 + ", " + variables.line2 + ", " + variables.line3 + ")";
-
-}
-
-if ( ! ( await InStr ( variables.line2, String.fromCharCode( 34 ) ) ) )
-
-{
-
-variables.line2 =  String.fromCharCode( 34 )  + variables.line2 + String.fromCharCode( 34 )
-
-}
-
-if ( ! ( await InStr ( variables.line3, String.fromCharCode( 34 ) ) ) )
-
-{
-
-variables.line3 =  String.fromCharCode( 34 )  + variables.line3 + String.fromCharCode( 34 )
 
 }
 

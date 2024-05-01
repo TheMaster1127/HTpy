@@ -518,6 +518,15 @@ itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ")"
 else
 {
 
+if (!(InStr(line2, Chr(34))))
+{
+line2 := Chr(34) . line2 . Chr(34)
+}
+if (!(InStr(line3, Chr(34))))
+{
+line3 := Chr(34) . line3 . Chr(34)
+}
+
 if (line2 = "") && (line3 = "")
 {
 ; nothing so only each char
@@ -534,14 +543,7 @@ if (line2 != "") && (line3 != "")
 itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ", " . line3 . ")"
 }
 
-if (!(InStr(line2, Chr(34))))
-{
-line2 := Chr(34) . line2 . Chr(34)
-}
-if (!(InStr(line3, Chr(34))))
-{
-line3 := Chr(34) . line3 . Chr(34)
-}
+
 
 }
 
