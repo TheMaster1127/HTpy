@@ -501,6 +501,31 @@
         }
       }
 
+      // Function to simulate AutoHotkey's RegExReplace in JavaScript
+      function RegExReplace(inputStr, regexPattern, replacement) {
+          // Create a regular expression object using the provided pattern
+          const regex = new RegExp(regexPattern, 'g'); // 'g' flag for global match
+
+          // Use the replace() method to perform the regex replacement
+          const resultStr = inputStr.replace(regex, replacement);
+
+          // Return the modified string
+          return resultStr;
+      }
+
+
+      function StrSplit(inputStr, delimiter, num) {
+    // Split the input string based on the delimiter
+    const parts = inputStr.split(delimiter);
+
+    // Return the part specified by the num parameter (1-based index)
+    if (num > 0 && num <= parts.length) {
+        return parts[num - 1]; // Return the specified part (0-based index)
+    } else {
+        return ''; // Return an empty string if num is out of range
+    }
+}
+
    function MakeHotKey(hotkey, callback) {
         document.addEventListener("keydown", function (event) {
           const keys = hotkey.split("+").map((key) => key.trim().toLowerCase());
@@ -664,6 +689,32 @@ let funcs = {
         });
 
         // HTpy
+        variables.funcs_func = "LoopParseFunc|new"
+
+variables.func_LoopParseFunc_func = `
+
+def LoopParseFunc(var, delimiter1="", delimiter2=""):
+    import re
+    if not delimiter1 and not delimiter2:
+        # If no delimiters are provided, return a list of characters
+        items = list(var)
+    else:
+        # Construct the regular expression pattern for splitting the string
+        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'
+
+        # Split the string using the constructed pattern
+        items = re.split(pattern, var)
+
+    return items
+
+`;
+
+variables.func_new_func = `
+
+new
+
+`;
+
 
         Gui1.style.position = "absolute";
         Gui1.style.width = window.innerWidth + "px"; // Set the width

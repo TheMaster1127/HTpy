@@ -109,12 +109,8 @@ Sleep, 111
 gosub, Button
 Return
 
-
-
+; the compiler
 Button:
-
-
-
 
 pyCode := ""
 out := ""
@@ -234,6 +230,9 @@ onceImportTime := 0
 weUseRandomAtLeastOnce := 0
 weEverUseVars := ""
 usedLib := ""
+AindexcharLength := 1
+pycodeLoopfixa := ""
+
 Loop, Parse, HTpyCode, `n, `r
 {
 lineDone := 0
@@ -299,7 +298,7 @@ usedLib .= "import time`n"
 pyCode .= out . "`n"
 
 }
-else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = StrLower("Loop, "))
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = StrLower("Loop,s"))
 {
 
 var1 := A_LoopField
@@ -418,6 +417,140 @@ out := "return " . var12312
 lineDone := 1
 pyCode .= out . "`n"
 
+}
+else if (StrLower(A_LoopField) = "loop")
+{
+; infinity loops
+
+lineDone := 1
+var1 := "for A" . Chr(95) . "Index" . AindexcharLength . ", value in enumerate(iter(int, 1), start=1):"
+
+lineDone := 1
+pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
+pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
+AindexcharLength++
+pyCode .= pycodeLoopfixa1 . "`n" . var1 . "`n"
+
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = "loop, ") && (SubStr(Trim(StrLower(A_LoopField)), 1, 8) != "loop, % ") && (SubStr(Trim(StrLower(A_LoopField)), 1, 7) != "loop % ") && (SubStr(Trim(StrLower(A_LoopField)), 1, 11) != StrLower("Loop, Parse"))
+{
+
+
+
+str := A_LoopField
+;MsgBox, % str
+
+
+StringTrimLeft, out2, str, 6
+
+;MsgBox % out2
+
+;MsgBox, % out2
+out2 := Trim(out2)
+
+
+myVar := out2
+lineYGI := transpileVariables(myVar, functionNames)
+line := lineYGI
+
+;MsgBox, % line
+var1 := "for variables['A" . Chr(95) . "Index" . AindexcharLength . "'] in range(1, " . line . " + 1):"
+
+pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
+pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
+AindexcharLength++
+lineDone := 1
+pyCode .= pycodeLoopfixa1 . "`n" . var1 . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = "loop, % ")
+{
+str := A_LoopField
+;MsgBox, % str
+
+
+StringTrimLeft, out2, str, 8
+
+;MsgBox % out2
+
+;MsgBox, % out2
+out2 := Trim(out2)
+
+
+myVar := out2
+lineYGI := transpileVariables(myVar, functionNames)
+line := lineYGI
+
+;MsgBox, % line
+var1 := "for variables['A" . Chr(95) . "Index" . AindexcharLength . "'] in range(1, " . line . " + 1):"
+
+pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
+pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
+AindexcharLength++
+lineDone := 1
+pyCode .= pycodeLoopfixa1 . "`n" . var1 . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 13) = StrLower("Loop, Parse, "))
+{
+
+var1 := A_LoopField
+lineDone := 1
+var1 := Trim(var1)
+StringTrimLeft, var1, var1, 13
+
+line1 := Trim(StrSplit(var1, ",", 1))
+
+line1 := transpileVariables(line1, functionNames)
+line2 := ""
+line3 := ""
+itemsOut := ""
+line2 := Trim(StrSplit(var1, ",", 2))
+line3 := Trim(StrSplit(var1, ",", 3))
+
+line2 := StrReplace(line2, Chr(96), Chr(92))
+line3 := StrReplace(line3, Chr(96), Chr(92))
+
+
+if (InStr(var1, Chr(96) . ","))
+{
+line2 := Chr(34) . "," . Chr(34)
+itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ")"
+}
+else
+{
+
+if (line2 = "") && (line3 = "")
+{
+; nothing so only each char
+itemsOut := "items = LoopParseFunc(" . line1 . ")"
+}
+
+if (line2 != "") && (line3 = "")
+{
+itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ")"
+}
+
+if (line2 != "") && (line3 != "")
+{
+itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ", " . line3 . ")"
+}
+
+if (!(InStr(line2, Chr(34))))
+{
+line2 := Chr(34) . line2 . Chr(34)
+}
+if (!(InStr(line3, Chr(34))))
+{
+line3 := Chr(34) . line3 . Chr(34)
+}
+
+}
+
+
+var1out := itemsOut . "`n" . "for variables['A" . Chr(95) . "Index" . AindexcharLength . "'], variables['A" . Chr(95) . "LoopField" . AindexcharLength . "'] in enumerate(items, start=1):"
+pycodeLoopfixa .= "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
+pycodeLoopfixa1 := "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
+AindexcharLength++
+pyCode .= pycodeLoopfixa1 . "`n" . var1out . "`n"
 }
 else if (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss1)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 3) = StrLower(CheckIFandElsesss2)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 5) = StrLower(CheckIFandElsesss3)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss4)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss5)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower(CheckIFandElsesss6)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = StrLower(CheckIFandElsesss7)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss8))
 {
@@ -570,7 +703,493 @@ skipLeftCuleyForFuncPLS := 0
 
 } ; end of the parsing loop
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+StringTrimRight, pycodeLoopfixa, pycodeLoopfixa, 1
+
+OutputDebug, |%pycodeLoopfixa%|
+AIndexLoopCurlyFix := 1
+Loop, Parse, pycodeLoopfixa, `n, `r
+{
+
+
+
+str123 := A_LoopField
+fixLoopLokingFor := A_LoopField
+fixLoopLokingForfound := 1
+out1 := StrSplit(str123 ,"|" , 1)
+out2 := StrSplit(str123 ,"|" , 3)
+OutputDebug, |%out1%|
+OutputDebug, |%out2%|
+
+
+
+wasAtanyIfsElseAddAIndexLoopCurlyFix := 0
+
+
+if (out1 = "nl")
+{
+
+
+inTarget := 0
+insideBracket := 0
+netsedCurly := 0
+eldLoopNestedBADlol := 0
+readyToEnd := 0
+endBracketDOntPutThere := 0
+dontSaveStr := 0
+weAreDoneHereCurly := 0
+DeleayOneCuzOfLoopParse := 0
+fixLoopLokingForNum := 0
+insdeAnestedLoopBAD := 0
+foundTheTopLoop := 0
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% := ""
+Loop, Parse, pyCode, `n, `r
+{
+;MsgBox, dsfgsdefgesrdg1
+;MsgBox, |%A_LoopField%|`n|%fixLoopLokingFor%|
+
+
+if (InStr(A_LoopField, fixLoopLokingFor)) && (insdeAnestedLoopBAD != 1)
+{
+fixLoopLokingForNum := 1
+
+;MsgBox, do we came here 1
+}
+
+if (InStr(A_LoopField, "for ")) && (weAreDoneHereCurly != 1) && (insdeAnestedLoopBAD != 1) && (fixLoopLokingForNum = 1)
+{
+
+s := StrSplit(A_LoopField ,"A" . Chr(95) . "Index", 2)
+out1z := s
+
+s := StrSplit(out1z, " ", 1)
+out1z := Trim(s)
+
+;MsgBox, % out1z
+
+;MsgBox, do we came here 2
+fixLoopLokingForNum := 0
+foundTheTopLoop++
+  inTarget := 1
+	;MsgBox, % A_LoopField
+	dontSaveStr := 1
+
+	ALoopField := A_LoopField
+
+	;ALoopField := StrReplace(ALoopField, "for (/* Loop parse */", "for (/* Loop parse */ /* From AHK */")
+DeleayOneCuzOfLoopParse := 1
+	out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= ALoopField . "`n"
+}
+
+if (inTarget = 1) && (InStr(A_LoopField, Chr(123))) && (insdeAnestedLoopBAD != 1)
+{
+insideBracket := 1
+}
+
+if (insideBracket = 1) && (InStr(A_LoopField, Chr(123))) && (insdeAnestedLoopBAD != 1)
+{
+netsedCurly++
+}
+
+if (insideBracket = 1) && (InStr(A_LoopField, Chr(125))) && (insdeAnestedLoopBAD != 1)
+{
+netsedCurly--
+readyToEnd := 1
+}
+
+if (InStr(A_LoopField, "for ")) && (insdeAnestedLoopBAD != 1) && (foundTheTopLoop >= 2)
+{
+insdeAnestedLoopBAD := 1
+insideBracket1 := 0
+netsedCurly1 := 0
+}
+if (inTarget = 1)
+{
+foundTheTopLoop++
+}
+if (insdeAnestedLoopBAD = 1)
+{
+
+
+
+if (InStr(A_LoopField, Chr(123)))
+{
+insideBracket1 := 1
+}
+
+if (insideBracket1 = 1) && (InStr(A_LoopField, Chr(123)))
+{
+netsedCurly1++
+}
+
+if (insideBracket1 = 1) && (InStr(A_LoopField, Chr(125)))
+{
+netsedCurly1--
+readyToEnd1 := 1
+}
+
+
+if (InStr(A_LoopField, Chr(125))) && (readyToEnd1 = 1) && (netsedCurly1 = 0) && (insideBracket = 1)
+{
+;MsgBox, % A_LoopField
+eldLoopNestedBADlol := 1
+;out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+}
+
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+
+}
+
+
+if (inTarget = 1) && (dontSaveStr != 1) && (fixLoopLokingForNum != 1) && (insdeAnestedLoopBAD != 1)
+{
+
+ALoopField := A_LoopField
+
+
+
+
+; Replace "A_Index" with or without a following digit with "A_Index" + out1z
+ALoopField := RegExReplace(ALoopField, "A" . Chr(95) . "Index(?:\\d+)?", "A" . Chr(95) . "Index" . out1z)
+
+
+
+;ALoopField := StrReplace(ALoopField, "A_LoopField", "A_LoopField" . AIndexLoopCurlyFix)
+
+
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= ALoopField . "`n"
+
+}
+
+
+if (inTarget = 1) && (InStr(A_LoopField, Chr(125))) && (readyToEnd = 1) && (netsedCurly = 0) && (weAreDoneHereCurly = 0) && (dontSaveStr != 1) && (insdeAnestedLoopBAD != 1)
+{
+;MsgBox, % A_LoopField
+weAreDoneHereCurly := 1
+inTarget := 0
+endBracketDOntPutThere := 1
+;out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+}
+dontSaveStr := 0
+
+if (inTarget != 1) && (endBracketDOntPutThere != 1) && (insdeAnestedLoopBAD != 1)
+{
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+
+}
+endBracketDOntPutThere := 0
+
+if (eldLoopNestedBADlol = 1)
+{
+ insdeAnestedLoopBAD := 0
+}
+
+
+}
+strstysrstsytTRIMHELP := out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+StringTrimRight, strstysrstsytTRIMHELP, strstysrstsytTRIMHELP, 1
+;MsgBox, % out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+
+
+pyCode := strstysrstsytTRIMHELP
+
+;MsgBox, % jsCode
+wasAtanyIfsElseAddAIndexLoopCurlyFix := 1
+}
+else
+{
+
+
+inTarget := 0
+insideBracket := 0
+netsedCurly := 0
+eldLoopNestedBADlol := 0
+readyToEnd := 0
+endBracketDOntPutThere := 0
+dontSaveStr := 0
+weAreDoneHereCurly := 0
+DeleayOneCuzOfLoopParse := 0
+fixLoopLokingForNum := 0
+insdeAnestedLoopBAD := 0
+foundTheTopLoop := 0
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% := ""
+Loop, Parse, pyCode, `n, `r
+{
+
+if (InStr(A_LoopField , fixLoopLokingFor)) && (insdeAnestedLoopBAD != 1)
+{
+fixLoopLokingForNum := 1
+;MsgBox, do we came here 3
+}
+
+if (InStr(A_LoopField , "for ")) && (weAreDoneHereCurly != 1) && (insdeAnestedLoopBAD != 1) && (fixLoopLokingForNum = 1)
+{
+
+
+s := StrSplit(A_LoopField ,"A" . Chr(95) . "Index", 2)
+out1z := s
+
+s := StrSplit(out1z, " ", 1)
+out1z := Trim(s)
+
+;MsgBox, % out1z
+
+fixLoopLokingForNum := 0
+;MsgBox, do we came here 4
+foundTheTopLoop++
+  inTarget := 1
+	;MsgBox, % A_LoopField
+	dontSaveStr := 1
+
+	ALoopField := A_LoopField
+
+	;ALoopField := StrReplace(ALoopField, "for (/* Loop parse */", "for (/* Loop parse */ /* From AHK */")
+DeleayOneCuzOfLoopParse := 1
+	out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= ALoopField . "`n"
+}
+
+if (inTarget = 1) && (InStr(A_LoopField, Chr(123))) && (insdeAnestedLoopBAD != 1)
+{
+insideBracket := 1
+}
+
+if (insideBracket = 1) && (InStr(A_LoopField, Chr(123))) && (insdeAnestedLoopBAD != 1)
+{
+netsedCurly++
+}
+
+if (insideBracket = 1) && (InStr(A_LoopField, Chr(125))) && (insdeAnestedLoopBAD != 1)
+{
+netsedCurly--
+readyToEnd := 1
+}
+
+if (InStr(A_LoopField, "for ")) && (insdeAnestedLoopBAD != 1) && (foundTheTopLoop >= 2)
+{
+insdeAnestedLoopBAD := 1
+insideBracket1 := 0
+netsedCurly1 := 0
+}
+if (inTarget = 1)
+{
+foundTheTopLoop++
+}
+if (insdeAnestedLoopBAD = 1)
+{
+
+
+
+if (InStr(A_LoopField, Chr(123)))
+{
+insideBracket1 := 1
+}
+
+if (insideBracket1 = 1) && (InStr(A_LoopField, Chr(123)))
+{
+netsedCurly1++
+}
+
+if (insideBracket1 = 1) && (InStr(A_LoopField, Chr(125)))
+{
+netsedCurly1--
+readyToEnd1 := 1
+}
+
+
+if (InStr(A_LoopField, Chr(125))) && (readyToEnd1 = 1) && (netsedCurly1 = 0) && (insideBracket = 1)
+{
+;MsgBox, % A_LoopField
+eldLoopNestedBADlol := 1
+;out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+}
+
+
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+
+}
+
+
+if (inTarget = 1) && (dontSaveStr != 1) && (fixLoopLokingForNum != 1) && (insdeAnestedLoopBAD != 1)
+{
+
+ALoopField := A_LoopField
+
+
+; Replace "A_Index" with or without a following digit with "A_Index" + out1z
+ALoopField := RegExReplace(ALoopField, "A" . Chr(95) . "Index(?:\\d+)?", "A" . Chr(95) . "Index" . out1z)
+; Replace "A_Index" with or without a following digit with "A_Index" + out1z
+ALoopField := RegExReplace(ALoopField, "A" . Chr(95) . "LoopField(?:\\d+)?", "A" . Chr(95) . "LoopField" . out1z)
+
+
+
+
+
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= ALoopField . "`n"
+
+}
+
+
+if (inTarget = 1) && (InStr(A_LoopField, Chr(125))) && (readyToEnd = 1) && (netsedCurly = 0) && (weAreDoneHereCurly = 0) && (dontSaveStr != 1) && (insdeAnestedLoopBAD != 1)
+{
+;MsgBox, % A_LoopField
+weAreDoneHereCurly := 1
+inTarget := 0
+endBracketDOntPutThere := 1
+;out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+}
+dontSaveStr := 0
+
+if (inTarget != 1) && (endBracketDOntPutThere != 1) && (insdeAnestedLoopBAD != 1)
+{
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+
+}
+endBracketDOntPutThere := 0
+
+if (eldLoopNestedBADlol = 1)
+{
+ insdeAnestedLoopBAD := 0
+}
+
+
+}
+
+strstysrstsytTRIMHELP := out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+StringTrimRight, strstysrstsytTRIMHELP, strstysrstsytTRIMHELP, 1
+;MsgBox, % out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+
+
+pyCode := strstysrstsytTRIMHELP
+
+;MsgBox, % jsCode
+wasAtanyIfsElseAddAIndexLoopCurlyFix := 1
+}
+
+if (wasAtanyIfsElseAddAIndexLoopCurlyFix = 1)
+{
+AIndexLoopCurlyFix++
+wasAtanyIfsElseAddAIndexLoopCurlyFix := 0
+}
+}
+
+
+out4758686d86dgt8r754444444 := ""
+hold := 0
+Loop, Parse, pyCode, `n, `r
+{
+ignore := 0
+if (InStr(A_LoopField, "for "))
+{
+if (hold = 1) && (holdText = A_LoopField)
+{
+ignore := 1
+}
+else
+{
+holdText := A_LoopField
+hold := 1
+}
+}
+
+if (!(ignore))
+{
+out4758686d86dgt8r754444444 .= A_LoopField . "`n"
+}
+}
+
+StringTrimRight, out4758686d86dgt8r754444444, out4758686d86dgt8r754444444, 1
+pyCode := out4758686d86dgt8r754444444
+
+
+
+
+
+
+
+
 pyCode := indent_nested_curly_braces(pyCode)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 pyCodeOut1234565432 := ""
@@ -583,7 +1202,19 @@ out := A_LoopField
 
 StringTrimLeft, out, out, 1
 
+if (InStr(out, "variables['A" . Chr(95) . "Index")) or (InStr(out, "variables['A" . Chr(95) . "LoopField"))
+{
+out := StrReplace(out, ",']", "']")
+out := StrReplace(out, "'],']", "']")
+out := StrReplace(out, "']']", "']")
+}
+
+if (!(InStr(out, "|itsaersdtgtgfergsdgfsegdfsedAA|")))
+{
 pyCodeOut1234565432 .= out . "`n"
+}
+
+
 }
 
 }
@@ -593,6 +1224,18 @@ pyCodeFinal := pyCode
 ;~ FileRead, upCode, upCode.txt
 ;~ FileRead, downCode, downCode.txt
 ;~ pyCode := upCode . "`n" . usedLib . "`n" . weEverUseVars . "`n" . pyCode . "`n" . downCode
+
+allFuncsHere := ""
+Loop, Parse, funcs_func, "|"
+{
+if (InStr(pyCodeFinal, A_LoopField . Chr(40)))
+{
+hererererehre := A_LoopField . "_func"
+allFuncsHere .= func_%hererererehre%
+}
+}
+
+pyCodeFinal := allFuncsHere . "`n" . pyCodeFinal . "`n"
 
 if (usedLib = "")
 {
@@ -612,6 +1255,7 @@ else
 {
 pyCode := usedLib . "`n" . weEverUseVars . "`n" . pyCodeFinal
 }
+
 
 
 
@@ -736,7 +1380,7 @@ return false
 }
 
 
-StrSplit(str, delimiter, num)
+StrSplit123(str, delimiter, num)
 {
 
 if (num = 1)
