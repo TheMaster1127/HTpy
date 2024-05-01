@@ -164,7 +164,7 @@ CheckIFandElsesss7 := "else if !("
 CheckIFandElsesss8 := "else if!("
 CheckIFandElsesssNum := 0
 
-functionNames := "input|int|chr|str"
+functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr"
 
 willNextLineBeCurlyBracee := 0
 theFuncWeFound := ""
@@ -251,7 +251,7 @@ out := "print(" . var2 . ")"
 lineDone := 1
 pyCode .= out . "`n"
 }
-else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("msgbox, ")) && (lineDone = 0)
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("msgbox, ")) && (SubStr(Trim(StrLower(A_LoopField)), 1, 10) != StrLower("msgbox, % "))
 {
 StringTrimLeft, var1, A_LoopField, 8
 
@@ -297,22 +297,6 @@ usedLib .= "import time`n"
 }
 pyCode .= out . "`n"
 
-}
-else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = StrLower("Loop,s"))
-{
-
-var1 := A_LoopField
-StringTrimLeft, var1, var1, 6
-var1 := Trim(transpileVariables(var1, functionNames))
-
-
-
-out := "for variables['A" . Chr(95) . "Index'] in range(1, " . var1 . " + 1):"
-
-
-
-lineDone := 1
-pyCode .= out . "`n"
 }
 else if (ifTheLineIsAFuncDec(Trim(A_LoopField), theFuncWeFound))
 {
@@ -554,6 +538,36 @@ pycodeLoopfixa1 := "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
 AindexcharLength++
 pyCode .= pycodeLoopfixa1 . "`n" . var1out . "`n"
 }
+else if (SubStr(A_LoopField, -1) = "++")
+{
+str123 := Trim(A_LoopField)
+StringTrimRight, str123, str123, 2
+
+str123 := Trim(transpileVariables(str123, functionNames))
+
+out := str123 . " += 1"
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(A_LoopField, -1) = "--")
+{
+str123 := Trim(A_LoopField)
+StringTrimRight, str123, str123, 2
+
+str123 := Trim(transpileVariables(str123, functionNames))
+
+out := str123 . " -= 1"
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 17) = StrLower("StringTrimRight, "))
+{
+
+StringTrimRight, str123, A_LoopField, 1
+
+lineDone := 1
+pyCode .= out . "`n"
+}
 else if (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss1)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 3) = StrLower(CheckIFandElsesss2)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 5) = StrLower(CheckIFandElsesss3)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss4)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss5)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower(CheckIFandElsesss6)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = StrLower(CheckIFandElsesss7)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss8))
 {
 
@@ -758,7 +772,7 @@ skipLeftCuleyForFuncPLS := 0
 
 StringTrimRight, pycodeLoopfixa, pycodeLoopfixa, 1
 
-OutputDebug, |%pycodeLoopfixa%|
+;OutputDebug, |%pycodeLoopfixa%|
 AIndexLoopCurlyFix := 1
 Loop, Parse, pycodeLoopfixa, `n, `r
 {
@@ -770,8 +784,8 @@ fixLoopLokingFor := A_LoopField
 fixLoopLokingForfound := 1
 out1 := StrSplit(str123 ,"|" , 1)
 out2 := StrSplit(str123 ,"|" , 3)
-OutputDebug, |%out1%|
-OutputDebug, |%out2%|
+;OutputDebug, |%out1%|
+;OutputDebug, |%out2%|
 
 
 
@@ -1382,72 +1396,6 @@ return false
 }
 
 
-StrSplit123(str, delimiter, num)
-{
-
-if (num = 1)
-{
-out := ""
-Loop, Parse, str
-{
-
-out .= A_LoopField
-
-if (A_LoopField = delimiter)
-{
-StringTrimRight, out, out, 1
-break
-}
-
-}
-return out
-}
-else
-{
-
-str := delimiter . str
-
-posNum := 0
-allowPos := 0
-out := ""
-Loop, Parse, str
-{
-
-if (allowPos = 1)
-{
-out .= A_LoopField
-}
-
-if (A_LoopField = delimiter) && (allowPos = 1)
-{
-
-if (pos = num)
-{
-StringTrimRight, out, out, 1
-break
-}
-else
-{
-allowPos := 0
-out := ""
-}
-
-}
-if (A_LoopField = delimiter) && (allowPos = 0)
-{
-allowPos := 1
-posNum++
-pos := posNum
-}
-
-
-} ; end of Loop
-return out
-}
-
-
-} ; end of func
-
 
 
 transpileVariables(str, functionNames)
@@ -1687,6 +1635,9 @@ transpileLowVariables(str)
 {
 Trim(str)
 numOfStrings := 0
+
+str := StrReplace(str, Chr(37) . Chr(37), "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100))
+
 if (InStr(str, Chr(37)))
 {
 
@@ -1760,6 +1711,8 @@ outOftranspileVariablesOut .= Chr(34)
 nothing := ""
 outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(34) . Chr(34) . " + ", nothing)
 outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, " + " . Chr(34) . Chr(34), nothing)
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100), Chr(37) . Chr(37))
 
 weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n`n"
 

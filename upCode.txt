@@ -689,7 +689,6 @@ let funcs = {
         });
 
         // HTpy
-        variables.funcs_func = "LoopParseFunc|new"
 
 variables.func_LoopParseFunc_func = `
 
@@ -709,11 +708,147 @@ def LoopParseFunc(var, delimiter1="", delimiter2=""):
 
 `;
 
-variables.func_new_func = `
+variables.func_InStr_func = `
 
-new
+def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
+    if Haystack is None or Needle is None:
+        return False
+
+    StartingPos = max(StartingPos, 1)
+
+    if not CaseSensitive:
+        Haystack = Haystack.lower()
+        Needle = Needle.lower()
+
+    pos = -1
+    count = 0
+    for i in range(StartingPos - 1, len(Haystack)):
+        if Haystack[i:i + len(Needle)] == Needle:
+            count += 1
+            if count == Occurrence:
+                pos = i + 1
+                break
+
+    return pos > 0
 
 `;
+
+variables.func_SubStr_func = `
+
+def SubStr(str, startPos, length=None):
+    if str is None or str == "":
+        return ""
+
+    if length is None or length == "":
+        length = len(str) - startPos + 1
+
+    if startPos < 1:
+        startPos = len(str) + startPos
+
+    return str[startPos - 1:startPos - 1 + length]
+
+`;
+
+variables.func_Trim_func = `
+
+def Trim(inputString):
+    if inputString is None:
+        return ""
+
+    return inputString.strip()
+
+`;
+
+variables.func_StrReplace_func = `
+  
+def StrReplace(originalString, find, replaceWith):
+    import re
+    if not isinstance(originalString, str):
+        return originalString
+
+    escapedFind = re.escape(find)
+    replaceWith = str(replaceWith)  # Ensure replaceWith is treated as a string
+    return re.sub(escapedFind, replaceWith, originalString)
+
+`;
+
+variables.func_StringTrimLeft_func = `
+
+def StringTrimLeft(input, numChars):
+    if input and len(input) >= numChars:
+        return input[numChars:]
+    else:
+        return input
+
+`;
+
+variables.func_StringTrimRight_func = `
+
+def StringTrimRight(input, numChars):
+    if input and len(input) >= numChars:
+        return input[:-numChars]
+    else:
+        return input
+
+`;
+
+variables.func_StrLower_func = `
+
+def StrLower(string):
+    return string.lower()
+
+`;
+
+variables.func_RegExReplace_func = `
+
+def RegExReplace(inputStr, regexPattern, replacement):
+    # Create a regular expression object using the provided pattern
+    import re
+    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching
+
+    # Use the sub() method to perform the regex replacement
+    resultStr = regex.sub(replacement, inputStr)
+
+    # Return the modified string
+    return resultStr
+
+`;
+
+variables.func_StrSplit_func = `
+
+def StrSplit(inputStr, delimiter, num):
+    # Split the input string based on the delimiter
+    parts = inputStr.split(delimiter)
+
+    # Return the part specified by the num parameter (1-based index)
+    if 0 < num <= len(parts):
+        return parts[num - 1]  # Return the specified part (0-based index)
+    else:
+        return ''  # Return an empty string if num is out of range
+
+`;
+
+
+variables.func_Chr_func = `
+
+def Chr(number):
+    # Check if the number is None
+    if number is None:
+        # Return an empty string
+        return ""
+
+    # Check if the number is within the valid Unicode range
+    if 0 <= number <= 0x10FFFF:
+        # Convert the number to a character using chr()
+        return chr(number)
+    else:
+        # Return an empty string for invalid numbers
+        return ""
+
+`;
+
+
+variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr"
 
 
         Gui1.style.position = "absolute";

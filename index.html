@@ -689,7 +689,6 @@ let funcs = {
         });
 
         // HTpy
-        variables.funcs_func = "LoopParseFunc|new"
 
 variables.func_LoopParseFunc_func = `
 
@@ -709,11 +708,147 @@ def LoopParseFunc(var, delimiter1="", delimiter2=""):
 
 `;
 
-variables.func_new_func = `
+variables.func_InStr_func = `
 
-new
+def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
+    if Haystack is None or Needle is None:
+        return False
+
+    StartingPos = max(StartingPos, 1)
+
+    if not CaseSensitive:
+        Haystack = Haystack.lower()
+        Needle = Needle.lower()
+
+    pos = -1
+    count = 0
+    for i in range(StartingPos - 1, len(Haystack)):
+        if Haystack[i:i + len(Needle)] == Needle:
+            count += 1
+            if count == Occurrence:
+                pos = i + 1
+                break
+
+    return pos > 0
 
 `;
+
+variables.func_SubStr_func = `
+
+def SubStr(str, startPos, length=None):
+    if str is None or str == "":
+        return ""
+
+    if length is None or length == "":
+        length = len(str) - startPos + 1
+
+    if startPos < 1:
+        startPos = len(str) + startPos
+
+    return str[startPos - 1:startPos - 1 + length]
+
+`;
+
+variables.func_Trim_func = `
+
+def Trim(inputString):
+    if inputString is None:
+        return ""
+
+    return inputString.strip()
+
+`;
+
+variables.func_StrReplace_func = `
+  
+def StrReplace(originalString, find, replaceWith):
+    import re
+    if not isinstance(originalString, str):
+        return originalString
+
+    escapedFind = re.escape(find)
+    replaceWith = str(replaceWith)  # Ensure replaceWith is treated as a string
+    return re.sub(escapedFind, replaceWith, originalString)
+
+`;
+
+variables.func_StringTrimLeft_func = `
+
+def StringTrimLeft(input, numChars):
+    if input and len(input) >= numChars:
+        return input[numChars:]
+    else:
+        return input
+
+`;
+
+variables.func_StringTrimRight_func = `
+
+def StringTrimRight(input, numChars):
+    if input and len(input) >= numChars:
+        return input[:-numChars]
+    else:
+        return input
+
+`;
+
+variables.func_StrLower_func = `
+
+def StrLower(string):
+    return string.lower()
+
+`;
+
+variables.func_RegExReplace_func = `
+
+def RegExReplace(inputStr, regexPattern, replacement):
+    # Create a regular expression object using the provided pattern
+    import re
+    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching
+
+    # Use the sub() method to perform the regex replacement
+    resultStr = regex.sub(replacement, inputStr)
+
+    # Return the modified string
+    return resultStr
+
+`;
+
+variables.func_StrSplit_func = `
+
+def StrSplit(inputStr, delimiter, num):
+    # Split the input string based on the delimiter
+    parts = inputStr.split(delimiter)
+
+    # Return the part specified by the num parameter (1-based index)
+    if 0 < num <= len(parts):
+        return parts[num - 1]  # Return the specified part (0-based index)
+    else:
+        return ''  # Return an empty string if num is out of range
+
+`;
+
+
+variables.func_Chr_func = `
+
+def Chr(number):
+    # Check if the number is None
+    if number is None:
+        # Return an empty string
+        return ""
+
+    # Check if the number is within the valid Unicode range
+    if 0 <= number <= 0x10FFFF:
+        # Convert the number to a character using chr()
+        return chr(number)
+    else:
+        # Return an empty string for invalid numbers
+        return ""
+
+`;
+
+
+variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr"
 
 
         Gui1.style.position = "absolute";
@@ -1111,7 +1246,7 @@ variables.CheckIFandElsesss8 =  "else if!(";
 
 variables.CheckIFandElsesssNum =  0;
 
-variables.functionNames =  "input|int|chr|str";
+variables.functionNames =  "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr";
 
 variables.willNextLineBeCurlyBracee =  0;
 
@@ -1245,7 +1380,7 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 8 ) == await StrLower ( "msgbox, " )  &&  variables.lineDone == 0 )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 8 ) == await StrLower ( "msgbox, " )  &&  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 10 ) !== await StrLower ( "msgbox, % " ) )
 
 {
 
@@ -1316,24 +1451,6 @@ if ( variables.onceImportTime == 1 )
 variables.usedLib +=  "import time\n";
 
 }
-
-variables.pyCode +=  variables.out + "\n";
-
-}
-
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 6 ) == await StrLower ( "Loop,s" ) )
-
-{
-
-variables.var1 =  variables.A_LoopField3;
-
-variables.var1 = StringTrimLeft(variables.var1, 6)
-
-variables.var1 =  Trim( await transpileVariables ( variables.var1, variables.functionNames )  )
-
-variables.out =  "for variables['A" + String.fromCharCode( 95 )  + "Index'] in range(1, " + variables.var1 + " + 1):";
-
-variables.lineDone =  1;
 
 variables.pyCode +=  variables.out + "\n";
 
@@ -1693,6 +1810,54 @@ variables.pyCode +=  variables.pycodeLoopfixa1 + "\n" + variables.var1out + "\n"
 
 }
 
+if ( SubStr( variables.A_LoopField3, -1 ) == "++" )
+
+{
+
+variables.str123 =  Trim( variables.A_LoopField3 )
+
+variables.str123 = StringTrimRight(variables.str123, 2)
+
+variables.str123 =  Trim( await transpileVariables ( variables.str123, variables.functionNames )  )
+
+variables.out =  variables.str123 + " += 1";
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( SubStr( variables.A_LoopField3, -1 ) == "--" )
+
+{
+
+variables.str123 =  Trim( variables.A_LoopField3 )
+
+variables.str123 = StringTrimRight(variables.str123, 2)
+
+variables.str123 =  Trim( await transpileVariables ( variables.str123, variables.functionNames )  )
+
+variables.out =  variables.str123 + " -= 1";
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 17 ) == await StrLower ( "StringTrimRight, " ) )
+
+{
+
+variables.str123 = StringTrimRight(variables.A_LoopField3, 1)
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
 if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
 
 {
@@ -1939,7 +2104,7 @@ variables.skipLeftCuleyForFuncPLS =  0;
 
 variables.pycodeLoopfixa = StringTrimRight(variables.pycodeLoopfixa, 1)
 
-console.log("|" + variables.pycodeLoopfixa + "| ")
+//OutputDebug, |%pycodeLoopfixa%|
 
 variables.AIndexLoopCurlyFix =  1;
 
@@ -1959,9 +2124,9 @@ variables.out1 =  await StrSplit ( variables.str123 ,"|" , 1 )
 
 variables.out2 =  await StrSplit ( variables.str123 ,"|" , 3 )
 
-console.log("|" + variables.out1 + "| ")
+//OutputDebug, |%out1%|
 
-console.log("|" + variables.out2 + "| ")
+//OutputDebug, |%out2%|
 
 variables.wasAtanyIfsElseAddAIndexLoopCurlyFix =  0;
 
@@ -2826,117 +2991,6 @@ return false
 
 }
 
-async function StrSplit123(str, delimiter, num)
-{
-
-variables.str = str
-
-variables.delimiter = delimiter
-
-variables.num = num
-
-if ( variables.num == 1 )
-
-{
-
-variables.out =  ""
-
-variables.characters17 = variables.str.split("")
-variables.charLength17 = variables.characters17.length
-
-for (/* Loop parse */ variables.A_Index17 = 1; variables.A_Index17 <= variables.charLength17; variables.A_Index17++) {
-variables.A_LoopField17 = variables.characters17[variables.A_Index17 - 1]; // Using array notation to access characters
-
-variables.out +=  variables.A_LoopField17;
-
-if ( variables.A_LoopField17 == variables.delimiter )
-
-{
-
-variables.out = StringTrimRight(variables.out, 1)
-
-break
-
-}
-
-}
-
-return variables.out
-
-}
-
-else
-
-{
-
-variables.str =  variables.delimiter + variables.str;
-
-variables.posNum =  0;
-
-variables.allowPos =  0;
-
-variables.out =  ""
-
-variables.characters18 = variables.str.split("")
-variables.charLength18 = variables.characters18.length
-
-for (/* Loop parse */ variables.A_Index18 = 1; variables.A_Index18 <= variables.charLength18; variables.A_Index18++) {
-variables.A_LoopField18 = variables.characters18[variables.A_Index18 - 1]; // Using array notation to access characters
-
-if ( variables.allowPos == 1 )
-
-{
-
-variables.out +=  variables.A_LoopField18;
-
-}
-
-if ( variables.A_LoopField18 == variables.delimiter  &&  variables.allowPos == 1 )
-
-{
-
-if ( variables.pos == variables.num )
-
-{
-
-variables.out = StringTrimRight(variables.out, 1)
-
-break
-
-}
-
-else
-
-{
-
-variables.allowPos =  0;
-
-variables.out =  ""
-
-}
-
-}
-
-if ( variables.A_LoopField18 == variables.delimiter  &&  variables.allowPos == 0 )
-
-{
-
-variables.allowPos =  1;
-
-variables.posNum++
-
-variables.pos =  variables.posNum;
-
-}
-
-}  // end of Loop
-
-return variables.out
-
-}
-
-}  // end of func
-
 async function transpileVariables(str, functionNames)
 {
 
@@ -2956,13 +3010,13 @@ if ( await InStr ( variables.str, String.fromCharCode( 34 ) ) )
 
 //OutputDebug, |||%str%|||
 
-variables.characters19 = variables.str.split(/[" "]/)
-variables.charLength19 = variables.characters19.length
+variables.characters17 = variables.str.split(/[" "]/)
+variables.charLength17 = variables.characters17.length
 
-for (/* Loop parse */ variables.A_Index19 = 1; variables.A_Index19 <= variables.charLength19; variables.A_Index19++) {
-variables.A_LoopField19 = variables.characters19[variables.A_Index19 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index17 = 1; variables.A_Index17 <= variables.charLength17; variables.A_Index17++) {
+variables.A_LoopField17 = variables.characters17[variables.A_Index17 - 1]; // Using array notation to access characters
 
-variables["theString" + variables.A_Index19] =  ""
+variables["theString" + variables.A_Index17] =  ""
 
 }
 
@@ -2984,13 +3038,13 @@ variables.outOfstr11 =  ""
 
 variables.str =  String.fromCharCode( 34 )  + String.fromCharCode( 34 )  + variables.str + String.fromCharCode( 34 )
 
-variables.characters20 = variables.str.split("")
-variables.charLength20 = variables.characters20.length
+variables.characters18 = variables.str.split("")
+variables.charLength18 = variables.characters18.length
 
-for (/* Loop parse */ variables.A_Index20 = 1; variables.A_Index20 <= variables.charLength20; variables.A_Index20++) {
-variables.A_LoopField20 = variables.characters20[variables.A_Index20 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index18 = 1; variables.A_Index18 <= variables.charLength18; variables.A_Index18++) {
+variables.A_LoopField18 = variables.characters18[variables.A_Index18 - 1]; // Using array notation to access characters
 
-//OutputDebug, |?|%A_LoopField20%|?|
+//OutputDebug, |?|%A_LoopField18%|?|
 
 if ( variables.posStartToGetString == 2 )
 
@@ -3002,11 +3056,11 @@ variables.ONCEposStartToGetString =  0;
 
 }
 
-if ( variables.posStartToGetString == 1  &&  variables.A_LoopField20 !== String.fromCharCode( 34 ) )
+if ( variables.posStartToGetString == 1  &&  variables.A_LoopField18 !== String.fromCharCode( 34 ) )
 
 {
 
-variables["theString" + variables.numGetStringTheSatring] +=  variables.A_LoopField20;
+variables["theString" + variables.numGetStringTheSatring] +=  variables.A_LoopField18;
 
 variables.ONCEposStartToGetString++
 
@@ -3024,17 +3078,17 @@ else
 
 {
 
-if ( variables.A_LoopField20 !== String.fromCharCode( 34 ) )
+if ( variables.A_LoopField18 !== String.fromCharCode( 34 ) )
 
 {
 
-variables.outOfstr11 +=  variables.A_LoopField20;
+variables.outOfstr11 +=  variables.A_LoopField18;
 
 }
 
 }
 
-if ( variables.A_LoopField20 == String.fromCharCode( 34 ) )
+if ( variables.A_LoopField18 == String.fromCharCode( 34 ) )
 
 {
 
@@ -3086,21 +3140,21 @@ variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVari
 
 variables.wasHereVarTryUhBug =  1;
 
-variables.characters21 = variables.outOftranspileVariablesOut.split(/[" "]/)
-variables.charLength21 = variables.characters21.length
+variables.characters19 = variables.outOftranspileVariablesOut.split(/[" "]/)
+variables.charLength19 = variables.characters19.length
 
-for (/* Loop parse */ variables.A_Index21 = 1; variables.A_Index21 <= variables.charLength21; variables.A_Index21++) {
-variables.A_LoopField21 = variables.characters21[variables.A_Index21 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index19 = 1; variables.A_Index19 <= variables.charLength19; variables.A_Index19++) {
+variables.A_LoopField19 = variables.characters19[variables.A_Index19 - 1]; // Using array notation to access characters
 
 variables.howManyCharIfVar =  0;
 
-variables.characters22 = variables.A_LoopField21.split("")
-variables.charLength22 = variables.characters22.length
+variables.characters20 = variables.A_LoopField19.split("")
+variables.charLength20 = variables.characters20.length
 
-for (/* Loop parse */ variables.A_Index22 = 1; variables.A_Index22 <= variables.charLength22; variables.A_Index22++) {
-variables.A_LoopField22 = variables.characters22[variables.A_Index22 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index20 = 1; variables.A_Index20 <= variables.charLength20; variables.A_Index20++) {
+variables.A_LoopField20 = variables.characters20[variables.A_Index20 - 1]; // Using array notation to access characters
 
-if ( await varDetect ( variables.A_LoopField22 ) )
+if ( await varDetect ( variables.A_LoopField20 ) )
 
 {
 
@@ -3112,11 +3166,11 @@ variables.howManyCharIfVar++
 
 variables.howManyCharIfVar2 =  0;
 
-variables.characters23 = variables.A_LoopField21.split("")
-variables.charLength23 = variables.characters23.length
+variables.characters21 = variables.A_LoopField19.split("")
+variables.charLength21 = variables.characters21.length
 
-for (/* Loop parse */ variables.A_Index23 = 1; variables.A_Index23 <= variables.charLength23; variables.A_Index23++) {
-variables.A_LoopField23 = variables.characters23[variables.A_Index23 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index21 = 1; variables.A_Index21 <= variables.charLength21; variables.A_Index21++) {
+variables.A_LoopField21 = variables.characters21[variables.A_Index21 - 1]; // Using array notation to access characters
 
 variables.howManyCharIfVar2++
 
@@ -3138,13 +3192,13 @@ if ( variables.istAvar == 1 )
 
 variables.howManyCharIfVar =  0;
 
-variables.characters24 = variables.A_LoopField21.split("")
-variables.charLength24 = variables.characters24.length
+variables.characters22 = variables.A_LoopField19.split("")
+variables.charLength22 = variables.characters22.length
 
-for (/* Loop parse */ variables.A_Index24 = 1; variables.A_Index24 <= variables.charLength24; variables.A_Index24++) {
-variables.A_LoopField24 = variables.characters24[variables.A_Index24 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index22 = 1; variables.A_Index22 <= variables.charLength22; variables.A_Index22++) {
+variables.A_LoopField22 = variables.characters22[variables.A_Index22 - 1]; // Using array notation to access characters
 
-if ( await isVarAnumKindaVar ( variables.A_LoopField24 ) )
+if ( await isVarAnumKindaVar ( variables.A_LoopField22 ) )
 
 {
 
@@ -3156,11 +3210,11 @@ variables.howManyCharIfVar++
 
 variables.howManyCharIfVar2 =  0;
 
-variables.characters25 = variables.A_LoopField21.split("")
-variables.charLength25 = variables.characters25.length
+variables.characters23 = variables.A_LoopField19.split("")
+variables.charLength23 = variables.characters23.length
 
-for (/* Loop parse */ variables.A_Index25 = 1; variables.A_Index25 <= variables.charLength25; variables.A_Index25++) {
-variables.A_LoopField25 = variables.characters25[variables.A_Index25 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index23 = 1; variables.A_Index23 <= variables.charLength23; variables.A_Index23++) {
+variables.A_LoopField23 = variables.characters23[variables.A_Index23 - 1]; // Using array notation to access characters
 
 variables.howManyCharIfVar2++
 
@@ -3180,7 +3234,7 @@ if ( variables.isNumKindaVar == 1 )
 
 {
 
-variables.outOftranspileVariables +=  variables.A_LoopField21 + BuildInVars("A_Space");
+variables.outOftranspileVariables +=  variables.A_LoopField19 + BuildInVars("A_Space");
 
 }
 
@@ -3188,13 +3242,13 @@ else
 
 {
 
-if ( await InStr ( variables.A_LoopField21, "%" ) )
+if ( await InStr ( variables.A_LoopField19, "%" ) )
 
 {
 
-variables.var1 =  await StrSplit ( variables.A_LoopField21, "%", 1 )
+variables.var1 =  await StrSplit ( variables.A_LoopField19, "%", 1 )
 
-variables.var2 =  await StrSplit ( variables.A_LoopField21, "%", 2 )
+variables.var2 =  await StrSplit ( variables.A_LoopField19, "%", 2 )
 
 variables.out1 =  "variables[f" + String.fromCharCode( 39 )  + variables.var1 + "{variables[" + String.fromCharCode( 34 )  + variables.var2 + String.fromCharCode( 34 )  + "]}" + String.fromCharCode( 39 )  + "]";
 
@@ -3206,7 +3260,7 @@ else
 
 {
 
-variables.out1 =  "variables[" + String.fromCharCode( 39 )  + variables.A_LoopField21 + String.fromCharCode( 39 )  + "]";
+variables.out1 =  "variables[" + String.fromCharCode( 39 )  + variables.A_LoopField19 + String.fromCharCode( 39 )  + "]";
 
 variables.outOftranspileVariables +=  variables.out1 + BuildInVars("A_Space");
 
@@ -3220,7 +3274,7 @@ else
 
 {
 
-variables.outOftranspileVariables +=  variables.A_LoopField21 + BuildInVars("A_Space");
+variables.outOftranspileVariables +=  variables.A_LoopField19 + BuildInVars("A_Space");
 
 }
 
@@ -3292,21 +3346,21 @@ variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariabl
 
 variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " ] ", "]" )
 
-variables.characters26 = variables.functionNames.split(/["|"]/)
-variables.charLength26 = variables.characters26.length
+variables.characters24 = variables.functionNames.split(/["|"]/)
+variables.charLength24 = variables.characters24.length
 
-for (/* Loop parse */ variables.A_Index26 = 1; variables.A_Index26 <= variables.charLength26; variables.A_Index26++) {
-variables.A_LoopField26 = variables.characters26[variables.A_Index26 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index24 = 1; variables.A_Index24 <= variables.charLength24; variables.A_Index24++) {
+variables.A_LoopField24 = variables.characters24[variables.A_Index24 - 1]; // Using array notation to access characters
 
-variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['" + variables.A_LoopField26 + "']", variables.A_LoopField26 )
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['" + variables.A_LoopField24 + "']", variables.A_LoopField24 )
 
 }
 
-for (/* Normal Loop */ variables.A_Index27 = 1; variables.A_Index27 <= variables.numOfStrings; variables.A_Index27++)
+for (/* Normal Loop */ variables.A_Index25 = 1; variables.A_Index25 <= variables.numOfStrings; variables.A_Index25++)
 
 {
 
-variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.A_Index27, String.fromCharCode( 34 )  + variables["theString" + variables.A_Index27] + String.fromCharCode( 34 )  )
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.A_Index25, String.fromCharCode( 34 )  + variables["theString" + variables.A_Index25] + String.fromCharCode( 34 )  )
 
 }
 
@@ -3335,17 +3389,19 @@ Trim(variables.str)
 
 variables.numOfStrings =  0;
 
+variables.str =  StrReplace( variables.str, String.fromCharCode( 37 )  + String.fromCharCode( 37 ) , "cyiasasasasstAYtheummonlyemlpystringya-a-" + String.fromCharCode( 100 )  )
+
 if ( await InStr ( variables.str, String.fromCharCode( 37 ) ) )
 
 {
 
-variables.characters28 = variables.str.split(/["%"]/)
-variables.charLength28 = variables.characters28.length
+variables.characters26 = variables.str.split(/["%"]/)
+variables.charLength26 = variables.characters26.length
 
-for (/* Loop parse */ variables.A_Index28 = 1; variables.A_Index28 <= variables.charLength28; variables.A_Index28++) {
-variables.A_LoopField28 = variables.characters28[variables.A_Index28 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index26 = 1; variables.A_Index26 <= variables.charLength26; variables.A_Index26++) {
+variables.A_LoopField26 = variables.characters26[variables.A_Index26 - 1]; // Using array notation to access characters
 
-variables["theString" + variables.A_Index28] =  ""
+variables["theString" + variables.A_Index26] =  ""
 
 }
 
@@ -3355,11 +3411,11 @@ variables.numGetStringTheSatring =  0;
 
 variables.outOfstr11 =  ""
 
-variables.characters29 = variables.str.split("")
-variables.charLength29 = variables.characters29.length
+variables.characters27 = variables.str.split("")
+variables.charLength27 = variables.characters27.length
 
-for (/* Loop parse */ variables.A_Index29 = 1; variables.A_Index29 <= variables.charLength29; variables.A_Index29++) {
-variables.A_LoopField29 = variables.characters29[variables.A_Index29 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index27 = 1; variables.A_Index27 <= variables.charLength27; variables.A_Index27++) {
+variables.A_LoopField27 = variables.characters27[variables.A_Index27 - 1]; // Using array notation to access characters
 
 if ( variables.posStartToGetString == 2 )
 
@@ -3371,11 +3427,11 @@ variables.ONCEposStartToGetString =  0;
 
 }
 
-if ( variables.posStartToGetString == 1  &&  variables.A_LoopField29 !== String.fromCharCode( 37 ) )
+if ( variables.posStartToGetString == 1  &&  variables.A_LoopField27 !== String.fromCharCode( 37 ) )
 
 {
 
-variables["theString" + variables.numGetStringTheSatring] +=  variables.A_LoopField29;
+variables["theString" + variables.numGetStringTheSatring] +=  variables.A_LoopField27;
 
 variables.ONCEposStartToGetString++
 
@@ -3393,17 +3449,17 @@ else
 
 {
 
-if ( variables.A_LoopField29 !== String.fromCharCode( 37 ) )
+if ( variables.A_LoopField27 !== String.fromCharCode( 37 ) )
 
 {
 
-variables.outOfstr11 +=  variables.A_LoopField29;
+variables.outOfstr11 +=  variables.A_LoopField27;
 
 }
 
 }
 
-if ( variables.A_LoopField29 == String.fromCharCode( 37 ) )
+if ( variables.A_LoopField27 == String.fromCharCode( 37 ) )
 
 {
 
@@ -3439,11 +3495,11 @@ variables.outOftranspileVariables =  ""
 
 variables.outOftranspileVariablesOut =  String.fromCharCode( 34 )  + Trim( variables.outOfstr11 )
 
-for (/* Normal Loop */ variables.A_Index30 = 1; variables.A_Index30 <= variables.numOfStrings; variables.A_Index30++)
+for (/* Normal Loop */ variables.A_Index28 = 1; variables.A_Index28 <= variables.numOfStrings; variables.A_Index28++)
 
 {
 
-variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.A_Index30, String.fromCharCode( 34 )  + " + variables[" + String.fromCharCode( 39 )  + variables["theString" + variables.A_Index30] + String.fromCharCode( 39 )  + "] + " + String.fromCharCode( 34 )  )
+variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.A_Index28, String.fromCharCode( 34 )  + " + variables[" + String.fromCharCode( 39 )  + variables["theString" + variables.A_Index28] + String.fromCharCode( 39 )  + "] + " + String.fromCharCode( 34 )  )
 
 }
 
@@ -3454,6 +3510,8 @@ variables.nothing =  ""
 variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, String.fromCharCode( 34 )  + String.fromCharCode( 34 )  + " + ", variables.nothing )
 
 variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVariablesOut, " + " + String.fromCharCode( 34 )  + String.fromCharCode( 34 ) , variables.nothing )
+
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "cyiasasasasstAYtheummonlyemlpystringya-a-" + String.fromCharCode( 100 ) , String.fromCharCode( 37 )  + String.fromCharCode( 37 )  )
 
 variables.weEverUseVars =  "# Define a dictionary to store dynamic variables\nvariables = {}\n\n";
 
@@ -3468,7 +3526,7 @@ variables.str = str
 
 variables.strLettersStart =  48;
 
-for (/* Normal Loop */ variables.A_Index31 = 1; variables.A_Index31 <= 10; variables.A_Index31++)
+for (/* Normal Loop */ variables.A_Index29 = 1; variables.A_Index29 <= 10; variables.A_Index29++)
 
 {
 
@@ -3503,7 +3561,7 @@ variables.str = str
 
 variables.strLettersStart =  97;
 
-for (/* Normal Loop */ variables.A_Index32 = 1; variables.A_Index32 <= 26; variables.A_Index32++)
+for (/* Normal Loop */ variables.A_Index30 = 1; variables.A_Index30 <= 26; variables.A_Index30++)
 
 {
 
@@ -3521,7 +3579,7 @@ variables.strLettersStart++
 
 variables.strLettersStart =  65;
 
-for (/* Normal Loop */ variables.A_Index33 = 1; variables.A_Index33 <= 26; variables.A_Index33++)
+for (/* Normal Loop */ variables.A_Index31 = 1; variables.A_Index31 <= 26; variables.A_Index31++)
 
 {
 
@@ -3539,7 +3597,7 @@ variables.strLettersStart++
 
 variables.strLettersStart =  48;
 
-for (/* Normal Loop */ variables.A_Index34 = 1; variables.A_Index34 <= 10; variables.A_Index34++)
+for (/* Normal Loop */ variables.A_Index32 = 1; variables.A_Index32 <= 10; variables.A_Index32++)
 
 {
 
@@ -3612,8 +3670,8 @@ variables.isValid =  true;
 
 // Loop through each character in the string using Loop, Parse
 
-for (/* Loop parse */ variables.A_Index35 = 1; variables.A_Index35 <= variables.charLength35; variables.A_Index35++) {
-variables.A_LoopField7 = variables.characters35[variables.A_Index7 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index33 = 1; variables.A_Index33 <= variables.charLength33; variables.A_Index33++) {
+variables.A_LoopField7 = variables.characters33[variables.A_Index7 - 1]; // Using array notation to access characters
 
 // Check the current parsed item (character)
 
