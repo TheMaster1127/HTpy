@@ -165,6 +165,7 @@ CheckIFandElsesss8 := "else if!("
 CheckIFandElsesssNum := 0
 
 functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr"
+awesdrtf := "|A" . Chr(95) . "LoopField|A" . Chr(95) . "Index"
 
 willNextLineBeCurlyBracee := 0
 theFuncWeFound := ""
@@ -278,6 +279,36 @@ if (weUseRandomAtLeastOnce = 1)
 usedLib .= "import random`n"
 }
 out := outt1 . " = " . "random.randint(" . outt2 . ", " . outt3 . ")"
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 17) = StrLower("StringTrimRight, "))
+{
+varr1 := StrSplit(A_LoopField, ",", 2)
+varr2 := StrSplit(A_LoopField, ",", 3)
+varr3 := StrSplit(A_LoopField, ",", 4)
+
+outt1 := Trim(transpileVariables(varr1, functionNames))
+outt2 := Trim(transpileVariables(varr2, functionNames))
+outt3 := Trim(transpileVariables(varr3, functionNames))
+
+out := outt1 . " = " . "StringTrimRight(" . outt2 . ", " . outt3 . ")"
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 16) = StrLower("StringTrimLeft, "))
+{
+varr1 := StrSplit(A_LoopField, ",", 2)
+varr2 := StrSplit(A_LoopField, ",", 3)
+varr3 := StrSplit(A_LoopField, ",", 4)
+
+outt1 := Trim(transpileVariables(varr1, functionNames))
+outt2 := Trim(transpileVariables(varr2, functionNames))
+outt3 := Trim(transpileVariables(varr3, functionNames))
+
+out := outt1 . " = " . "StringTrimLeft(" . outt2 . ", " . outt3 . ")"
 
 lineDone := 1
 pyCode .= out . "`n"
@@ -560,11 +591,12 @@ out := str123 . " -= 1"
 lineDone := 1
 pyCode .= out . "`n"
 }
-else if (SubStr(Trim(StrLower(A_LoopField)), 1, 17) = StrLower("StringTrimRight, "))
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = ";")
 {
+StringTrimLeft, str123, A_LoopField, 1
 
-StringTrimRight, str123, A_LoopField, 1
-
+str123 := "#" . str123
+out := str123
 lineDone := 1
 pyCode .= out . "`n"
 }
@@ -766,10 +798,6 @@ skipLeftCuleyForFuncPLS := 0
 
 
 
-
-
-
-
 StringTrimRight, pycodeLoopfixa, pycodeLoopfixa, 1
 
 ;OutputDebug, |%pycodeLoopfixa%|
@@ -828,8 +856,10 @@ if (InStr(A_LoopField, "for ")) && (weAreDoneHereCurly != 1) && (insdeAnestedLoo
 s := StrSplit(A_LoopField ,"A" . Chr(95) . "Index", 2)
 out1z := s
 
+
 s := StrSplit(out1z, " ", 1)
 out1z := Trim(s)
+StringTrimRight, out1z, out1z, 2
 
 ;MsgBox, % out1z
 
@@ -997,7 +1027,7 @@ out1z := s
 
 s := StrSplit(out1z, " ", 1)
 out1z := Trim(s)
-
+StringTrimRight, out1z, out1z, 2
 ;MsgBox, % out1z
 
 fixLoopLokingForNum := 0
@@ -1218,13 +1248,6 @@ out := A_LoopField
 
 StringTrimLeft, out, out, 1
 
-if (InStr(out, "variables['A" . Chr(95) . "Index")) or (InStr(out, "variables['A" . Chr(95) . "LoopField"))
-{
-out := StrReplace(out, ",']", "']")
-out := StrReplace(out, "'],']", "']")
-out := StrReplace(out, "']']", "']")
-}
-
 if (!(InStr(out, "|itsaersdtgtgfergsdgfsegdfsedAA|")))
 {
 pyCodeOut1234565432 .= out . "`n"
@@ -1234,6 +1257,7 @@ pyCodeOut1234565432 .= out . "`n"
 }
 
 }
+
 
 StringTrimRight, pyCode, pyCodeOut1234565432, 1
 pyCodeFinal := pyCode

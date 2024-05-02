@@ -1248,6 +1248,8 @@ variables.CheckIFandElsesssNum =  0;
 
 variables.functionNames =  "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr";
 
+variables.awesdrtf =  "|A" + String.fromCharCode( 95 )  + "LoopField|A" + String.fromCharCode( 95 )  + "Index";
+
 variables.willNextLineBeCurlyBracee =  0;
 
 variables.theFuncWeFound =  ""
@@ -1423,6 +1425,54 @@ variables.usedLib +=  "import random\n";
 }
 
 variables.out =  variables.outt1 + " = " + "random.randint(" + variables.outt2 + ", " + variables.outt3 + ")";
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 17 ) == await StrLower ( "StringTrimRight, " ) )
+
+{
+
+variables.varr1 =  await StrSplit ( variables.A_LoopField3, ",", 2 )
+
+variables.varr2 =  await StrSplit ( variables.A_LoopField3, ",", 3 )
+
+variables.varr3 =  await StrSplit ( variables.A_LoopField3, ",", 4 )
+
+variables.outt1 =  Trim( await transpileVariables ( variables.varr1, variables.functionNames )  )
+
+variables.outt2 =  Trim( await transpileVariables ( variables.varr2, variables.functionNames )  )
+
+variables.outt3 =  Trim( await transpileVariables ( variables.varr3, variables.functionNames )  )
+
+variables.out =  variables.outt1 + " = " + "StringTrimRight(" + variables.outt2 + ", " + variables.outt3 + ")";
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 16 ) == await StrLower ( "StringTrimLeft, " ) )
+
+{
+
+variables.varr1 =  await StrSplit ( variables.A_LoopField3, ",", 2 )
+
+variables.varr2 =  await StrSplit ( variables.A_LoopField3, ",", 3 )
+
+variables.varr3 =  await StrSplit ( variables.A_LoopField3, ",", 4 )
+
+variables.outt1 =  Trim( await transpileVariables ( variables.varr1, variables.functionNames )  )
+
+variables.outt2 =  Trim( await transpileVariables ( variables.varr2, variables.functionNames )  )
+
+variables.outt3 =  Trim( await transpileVariables ( variables.varr3, variables.functionNames )  )
+
+variables.out =  variables.outt1 + " = " + "StringTrimLeft(" + variables.outt2 + ", " + variables.outt3 + ")";
 
 variables.lineDone =  1;
 
@@ -1846,11 +1896,15 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 17 ) == await StrLower ( "StringTrimRight, " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField3 ) ) , 1, 1 ) == ";" )
 
 {
 
-variables.str123 = StringTrimRight(variables.A_LoopField3, 1)
+variables.str123 = StringTrimLeft(variables.A_LoopField3, 1)
+
+variables.str123 =  "#" + variables.str123;
+
+variables.out =  variables.str123;
 
 variables.lineDone =  1;
 
@@ -2192,6 +2246,8 @@ variables.s =  await StrSplit ( variables.out1z, " ", 1 )
 
 variables.out1z =  Trim( variables.s )
 
+variables.out1z = StringTrimRight(variables.out1z, 2)
+
 //MsgBox, % out1z
 
 //MsgBox, do we came here 2
@@ -2433,6 +2489,8 @@ variables.out1z =  variables.s;
 variables.s =  await StrSplit ( variables.out1z, " ", 1 )
 
 variables.out1z =  Trim( variables.s )
+
+variables.out1z = StringTrimRight(variables.out1z, 2)
 
 //MsgBox, % out1z
 
@@ -2699,18 +2757,6 @@ if ( Trim( variables.A_LoopField11 ) !== String.fromCharCode( 123 )  &&  Trim( v
 variables.out =  variables.A_LoopField11;
 
 variables.out = StringTrimLeft(variables.out, 1)
-
-if ( await InStr ( variables.out, "variables['A" + String.fromCharCode( 95 ) + "Index" )  ||  await InStr ( variables.out, "variables['A" + String.fromCharCode( 95 ) + "LoopField" ) )
-
-{
-
-variables.out =  StrReplace( variables.out, ",']", "']" )
-
-variables.out =  StrReplace( variables.out, "'],']", "']" )
-
-variables.out =  StrReplace( variables.out, "']']", "']" )
-
-}
 
 if ( ! ( await InStr ( variables.out, "|itsaersdtgtgfergsdgfsegdfsedAA|" ) ) )
 
