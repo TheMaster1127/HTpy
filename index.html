@@ -767,27 +767,8 @@ def Trim(inputString):
 variables.func_StrReplace_func = `
   
 def StrReplace(originalString, find, replaceWith):
-    import re
-    # Convert originalString to string if it's not already
-    if not isinstance(originalString, str):
-        originalString = str(originalString)
-    
-    # Convert find to string if it's not already
-    if not isinstance(find, str):
-        find = str(find)
-    
-    # Convert replaceWith to string if it's not already
-    if not isinstance(replaceWith, str):
-        replaceWith = str(replaceWith)
-    
-    # Escape special characters in find for safe use in regex
-    escapedFind = re.escape(find)
-    
-    # Escape special characters in replaceWith for safe use in replacement
-    escapedReplace = re.escape(replaceWith)
-    
-    # Perform replacement using the escaped patterns
-    return re.sub(escapedFind, escapedReplace, originalString)
+    # Use the replace method to replace occurrences of 'find' with 'replaceWith'
+    return originalString.replace(find, replaceWith)
 
 `;
 
@@ -1777,7 +1758,7 @@ variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariabl
 
 variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "  <= ", " <= " )
 
-variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " . ", " + " )
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, ".", " + " )
 
 variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, " ,  ", ", " )
 
@@ -2539,13 +2520,15 @@ variables.haveWeEverUsedAloop =  1;
 
 variables.lineDone =  1;
 
-variables.var1 =  "for A" + String.fromCharCode( 95 )  + "Index" + variables.AindexcharLength + ", value in enumerate(iter(int, 1), start=1):";
+variables.var1 =  "for A" + String.fromCharCode( 95 )  + "Index" + variables.AindexcharLength + " , value in enumerate(iter(int, 1), start=1):";
 
 variables.nothing =  ""
 
 variables.AindexcharLengthStr =  variables.nothing + variables.AindexcharLength + variables.nothing;
 
 variables.theFixTextLoopNL =  "variables['A" + String.fromCharCode( 95 )  + "Index" + variables.AindexcharLengthStr + "'] = A" + String.fromCharCode( 95 )  + "Index" + variables.AindexcharLengthStr;
+
+variables.pycodeAcurlyBraceAddSomeVrasFixNL =  1;
 
 variables.lineDone =  1;
 

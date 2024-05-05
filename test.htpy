@@ -1,0 +1,4 @@
+Loop
+{
+MsgBox, % A_Index
+}

@@ -767,27 +767,8 @@ def Trim(inputString):
 variables.func_StrReplace_func = `
   
 def StrReplace(originalString, find, replaceWith):
-    import re
-    # Convert originalString to string if it's not already
-    if not isinstance(originalString, str):
-        originalString = str(originalString)
-    
-    # Convert find to string if it's not already
-    if not isinstance(find, str):
-        find = str(find)
-    
-    # Convert replaceWith to string if it's not already
-    if not isinstance(replaceWith, str):
-        replaceWith = str(replaceWith)
-    
-    # Escape special characters in find for safe use in regex
-    escapedFind = re.escape(find)
-    
-    # Escape special characters in replaceWith for safe use in replacement
-    escapedReplace = re.escape(replaceWith)
-    
-    # Perform replacement using the escaped patterns
-    return re.sub(escapedFind, escapedReplace, originalString)
+    # Use the replace method to replace occurrences of 'find' with 'replaceWith'
+    return originalString.replace(find, replaceWith)
 
 `;
 

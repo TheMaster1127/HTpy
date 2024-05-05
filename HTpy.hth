@@ -458,7 +458,7 @@ outOftranspileVariables := StrReplace(outOftranspileVariables, " > ", Chr(62))
 outOftranspileVariables := StrReplace(outOftranspileVariables, "  >= ", " >= ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, "  <= ", " <= ")
 
-outOftranspileVariables := StrReplace(outOftranspileVariables, " . ", " + ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, ".", " + ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " ,  ", ", ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " [ ", "[")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " ] ", "]")
@@ -944,10 +944,12 @@ else if (StrLower(A_LoopField) = "loop")
 ; infinity loops
 haveWeEverUsedAloop := 1
 lineDone := 1
-var1 := "for A" . Chr(95) . "Index" . AindexcharLength . ", value in enumerate(iter(int, 1), start=1):"
+var1 := "for A" . Chr(95) . "Index" . AindexcharLength . " , value in enumerate(iter(int, 1), start=1):"
 nothing := ""
 AindexcharLengthStr := nothing . AindexcharLength . nothing
 theFixTextLoopNL := "variables['A" . Chr(95) . "Index" . AindexcharLengthStr . "'] = A" . Chr(95) . "Index" . AindexcharLengthStr
+
+pycodeAcurlyBraceAddSomeVrasFixNL := 1
 lineDone := 1
 pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
 pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
