@@ -305,80 +305,8 @@ transpileVariables(str123455, functionNames)
 str123455 := Trim(str123455)
 numOfStrings := 0
 
-str123455 := StrReplace(str123455, Chr(34) . Chr(34), "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100))
-
-
-
-if (InStr(str123455, Chr(34)))
-{
-;OutputDebug, |||%str%|||
-
-Loop, Parse, str123455, " "
-{
-theString%A_Index% := ""
-}
-theString1 := ""
-theString2 := ""
-theString3 := ""
-theString4 := ""
-theString5 := ""
-
-
-posStartToGetString := 0
-numGetStringTheSatring := 0
-
-outOfstr11 := ""
-str123455 := Chr(34) . Chr(34) . str123455 . Chr(34)
-Loop, Parse, str123455
-{
-;OutputDebug, |?|%A_LoopField%|?|
-if (posStartToGetString = 2)
-{
-posStartToGetString := 0
-ONCEposStartToGetString := 0
-}
-
-if (posStartToGetString = 1) && (A_LoopField != Chr(34))
-{
-theString%numGetStringTheSatring% .= A_LoopField
-ONCEposStartToGetString++
-if (ONCEposStartToGetString = 1)
-{
-outOfstr11 .= "freeeeepaestine-sav-etehmtyeah-freee-n" . numOfStrings
-}
-}
-else
-{
-if (A_LoopField != Chr(34))
-{
-outOfstr11 .= A_LoopField
-}
-}
-
-if (A_LoopField = Chr(34))
-{
-posStartToGetString++
-if (posStartToGetString = 1)
-{
-numGetStringTheSatring++
-numOfStrings++
-}
-}
-
-
-} ; loop
-
-
-}
-else
-{
-outOfstr11 := str123455
-}
-
-;OutputDebug, |%outOfstr11%|
 outOftranspileVariables := ""
-outOftranspileVariablesOut := Trim(outOfstr11)
-
+outOftranspileVariablesOut := str123455
 
 
 outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(40), " ( ")
@@ -390,6 +318,7 @@ outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(91), " 
 outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(93), " ] ")
 
 wasHereVarTryUhBug := 1
+
 Loop, Parse, outOftranspileVariablesOut, " "
 {
 howManyCharIfVar := 0
@@ -720,7 +649,7 @@ areWEinSome34sNum := 0
 }
 HTpyCode := HTpyCodeOUT754754
 
-Loop, Parse, HTpyCode
+Loop, % theIdNumOfThe34
 {
 theIdNumOfThe34theVar%A_Index% .= Chr(34)
 }
@@ -1318,14 +1247,15 @@ str123 := StrReplace(str123, "-=", "=")
 str123 := StrReplace(str123, "*=", "=")
 
 
-var1 := Trim(StrSplit(str123, "=", 1))
-var2 := Trim(StrSplit(str123, "=", 2))
+var1avavavavva := Trim(StrSplit(str123, "=", 1))
+var2avavavavva := Trim(StrSplit(str123, "=", 2))
 ;OutputDebug, ||||||||||||%var2%||||||||||||
-varOUT1 := transpileVariables(var1, functionNames)
-varOUT2 := transpileVariables(var2, functionNames)
+
+varOUT1avavavavva := transpileVariables(var1avavavavva, functionNames)
+varOUT2avavavavva := transpileVariables(var2avavavavva, functionNames)
 
 
-out := varOUT1 . whatVarWeUse . varOUT2
+out := varOUT1avavavavva . whatVarWeUse . varOUT2avavavavva
 
 
 pyCode .= out . "`n"
