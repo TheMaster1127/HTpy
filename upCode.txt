@@ -724,23 +724,17 @@ variables.func_InStr_func = `
 def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
     if Haystack is None or Needle is None:
         return False
-
     StartingPos = max(StartingPos, 1)
-
     if not CaseSensitive:
         Haystack = Haystack.lower()
         Needle = Needle.lower()
-
-    pos = -1
     count = 0
     for i in range(StartingPos - 1, len(Haystack)):
         if Haystack[i:i + len(Needle)] == Needle:
             count += 1
             if count == Occurrence:
-                pos = i + 1
-                break
-
-    return pos > 0
+                return True
+    return False  
 
 `;
 

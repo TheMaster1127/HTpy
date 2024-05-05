@@ -724,23 +724,17 @@ variables.func_InStr_func = `
 def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
     if Haystack is None or Needle is None:
         return False
-
     StartingPos = max(StartingPos, 1)
-
     if not CaseSensitive:
         Haystack = Haystack.lower()
         Needle = Needle.lower()
-
-    pos = -1
     count = 0
     for i in range(StartingPos - 1, len(Haystack)):
         if Haystack[i:i + len(Needle)] == Needle:
             count += 1
             if count == Occurrence:
-                pos = i + 1
-                break
-
-    return pos > 0
+                return True
+    return False  
 
 `;
 
@@ -2807,10 +2801,6 @@ variables.line2 =  Trim( await StrSplit ( variables.var1, ",", 2 )  )
 
 variables.line3 =  Trim( await StrSplit ( variables.var1, ",", 3 )  )
 
-variables.line2 =  StrReplace( variables.line2, String.fromCharCode( 96 ) , String.fromCharCode( 92 )  )
-
-variables.line3 =  StrReplace( variables.line3, String.fromCharCode( 96 ) , String.fromCharCode( 92 )  )
-
 if ( await InStr ( variables.var1, String.fromCharCode( 96 ) + "," ) )
 
 {
@@ -2824,22 +2814,6 @@ variables.itemsOut =  "items = LoopParseFunc(" + variables.line1 + ", " + variab
 else
 
 {
-
-if ( ! ( await InStr ( variables.line2, String.fromCharCode( 34 ) ) ) )
-
-{
-
-variables.line2 =  String.fromCharCode( 34 )  + variables.line2 + String.fromCharCode( 34 )
-
-}
-
-if ( ! ( await InStr ( variables.line3, String.fromCharCode( 34 ) ) ) )
-
-{
-
-variables.line3 =  String.fromCharCode( 34 )  + variables.line3 + String.fromCharCode( 34 )
-
-}
 
 if ( variables.line2 == ""  &&  variables.line3 == "" )
 
@@ -2855,6 +2829,14 @@ if ( variables.line2 !== ""  &&  variables.line3 == "" )
 
 {
 
+if ( await InStr ( variables.line2, String.fromCharCode( 96 ) ) )
+
+{
+
+variables.line2 =  String.fromCharCode( 34 )  + variables.line2 + String.fromCharCode( 34 )
+
+}
+
 variables.itemsOut =  "items = LoopParseFunc(" + variables.line1 + ", " + variables.line2 + ")";
 
 }
@@ -2863,9 +2845,27 @@ if ( variables.line2 !== ""  &&  variables.line3 !== "" )
 
 {
 
+if ( await InStr ( variables.line2, String.fromCharCode( 96 ) ) )
+
+{
+
+variables.line2 =  String.fromCharCode( 34 )  + variables.line2 + String.fromCharCode( 34 )
+
+}
+
+if ( await InStr ( variables.line3, String.fromCharCode( 96 ) ) )
+
+{
+
+variables.line3 =  String.fromCharCode( 34 )  + variables.line3 + String.fromCharCode( 34 )
+
+}
+
 variables.itemsOut =  "items = LoopParseFunc(" + variables.line1 + ", " + variables.line2 + ", " + variables.line3 + ")";
 
 }
+
+variables.itemsOut =  StrReplace( variables.itemsOut, String.fromCharCode( 96 ) , String.fromCharCode( 92 )  )
 
 }
 
