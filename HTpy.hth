@@ -109,13 +109,524 @@ Sleep, 111
 gosub, Button
 Return
 
+
+
+
+indent_nested_curly_braces(input_string)
+{
+indent_size := 4
+current_indent := 0
+result := ""
+;MsgBox, % input_string
+input_string := input_string
+Loop, Parse, input_string, `n, `r
+{
+
+trimmed_line := Trim(A_LoopField)
+
+if (trimmed_line = Chr(123))
+{
+
+result .= ((Chr(32) . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+current_indent := current_indent + indent_size
+}
+else if (trimmed_line = Chr(125))
+{
+
+current_indent := current_indent - indent_size
+result .= ((Chr(32) . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+}
+else
+{
+
+result .= ((Chr(32) . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+}
+
+}
+
+; Return the result
+return result
+}
+
+RepeatSpaces(count)
+{
+spaces := ""
+Loop, % count
+{
+spaces .= Chr(32)
+}
+return spaces
+}
+
+
+
+ifTheLineIsAFuncDec(strgjvkh, theFuncWeFound)
+{
+Loop, Parse, theFuncWeFound, `n, `r
+{
+
+numOfChars := 0
+Loop, Parse, A_LoopField
+{
+numOfChars++
+}
+
+ALoopFieldd := StrSplit(A_LoopField, Chr(40), 1)
+ALoopFieldd2 := StrSplit(strgjvkh, Chr(40), 1)
+
+if (SubStr(ALoopFieldd, 1, numOfChars) = ALoopFieldd2) && (InStr(strgjvkh, Chr(40)))
+{
+return true
+}
+
+
+}
+
+return false
+}
+
+
+
+
+
+
+isVarAnumKindaVar(strrrrr)
+{
+
+strLettersStart := 48
+Loop, 10
+{
+if (InStr(strrrrr, Chr(strLettersStart)))
+{
+return true
+}
+strLettersStart++
+}
+
+if (InStr(strrrrr, Chr(95)))
+{
+return true
+}
+
+
+return false
+}
+
+varDetect(strrrrr)
+{
+
+strLettersStart := 97
+Loop, 26
+{
+if (InStr(strrrrr, Chr(strLettersStart)))
+{
+return true
+}
+strLettersStart++
+}
+
+
+strLettersStart := 65
+Loop, 26
+{
+if (InStr(strrrrr, Chr(strLettersStart)))
+{
+return true
+}
+strLettersStart++
+}
+
+
+strLettersStart := 48
+Loop, 10
+{
+if (InStr(strrrrr, Chr(strLettersStart)))
+{
+return true
+}
+strLettersStart++
+}
+
+if (InStr(strrrrr, Chr(95)))
+{
+return true
+}
+
+if (InStr(strrrrr, Chr(37)))
+{
+return true
+}
+
+return false
+}
+
+
+funcToChecIfVaidNameForFunc(strrrrr)
+{
+    ; Check if the string is empty
+    if (!(strrrrr))
+    {
+        ;MsgBox, Invalid function name: %strrrrr% (empty string)
+        return false
+    }
+
+    ; Check if the first character is a digit (invalid for function name)
+    firstChar := SubStr(strrrrr, 1, 1)
+    if (firstChar >= "0" && firstChar <= "9")
+    {
+     ;   MsgBox, Invalid function name: %strrrrr% (starts with a digit)
+        return false
+    }
+
+    ; Initialize a flag for validation
+    isValid := true
+
+    ; Loop through each character in the string using Loop, Parse
+    Loop, Parse, strrrrr
+    {
+        ; Check the current parsed item (character)
+        char := A_LoopField
+
+        ; Check if the character is a valid letter, digit, or underscore
+        if (!(char >= "A" && char <= "Z" || char >= "a" && char <= "z" || char >= "0" && char <= "9" || char = "_"))
+        {
+           ; MsgBox, Invalid character %char% in function name: %strrrrr%
+            isValid := false
+            break
+        }
+    }
+
+    ; If passed all checks, return true (valid function name)
+    return isValid
+}
+
+transpileVariables(str123455, functionNames)
+{
+str123455 := Trim(str123455)
+numOfStrings := 0
+
+str123455 := StrReplace(str123455, Chr(34) . Chr(34), "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100))
+
+
+
+if (InStr(str123455, Chr(34)))
+{
+;OutputDebug, |||%str%|||
+
+Loop, Parse, str123455, " "
+{
+theString%A_Index% := ""
+}
+theString1 := ""
+theString2 := ""
+theString3 := ""
+theString4 := ""
+theString5 := ""
+
+
+posStartToGetString := 0
+numGetStringTheSatring := 0
+
+outOfstr11 := ""
+str123455 := Chr(34) . Chr(34) . str123455 . Chr(34)
+Loop, Parse, str123455
+{
+;OutputDebug, |?|%A_LoopField%|?|
+if (posStartToGetString = 2)
+{
+posStartToGetString := 0
+ONCEposStartToGetString := 0
+}
+
+if (posStartToGetString = 1) && (A_LoopField != Chr(34))
+{
+theString%numGetStringTheSatring% .= A_LoopField
+ONCEposStartToGetString++
+if (ONCEposStartToGetString = 1)
+{
+outOfstr11 .= "freeeeepaestine-sav-etehmtyeah-freee-n" . numOfStrings
+}
+}
+else
+{
+if (A_LoopField != Chr(34))
+{
+outOfstr11 .= A_LoopField
+}
+}
+
+if (A_LoopField = Chr(34))
+{
+posStartToGetString++
+if (posStartToGetString = 1)
+{
+numGetStringTheSatring++
+numOfStrings++
+}
+}
+
+
+} ; loop
+
+
+}
+else
+{
+outOfstr11 := str123455
+}
+
+;OutputDebug, |%outOfstr11%|
+outOftranspileVariables := ""
+outOftranspileVariablesOut := Trim(outOfstr11)
+
+
+
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(40), " ( ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(41), " ) ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(44), " , ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(60), " < ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(62), " > ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(91), " [ ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(93), " ] ")
+
+wasHereVarTryUhBug := 1
+Loop, Parse, outOftranspileVariablesOut, " "
+{
+howManyCharIfVar := 0
+Loop, Parse, A_LoopField
+{
+if (varDetect(A_LoopField))
+{
+howManyCharIfVar++
+}
+}
+howManyCharIfVar2 := 0
+Loop, Parse, A_LoopField
+{
+howManyCharIfVar2++
+}
+istAvar := 0
+if (howManyCharIfVar = howManyCharIfVar2)
+{
+istAvar := 1
+}
+
+if (istAvar = 1)
+{
+
+howManyCharIfVar := 0
+Loop, Parse, A_LoopField
+{
+if (isVarAnumKindaVar(A_LoopField))
+{
+howManyCharIfVar++
+}
+}
+
+howManyCharIfVar2 := 0
+Loop, Parse, A_LoopField
+{
+howManyCharIfVar2++
+}
+isNumKindaVar := 0
+if (howManyCharIfVar2 = howManyCharIfVar)
+{
+isNumKindaVar := 1
+}
+
+if (isNumKindaVar = 1)
+{
+outOftranspileVariables .= A_LoopField . Chr(32)
+}
+else
+{
+
+if (InStr(A_LoopField, "%"))
+{
+var1 := StrSplit(A_LoopField, "%", 1)
+var2 := StrSplit(A_LoopField, "%", 2)
+out1 := "variables[f" . Chr(39) . var1 . "{variables[" . Chr(34) . var2 . Chr(34) . "]}" . Chr(39) . "]"
+outOftranspileVariables .= out1 . Chr(32)
+}
+else
+{
+out1 := "variables[" . Chr(39) . A_LoopField . Chr(39) . "]"
+outOftranspileVariables .= out1 . Chr(32)
+}
+}
+
+
+}
+else
+{
+outOftranspileVariables .= A_LoopField . Chr(32)
+}
+wasHereVarTryUhBug := 0
+}
+
+if (wasHereVarTryUhBug = 1)
+{
+outOftranspileVariables := outOftranspileVariablesOut
+}
+
+;OutputDebug, |%outOftranspileVariables%|
+
+
+Loop, Parse, functionNames, "|"
+{
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['" . A_LoopField . "']", A_LoopField)
+}
+
+
+Loop, % numOfStrings
+{
+outOftranspileVariables := StrReplace(outOftranspileVariables, "freeeeepaestine-sav-etehmtyeah-freee-n" . A_Index, Chr(34) . theString%A_Index% . Chr(34))
+}
+
+weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n`n"
+;OutputDebug, |%outOftranspileVariables%|
+outOftranspileVariables := Trim(outOftranspileVariables)
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, Chr(96), Chr(92))
+outOftranspileVariables := StrReplace(outOftranspileVariables, Chr(92) . Chr(92), Chr(96))
+outOftranspileVariables := StrReplace(outOftranspileVariables, "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100), Chr(34) . Chr(34))
+
+
+;OutputDebug, %outOftranspileVariables%
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['True']", "True")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['False']", "False")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['true']", "True")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['false']", "False")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['if']", "if")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['else']", "else")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['and']", "and")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['or']", "or")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "!", " not ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " && ", " and ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " || ", " or ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " < = ", " <= ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " > = ", " >= ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "not ==", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "  not == ", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " not == ", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " not ==", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "not ==", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "  not = ", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "not =", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
+
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, " ( ", Chr(40))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " ) ", Chr(41))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " )", Chr(41))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " < ", Chr(60))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " > ", Chr(62))
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "  >= ", " >= ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "  <= ", " <= ")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, " . ", " + ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " ,  ", ", ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " [ ", "[")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " ] ", "]")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "!=", " !=")
+
+;OutputDebug, %outOftranspileVariables%
+
+return outOftranspileVariables
+}
+
+
+
+
+
+
+transpileLowVariables(sstr)
+{
+sstr := Trim(sstr)
+
+outOftranspileVariablesOut := Chr(34)
+if (InStr(sstr, Chr(37)))
+{
+Loop, Parse, sstr, "%"
+{
+
+if (Mod(A_Index, 2))
+{
+outOftranspileVariablesOut .= A_LoopField
+}
+else
+{
+outOftranspileVariablesOut .= Chr(34) . " + variables['" . A_LoopField . Chr(39) . Chr(93) . " + " . Chr(34)
+}
+
+}
+}
+else
+{
+sstr := Chr(34) . sstr . Chr(34)
+return sstr
+}
+
+outOftranspileVariablesOut := outOftranspileVariablesOut . Chr(34)
+return outOftranspileVariablesOut
+}
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
 ; the compiler
 Button:
 
 pyCode := ""
 out := ""
 HTpyCodeD1 := ""
-
+skipLeftCuleyForFuncPLS := 0
 eavbnsalvbaslv := 0
 Loop, Parse, HTpyCode, `n, `r
 {
@@ -129,6 +640,7 @@ else
 if (Trim(A_LoopField) = Chr(123)) && (eavbnsalvbaslv = 1)
 {
 ; nothing
+nothing := ""
 }
 else
 {
@@ -151,6 +663,68 @@ StringTrimRight, HTpyCode, HTpyCodeD1, 1
 
 
 
+HTpyCodeOUT754754 := ""
+areWEinSome34sNum := 0
+theIdNumOfThe34 := 0
+
+Loop, Parse, HTpyCode
+{
+theIdNumOfThe34theVar%A_Index% := Chr(34)
+}
+
+Loop, Parse, HTpyCode
+{
+if (A_LoopField = Chr(34))
+{
+areWEinSome34sNum++
+}
+
+
+if (areWEinSome34sNum = 1)
+{
+
+
+
+if (A_LoopField != Chr(34))
+{
+if (A_LoopField = Chr(96))
+{
+theIdNumOfThe34theVar%theIdNumOfThe34% .= Chr(92)
+}
+else
+{
+theIdNumOfThe34theVar%theIdNumOfThe34% .= A_LoopField
+}
+}
+else
+{
+theIdNumOfThe34++
+HTpyCodeOUT754754 .= "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-" . Chr(65) . Chr(65) . theIdNumOfThe34 . Chr(65) . Chr(65)
+}
+
+}
+
+
+if (areWEinSome34sNum = 2) or (areWEinSome34sNum = 0)
+{
+if (A_LoopField != Chr(34))
+{
+HTpyCodeOUT754754 .= A_LoopField
+}
+
+areWEinSome34sNum := 0
+}
+
+
+
+}
+HTpyCode := HTpyCodeOUT754754
+
+Loop, Parse, HTpyCode
+{
+theIdNumOfThe34theVar%A_Index% .= Chr(34)
+}
+
 
 str23IfFuncInNAMEnum := 0
 
@@ -164,12 +738,13 @@ CheckIFandElsesss7 := "else if !("
 CheckIFandElsesss8 := "else if!("
 CheckIFandElsesssNum := 0
 
-functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr"
+functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod"
 awesdrtf := "|A" . Chr(95) . "LoopField|A" . Chr(95) . "Index"
 
 willNextLineBeCurlyBracee := 0
 theFuncWeFound := ""
 theFuncWeFoundAllNames := ""
+haveWeEverUsedAloop := 0
 ;OutputDebug, %HTpyCode%
 Loop, Parse, HTpyCode, `n, `r
 {
@@ -232,6 +807,8 @@ weUseRandomAtLeastOnce := 0
 weEverUseVars := ""
 usedLib := ""
 AindexcharLength := 1
+pycodeAcurlyBraceAddSomeVrasFixNL := 0
+pycodeAcurlyBraceAddSomeVrasFixLP := 0
 pycodeLoopfixa := ""
 
 Loop, Parse, HTpyCode, `n, `r
@@ -332,7 +909,7 @@ pyCode .= out . "`n"
 else if (ifTheLineIsAFuncDec(Trim(A_LoopField), theFuncWeFound))
 {
 
-OutputDebug, %A_LoopField%
+;OutputDebug, %A_LoopField%
 str23IfFuncIn := A_LoopField
 str23IfFuncInNAME := StrSplit(str23IfFuncIn, Chr(40), 1)
 
@@ -367,7 +944,7 @@ str234567 := "def " . str23IfFuncInNAME . Chr(40) . str23IfFuncInALL . Chr(41) .
 }
 
 
-Loop, %str23IfFuncInNAMEnum%
+Loop, % str23IfFuncInNAMEnum
 {
 
 if (str23IfFuncInNAME%A_Index% = str23IfFuncInNAME)
@@ -436,10 +1013,12 @@ pyCode .= out . "`n"
 else if (StrLower(A_LoopField) = "loop")
 {
 ; infinity loops
-
+haveWeEverUsedAloop := 1
 lineDone := 1
 var1 := "for A" . Chr(95) . "Index" . AindexcharLength . ", value in enumerate(iter(int, 1), start=1):"
-
+nothing := ""
+AindexcharLengthStr := nothing . AindexcharLength . nothing
+theFixTextLoopNL := "variables['A" . Chr(95) . "Index" . AindexcharLengthStr . "'] = A" . Chr(95) . "Index" . AindexcharLengthStr
 lineDone := 1
 pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
 pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
@@ -452,11 +1031,11 @@ else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = "loop, ") && (SubStr(Trim(S
 
 
 
-str := A_LoopField
-;MsgBox, % str
+str123 := A_LoopField
+;MsgBox, % str123
 
 
-StringTrimLeft, out2, str, 6
+StringTrimLeft, out2, str123, 6
 
 ;MsgBox % out2
 
@@ -467,9 +1046,14 @@ out2 := Trim(out2)
 myVar := out2
 lineYGI := transpileVariables(myVar, functionNames)
 line := lineYGI
-
+haveWeEverUsedAloop := 1
 ;MsgBox, % line
-var1 := "for variables['A" . Chr(95) . "Index" . AindexcharLength . "'] in range(1, " . line . " + 1):"
+var1 := "for A" . Chr(95) . "Index" . AindexcharLength . " in range(1, " . line . " + 1):"
+nothing := ""
+AindexcharLengthStr := nothing . AindexcharLength . nothing
+theFixTextLoopNL := "variables['A" . Chr(95) . "Index" . AindexcharLengthStr . "'] = A" . Chr(95) . "Index" . AindexcharLengthStr
+
+pycodeAcurlyBraceAddSomeVrasFixNL := 1
 
 pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
 pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
@@ -479,11 +1063,11 @@ pyCode .= pycodeLoopfixa1 . "`n" . var1 . "`n"
 }
 else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = "loop, % ")
 {
-str := A_LoopField
-;MsgBox, % str
+str123 := A_LoopField
+;MsgBox, % str123
 
 
-StringTrimLeft, out2, str, 8
+StringTrimLeft, out2, str123, 8
 
 ;MsgBox % out2
 
@@ -496,8 +1080,13 @@ lineYGI := transpileVariables(myVar, functionNames)
 line := lineYGI
 
 ;MsgBox, % line
-var1 := "for variables['A" . Chr(95) . "Index" . AindexcharLength . "'] in range(1, " . line . " + 1):"
+var1 := "for A" . Chr(95) . "Index" . AindexcharLength . " in range(1, " . line . " + 1):"
+nothing := ""
+AindexcharLengthStr := nothing . AindexcharLength . nothing
+theFixTextLoopNL := "variables['A" . Chr(95) . "Index" . AindexcharLengthStr . "'] = A" . Chr(95) . "Index" . AindexcharLengthStr
 
+pycodeAcurlyBraceAddSomeVrasFixNL := 1
+haveWeEverUsedAloop := 1
 pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
 pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
 AindexcharLength++
@@ -563,7 +1152,18 @@ itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ", " . line3 . ")"
 }
 
 
-var1out := itemsOut . "`n" . "for variables['A" . Chr(95) . "Index" . AindexcharLength . "'], variables['A" . Chr(95) . "LoopField" . AindexcharLength . "'] in enumerate(items, start=1):"
+var1out := itemsOut . "`n" . "for A" . Chr(95) . "Index" . AindexcharLength . ", A" . Chr(95) . "LoopField" . AindexcharLength . " in enumerate(items, start=1):"
+
+
+
+nothing := ""
+AindexcharLengthStr := nothing . AindexcharLength . nothing
+
+
+theFixTextLoopLP := "variables['A" . Chr(95) . "Index" . AindexcharLengthStr . "'] = A" . Chr(95) . "Index" . AindexcharLengthStr . "`n" . "variables['A" . Chr(95) . "LoopField" . AindexcharLengthStr . "'] = A" . Chr(95) . "LoopField" . AindexcharLengthStr
+
+pycodeAcurlyBraceAddSomeVrasFixLP := 1
+haveWeEverUsedAloop := 1
 pycodeLoopfixa .= "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
 pycodeLoopfixa1 := "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
 AindexcharLength++
@@ -588,15 +1188,6 @@ StringTrimRight, str123, str123, 2
 str123 := Trim(transpileVariables(str123, functionNames))
 
 out := str123 . " -= 1"
-lineDone := 1
-pyCode .= out . "`n"
-}
-else if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = ";")
-{
-StringTrimLeft, str123, A_LoopField, 1
-
-str123 := "#" . str123
-out := str123
 lineDone := 1
 pyCode .= out . "`n"
 }
@@ -645,33 +1236,31 @@ CheckIFandElsesssNum := 9
 CheckIFandElsesssNumNum := 8
 }
 
-StringTrimLeft, str, A_LoopField, variables.CheckIFandElsesssNum
+StringTrimLeft, str123, A_LoopField, variables.CheckIFandElsesssNum
 
-str := CheckIFandElsesss%CheckIFandElsesssNumNum% . A_Space . transpileVariables(str, functionNames)
+str123 := CheckIFandElsesss%CheckIFandElsesssNumNum% . Chr(32) . transpileVariables(str123, functionNames)
 
 
-if (SubStr(Trim(StrLower(str)), 1, 7) = StrLower("else if"))
+if (SubStr(Trim(StrLower(str123)), 1, 7) = StrLower("else if"))
 {
-str := StrReplace(str, "else if", "elif")
+str123 := StrReplace(str123, "else if", "elif")
 }
 else
 {
-str := str
-StringTrimLeft, str, str, 2
-str := "if" . str
+str123 := str123
+StringTrimLeft, str123, str123, 2
+str123 := "if" . str123
 }
 
 
-str := Trim(str) . ":"
+str123 := Trim(str123) . ":"
 
-str := StrReplace(str, "if " . Chr(40) . A_Space, "if " . Chr(40))
-str := StrReplace(str, A_Space . Chr(41) . ":", Chr(41) . ":")
+str123 := StrReplace(str123, "if " . Chr(40) . Chr(32), "if " . Chr(40))
+str123 := StrReplace(str123, Chr(32) . Chr(41) . ":", Chr(41) . ":")
 
 
-out := str
+out := str123
 
-out := StrReplace(out, "!", " not ")
-out := StrReplace(out, "  not ", " not ")
 
 lineDone := 1
 pyCode .= out . "`n"
@@ -687,7 +1276,7 @@ pyCode .= out . "`n"
 else if (InStr(A_LoopField, " := ")) or (InStr(A_LoopField, " .= ")) or (InStr(A_LoopField, " += ")) or (InStr(A_LoopField, " -= ")) or (InStr(A_LoopField, " *= ")) && (lineDone = 0)
 {
 lineDone := 1
-str := A_LoopField
+str123 := A_LoopField
 
 whatVarWeUse := ""
 if (InStr(A_LoopField, " := "))
@@ -714,15 +1303,15 @@ whatVarWeUse := " *= "
 
 
 
-str := StrReplace(str, ":=", "=")
-str := StrReplace(str, ".=", "=")
-str := StrReplace(str, "+=", "=")
-str := StrReplace(str, "-=", "=")
-str := StrReplace(str, "*=", "=")
+str123 := StrReplace(str123, ":=", "=")
+str123 := StrReplace(str123, ".=", "=")
+str123 := StrReplace(str123, "+=", "=")
+str123 := StrReplace(str123, "-=", "=")
+str123 := StrReplace(str123, "*=", "=")
 
 
-var1 := Trim(StrSplit(str, "=", 1))
-var2 := Trim(StrSplit(str, "=", 2))
+var1 := Trim(StrSplit(str123, "=", 1))
+var2 := Trim(StrSplit(str123, "=", 2))
 ;OutputDebug, ||||||||||||%var2%||||||||||||
 varOUT1 := transpileVariables(var1, functionNames)
 varOUT2 := transpileVariables(var2, functionNames)
@@ -734,13 +1323,48 @@ out := varOUT1 . whatVarWeUse . varOUT2
 pyCode .= out . "`n"
 
 }
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(59)) && (lineDone = 0)
+{
+StringTrimLeft, str123, A_LoopField, 1
+
+str123 := "#" . str123
+out := str123
+lineDone := 1
+pyCode .= out . "`n"
+}
 else
 {
+; this is THE else
 if (lineDone != 1)
 {
 if (skipLeftCuleyForFuncPLS != 1)
 {
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(125))
+{
+pyCode .= Chr(125) . "`n"
+}
+else
+{
+if (pycodeAcurlyBraceAddSomeVrasFixLP = 1) && (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(123))
+{
+pycodeAcurlyBraceAddSomeVrasFixLP := 0
+
+
+pyCode .= A_LoopField . "`n" . theFixTextLoopLP . "`n"
+}
+else
+{
+if (pycodeAcurlyBraceAddSomeVrasFixNL = 1) && (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(123))
+{
+pycodeAcurlyBraceAddSomeVrasFixNL := 0
+pyCode .= A_LoopField . "`n" . theFixTextLoopNL . "`n"
+}
+else
+{
 pyCode .= A_LoopField . "`n"
+}
+}
+}
 }
 else
 {
@@ -795,8 +1419,9 @@ skipLeftCuleyForFuncPLS := 0
 
 
 
-
-
+OutputDebug, %haveWeEverUsedAloop%
+if (haveWeEverUsedAloop = 1)
+{
 
 StringTrimRight, pycodeLoopfixa, pycodeLoopfixa, 1
 
@@ -859,7 +1484,7 @@ out1z := s
 
 s := StrSplit(out1z, " ", 1)
 out1z := Trim(s)
-StringTrimRight, out1z, out1z, 2
+
 
 ;MsgBox, % out1z
 
@@ -1022,12 +1647,12 @@ if (InStr(A_LoopField , "for ")) && (weAreDoneHereCurly != 1) && (insdeAnestedLo
 {
 
 
-s := StrSplit(A_LoopField ,"A" . Chr(95) . "Index", 2)
+s := StrSplit(A_LoopField ,"A" . Chr(95) . "LoopField", 2)
 out1z := s
 
 s := StrSplit(out1z, " ", 1)
 out1z := Trim(s)
-StringTrimRight, out1z, out1z, 2
+
 ;MsgBox, % out1z
 
 fixLoopLokingForNum := 0
@@ -1197,7 +1822,7 @@ StringTrimRight, out4758686d86dgt8r754444444, out4758686d86dgt8r754444444, 1
 pyCode := out4758686d86dgt8r754444444
 
 
-
+}
 
 
 
@@ -1248,9 +1873,19 @@ out := A_LoopField
 
 StringTrimLeft, out, out, 1
 
+if (InStr(out, "variables['A" . Chr(95) . "Index")) or (InStr(out, "variables['A" . Chr(95) . "LoopField"))
+{
+
+out := StrReplace(out, Chr(39) . Chr(34) . Chr(93) . Chr(125) . Chr(39) . Chr(93), Chr(34) . Chr(93) . Chr(125) . Chr(39) . Chr(93))
+out := StrReplace(out, Chr(39) . Chr(39) . Chr(93), Chr(39) . Chr(93))
+}
+
 if (!(InStr(out, "|itsaersdtgtgfergsdgfsegdfsedAA|")))
 {
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) != Chr(59))
+{
 pyCodeOut1234565432 .= out . "`n"
+}
 }
 
 
@@ -1302,6 +1937,12 @@ pyCode := usedLib . "`n" . weEverUseVars . "`n" . pyCodeFinal
 pyCode := StrReplace(pyCode, "`n`n", "`n")
 
 
+Loop, % theIdNumOfThe34
+{
+pyCode := StrReplace(pyCode, "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-" . Chr(65) . Chr(65) . A_Index . Chr(65) . Chr(65), theIdNumOfThe34theVar%A_Index%)
+}
+
+
 
 eval("Gui1codeBox.session.setValue(variables.pyCode);")
 
@@ -1344,517 +1985,3 @@ Return
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-indent_nested_curly_braces(input_string)
-{
-indent_size := 4
-current_indent := 0
-result := ""
-;MsgBox, % input_string
-input_string := input_string
-Loop, Parse, input_string, `n, `r
-{
-
-trimmed_line := Trim(A_LoopField)
-
-if (trimmed_line = Chr(123))
-{
-
-result .= ((A_Space . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
-current_indent := current_indent + indent_size
-}
-else if (trimmed_line = Chr(125))
-{
-
-current_indent := current_indent - indent_size
-result .= ((A_Space . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
-}
-else
-{
-
-result .= ((A_Space . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
-}
-
-}
-
-; Return the result
-return result
-}
-
-RepeatSpaces(count)
-{
-spaces := ""
-Loop, %count%
-{
-spaces .= A_Space
-}
-return spaces
-}
-
-
-
-ifTheLineIsAFuncDec(strgjvkh, theFuncWeFound)
-{
-Loop, Parse, theFuncWeFound, `n, `r
-{
-
-numOfChars := 0
-Loop, Parse, A_LoopField
-{
-numOfChars++
-}
-
-A_LoopFieldd := StrSplit(A_LoopField, Chr(40), 1)
-A_LoopFieldd2 := StrSplit(strgjvkh, Chr(40), 1)
-
-if (SubStr(A_LoopFieldd, 1, numOfChars) = A_LoopFieldd2) && (InStr(strgjvkh, Chr(40)))
-{
-return true
-}
-
-
-}
-
-return false
-}
-
-
-
-
-transpileVariables(str, functionNames)
-{
-Trim(str)
-numOfStrings := 0
-
-str := StrReplace(str, Chr(34) . Chr(34), "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100))
-
-
-
-if (InStr(str, Chr(34)))
-{
-;OutputDebug, |||%str%|||
-
-Loop, Parse, str, " "
-{
-theString%A_Index% := ""
-}
-theString1 := ""
-theString2 := ""
-theString3 := ""
-theString4 := ""
-theString5 := ""
-
-
-posStartToGetString := 0
-numGetStringTheSatring := 0
-
-outOfstr11 := ""
-str := Chr(34) . Chr(34) . str . Chr(34)
-Loop, Parse, str
-{
-;OutputDebug, |?|%A_LoopField%|?|
-if (posStartToGetString = 2)
-{
-posStartToGetString := 0
-ONCEposStartToGetString := 0
-}
-
-if (posStartToGetString = 1) && (A_LoopField != Chr(34))
-{
-theString%numGetStringTheSatring% .= A_LoopField
-ONCEposStartToGetString++
-if (ONCEposStartToGetString = 1)
-{
-outOfstr11 .= "freeeeepaestine-sav-etehmtyeah-freee-n" . numOfStrings
-}
-}
-else
-{
-if (A_LoopField != Chr(34))
-{
-outOfstr11 .= A_LoopField
-}
-}
-
-if (A_LoopField = Chr(34))
-{
-posStartToGetString++
-if (posStartToGetString = 1)
-{
-numGetStringTheSatring++
-numOfStrings++
-}
-}
-
-
-} ; loop
-
-
-}
-else
-{
-outOfstr11 := str
-}
-
-;OutputDebug, |%outOfstr11%|
-outOftranspileVariables := ""
-outOftranspileVariablesOut := Trim(outOfstr11)
-
-
-
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(40), " ( ")
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(41), " ) ")
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(44), " , ")
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(60), " < ")
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(62), " > ")
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(91), " [ ")
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(93), " ] ")
-
-wasHereVarTryUhBug := 1
-Loop, Parse, outOftranspileVariablesOut, " "
-{
-howManyCharIfVar := 0
-Loop, Parse, A_LoopField
-{
-if (varDetect(A_LoopField))
-{
-howManyCharIfVar++
-}
-}
-howManyCharIfVar2 := 0
-Loop, Parse, A_LoopField
-{
-howManyCharIfVar2++
-}
-istAvar := 0
-if (howManyCharIfVar = howManyCharIfVar2)
-{
-istAvar := 1
-}
-
-if (istAvar = 1)
-{
-
-howManyCharIfVar := 0
-Loop, Parse, A_LoopField
-{
-if (isVarAnumKindaVar(A_LoopField))
-{
-howManyCharIfVar++
-}
-}
-
-howManyCharIfVar2 := 0
-Loop, Parse, A_LoopField
-{
-howManyCharIfVar2++
-}
-isNumKindaVar := 0
-if (howManyCharIfVar2 = howManyCharIfVar)
-{
-isNumKindaVar := 1
-}
-
-if (isNumKindaVar = 1)
-{
-outOftranspileVariables .= A_LoopField . A_Space
-}
-else
-{
-
-if (InStr(A_LoopField, "%"))
-{
-var1 := StrSplit(A_LoopField, "%", 1)
-var2 := StrSplit(A_LoopField, "%", 2)
-out1 := "variables[f" . Chr(39) . var1 . "{variables[" . Chr(34) . var2 . Chr(34) . "]}" . Chr(39) . "]"
-outOftranspileVariables .= out1 . A_Space
-}
-else
-{
-out1 := "variables[" . Chr(39) . A_LoopField . Chr(39) . "]"
-outOftranspileVariables .= out1 . A_Space
-}
-}
-
-
-}
-else
-{
-outOftranspileVariables .= A_LoopField . A_Space
-}
-wasHereVarTryUhBug := 0
-}
-
-if (wasHereVarTryUhBug = 1)
-{
-outOftranspileVariables := outOftranspileVariablesOut
-}
-
-;OutputDebug, |%outOftranspileVariables%|
-
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['True']", "True")
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['False']", "False")
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['true']", "True")
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['false']", "False")
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['if']", "if")
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['else']", "else")
-
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['and']", "and")
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['or']", "or")
-
-outOftranspileVariables := StrReplace(outOftranspileVariables, "!", " not ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " && ", " and ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " || ", " or ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " < = ", " <= ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " > = ", " >= ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, "  not == ", " != ")
-
-outOftranspileVariables := StrReplace(outOftranspileVariables, " ( ", Chr(40))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " ) ", Chr(41))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " )", Chr(41))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " < ", Chr(60))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " > ", Chr(62))
-
-outOftranspileVariables := StrReplace(outOftranspileVariables, "  >= ", " >= ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, "  <= ", " <= ")
-
-outOftranspileVariables := StrReplace(outOftranspileVariables, " . ", " + ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " ,  ", ", ")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " [ ", "[")
-outOftranspileVariables := StrReplace(outOftranspileVariables, " ] ", "]")
-
-Loop, Parse, functionNames, "|"
-{
-outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['" . A_LoopField . "']", A_LoopField)
-}
-
-
-Loop, % numOfStrings
-{
-outOftranspileVariables := StrReplace(outOftranspileVariables, "freeeeepaestine-sav-etehmtyeah-freee-n" . A_Index, Chr(34) . theString%A_Index% . Chr(34))
-}
-
-weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n`n"
-;OutputDebug, |%outOftranspileVariables%|
-outOftranspileVariables := Trim(outOftranspileVariables)
-
-outOftranspileVariables := StrReplace(outOftranspileVariables, Chr(96), Chr(92))
-outOftranspileVariables := StrReplace(outOftranspileVariables, Chr(92) . Chr(92), Chr(96))
-outOftranspileVariables := StrReplace(outOftranspileVariables, "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100), Chr(34) . Chr(34))
-
-
-
-return outOftranspileVariables
-}
-
-
-
-
-
-
-transpileLowVariables(str)
-{
-Trim(str)
-numOfStrings := 0
-
-str := StrReplace(str, Chr(37) . Chr(37), "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100))
-
-if (InStr(str, Chr(37)))
-{
-
-Loop, Parse, str, "%"
-{
-theString%A_Index% := ""
-}
-
-
-posStartToGetString := 0
-numGetStringTheSatring := 0
-
-outOfstr11 := ""
-Loop, Parse, str
-{
-
-if (posStartToGetString = 2)
-{
-posStartToGetString := 0
-ONCEposStartToGetString := 0
-}
-
-if (posStartToGetString = 1) && (A_LoopField != Chr(37))
-{
-theString%numGetStringTheSatring% .= A_LoopField
-ONCEposStartToGetString++
-if (ONCEposStartToGetString = 1)
-{
-outOfstr11 .= "freeeeepaestine-sav-etehmtyeah-freee-n" . numOfStrings
-}
-}
-else
-{
-if (A_LoopField != Chr(37))
-{
-outOfstr11 .= A_LoopField
-}
-}
-
-if (A_LoopField = Chr(37))
-{
-posStartToGetString++
-if (posStartToGetString = 1)
-{
-numGetStringTheSatring++
-numOfStrings++
-}
-}
-
-
-} ; loop
-
-
-}
-else
-{
-outOfstr11 := str
-}
-
-;OutputDebug, |%outOfstr11%|
-outOftranspileVariables := ""
-outOftranspileVariablesOut := Chr(34) . Trim(outOfstr11)
-
-
-
-Loop, % numOfStrings
-{
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, "freeeeepaestine-sav-etehmtyeah-freee-n" . A_Index, Chr(34) . " + variables[" . Chr(39) . theString%A_Index% . Chr(39) . "] + " . Chr(34))
-}
-outOftranspileVariablesOut .= Chr(34)
-nothing := ""
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(34) . Chr(34) . " + ", nothing)
-outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, " + " . Chr(34) . Chr(34), nothing)
-
-outOftranspileVariables := StrReplace(outOftranspileVariables, "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100), Chr(37) . Chr(37))
-
-weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n`n"
-
-return outOftranspileVariablesOut
-}
-
-
-
-
-
-
-
-isVarAnumKindaVar(str)
-{
-
-strLettersStart := 48
-Loop, 10
-{
-if (InStr(str, Chr(strLettersStart)))
-{
-return true
-}
-strLettersStart++
-}
-
-if (InStr(str, Chr(95)))
-{
-return true
-}
-
-
-return false
-}
-
-varDetect(str)
-{
-
-strLettersStart := 97
-Loop, 26
-{
-if (InStr(str, Chr(strLettersStart)))
-{
-return true
-}
-strLettersStart++
-}
-
-
-strLettersStart := 65
-Loop, 26
-{
-if (InStr(str, Chr(strLettersStart)))
-{
-return true
-}
-strLettersStart++
-}
-
-
-strLettersStart := 48
-Loop, 10
-{
-if (InStr(str, Chr(strLettersStart)))
-{
-return true
-}
-strLettersStart++
-}
-
-if (InStr(str, Chr(95)))
-{
-return true
-}
-
-if (InStr(str, Chr(37)))
-{
-return true
-}
-
-return false
-}
-
-
-funcToChecIfVaidNameForFunc(str)
-{
-    ; Check if the string is empty
-    if (!(str))
-    {
-        ;MsgBox, Invalid function name: %str% (empty string)
-        return false
-    }
-
-    ; Check if the first character is a digit (invalid for function name)
-    firstChar := SubStr(str, 1, 1)
-    if (firstChar >= "0" && firstChar <= "9")
-    {
-     ;   MsgBox, Invalid function name: %str% (starts with a digit)
-        return false
-    }
-
-    ; Initialize a flag for validation
-    isValid := true
-
-    ; Loop through each character in the string using Loop, Parse
-    Loop, Parse, str
-    {
-        ; Check the current parsed item (character)
-        char := A_LoopField
-
-        ; Check if the character is a valid letter, digit, or underscore
-        if !(char >= "A" && char <= "Z" || char >= "a" && char <= "z" || char >= "0" && char <= "9" || char = "_")
-        {
-           ; MsgBox, Invalid character %char% in function name: %str%
-            isValid := false
-            break
-        }
-    }
-
-    ; If passed all checks, return true (valid function name)
-    return isValid
-}

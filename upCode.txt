@@ -514,7 +514,12 @@
       }
 
 
-      function StrSplit(inputStr, delimiter, num) {
+function StrSplit(inputStr, delimiter, num) {
+    // Check if inputStr is a valid string
+    if (typeof inputStr !== 'string') {
+        return ''; // Return empty string for invalid input
+    }
+
     // Split the input string based on the delimiter
     const parts = inputStr.split(delimiter);
 
@@ -525,6 +530,7 @@
         return ''; // Return an empty string if num is out of range
     }
 }
+
 
    function MakeHotKey(hotkey, callback) {
         document.addEventListener("keydown", function (event) {
@@ -575,6 +581,11 @@
             }
           }
         });
+      }
+
+      // Custom Mod function
+      function Mod(dividend, divisor) {
+        return dividend % divisor;
       }
 
       function isMobileDevice() {
@@ -763,32 +774,56 @@ variables.func_StrReplace_func = `
   
 def StrReplace(originalString, find, replaceWith):
     import re
+    # Convert originalString to string if it's not already
     if not isinstance(originalString, str):
-        return originalString
-
+        originalString = str(originalString)
+    
+    # Convert find to string if it's not already
+    if not isinstance(find, str):
+        find = str(find)
+    
+    # Convert replaceWith to string if it's not already
+    if not isinstance(replaceWith, str):
+        replaceWith = str(replaceWith)
+    
+    # Escape special characters in find for safe use in regex
     escapedFind = re.escape(find)
-    replaceWith = str(replaceWith)  # Ensure replaceWith is treated as a string
-    return re.sub(escapedFind, replaceWith, originalString)
+    
+    # Escape special characters in replaceWith for safe use in replacement
+    escapedReplace = re.escape(replaceWith)
+    
+    # Perform replacement using the escaped patterns
+    return re.sub(escapedFind, escapedReplace, originalString)
 
 `;
 
 variables.func_StringTrimLeft_func = `
 
 def StringTrimLeft(input, numChars):
-    if input and len(input) >= numChars:
-        return input[numChars:]
+    # Convert input to a string if it's not already a string
+    if not isinstance(input, str):
+        input = str(input)  # Convert input to string
+
+    # Check if the input is long enough to perform trimming
+    if len(input) >= numChars:
+        return input[numChars:]  # Trim the string from the left
     else:
-        return input
+        return input  # Return input unchanged if numChars is larger than string length
 
 `;
 
 variables.func_StringTrimRight_func = `
 
 def StringTrimRight(input, numChars):
-    if input and len(input) >= numChars:
-        return input[:-numChars]
+    # Convert input to a string if it's not already a string
+    if not isinstance(input, str):
+        input = str(input)  # Convert input to string
+
+    # Check if the input is long enough to perform trimming
+    if len(input) >= numChars:
+        return input[:-numChars]  # Trim the string from the right
     else:
-        return input
+        return input  # Return input unchanged if numChars is larger than string length
 
 `;
 
@@ -847,8 +882,15 @@ def Chr(number):
 
 `;
 
+variables.func_Mod_func = `
 
-variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr"
+# Custom Mod function in Python
+def Mod(dividend, divisor):
+    return dividend % divisor
+
+`;
+
+variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod"
 
 
         Gui1.style.position = "absolute";
@@ -1138,7 +1180,8 @@ variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLef
         	  variables.HTpyCode = sanitizedText;
 
 	          // Call Button function (assuming it returns a Promise)
-        	  await Button();
+            await sleep(1)
+        	  await Button(variables.HTpyCode);
       		}
 
 
