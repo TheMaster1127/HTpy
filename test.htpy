@@ -1,4 +1,1 @@
-Loop
-{
-MsgBox, % A_Index
-}
+msgbox, hello from HTpy

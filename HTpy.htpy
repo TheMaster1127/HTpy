@@ -1,0 +1,1821 @@
+
+
+
+indent_nested_curly_braces(input_string)
+{
+indent_size := 4
+current_indent := 0
+result := ""
+;MsgBox, % input_string
+input_string := input_string
+Loop, Parse, input_string, `n, `r
+{
+
+trimmed_line := Trim(A_LoopField)
+
+if (trimmed_line = Chr(123))
+{
+
+result .= ((Chr(32) . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+current_indent := current_indent + indent_size
+}
+else if (trimmed_line = Chr(125))
+{
+
+current_indent := current_indent - indent_size
+result .= ((Chr(32) . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+}
+else
+{
+
+result .= ((Chr(32) . RepeatSpaces(current_indent)) . (trimmed_line . "`n"))
+}
+
+}
+
+; Return the result
+return result
+}
+
+RepeatSpaces(count)
+{
+spaces := ""
+Loop, % count
+{
+spaces .= Chr(32)
+}
+return spaces
+}
+
+
+
+ifTheLineIsAFuncDec(strgjvkh, theFuncWeFound)
+{
+Loop, Parse, theFuncWeFound, `n, `r
+{
+
+numOfChars := 0
+Loop, Parse, A_LoopField
+{
+numOfChars++
+}
+
+ALoopFieldd := StrSplit(A_LoopField, Chr(40), 1)
+ALoopFieldd2 := StrSplit(strgjvkh, Chr(40), 1)
+
+if (SubStr(ALoopFieldd, 1, numOfChars) = ALoopFieldd2) && (InStr(strgjvkh, Chr(40)))
+{
+return true
+}
+
+
+}
+
+return false
+}
+
+
+
+
+
+
+isVarAnumKindaVar(strrrrr)
+{
+
+strLettersStart := 48
+Loop, 10
+{
+if (InStr(strrrrr, Chr(strLettersStart)))
+{
+return true
+}
+strLettersStart++
+}
+
+if (InStr(strrrrr, Chr(95)))
+{
+return true
+}
+
+
+return false
+}
+
+varDetect(strrrrr)
+{
+
+strLettersStart := 97
+Loop, 26
+{
+if (InStr(strrrrr, Chr(strLettersStart)))
+{
+return true
+}
+strLettersStart++
+}
+
+
+strLettersStart := 65
+Loop, 26
+{
+if (InStr(strrrrr, Chr(strLettersStart)))
+{
+return true
+}
+strLettersStart++
+}
+
+
+strLettersStart := 48
+Loop, 10
+{
+if (InStr(strrrrr, Chr(strLettersStart)))
+{
+return true
+}
+strLettersStart++
+}
+
+if (InStr(strrrrr, Chr(95)))
+{
+return true
+}
+
+if (InStr(strrrrr, Chr(37)))
+{
+return true
+}
+
+return false
+}
+
+
+funcToChecIfVaidNameForFunc(strrrrr)
+{
+    ; Check if the string is empty
+    if (!(strrrrr))
+    {
+        ;MsgBox, Invalid function name: %strrrrr% (empty string)
+        return false
+    }
+
+    ; Check if the first character is a digit (invalid for function name)
+    firstChar := SubStr(strrrrr, 1, 1)
+    if (firstChar >= "0" && firstChar <= "9")
+    {
+     ;   MsgBox, Invalid function name: %strrrrr% (starts with a digit)
+        return false
+    }
+
+    ; Initialize a flag for validation
+    isValid := true
+
+    ; Loop through each character in the string using Loop, Parse
+    Loop, Parse, strrrrr
+    {
+        ; Check the current parsed item (character)
+        char := A_LoopField
+
+        ; Check if the character is a valid letter, digit, or underscore
+        if (!(char >= "A" && char <= "Z" || char >= "a" && char <= "z" || char >= "0" && char <= "9" || char = "_"))
+        {
+           ; MsgBox, Invalid character %char% in function name: %strrrrr%
+            isValid := false
+            break
+        }
+    }
+
+    ; If passed all checks, return true (valid function name)
+    return isValid
+}
+
+transpileVariables(str123455, functionNames)
+{
+str123455 := Trim(str123455)
+numOfStrings := 0
+
+outOftranspileVariables := ""
+outOftranspileVariablesOut := str123455
+
+
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(40), " ( ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(41), " ) ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(44), " , ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(60), " < ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(62), " > ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(91), " [ ")
+outOftranspileVariablesOut := StrReplace(outOftranspileVariablesOut, Chr(93), " ] ")
+
+wasHereVarTryUhBug := 1
+
+Loop, Parse, outOftranspileVariablesOut, " "
+{
+howManyCharIfVar := 0
+Loop, Parse, A_LoopField
+{
+if (varDetect(A_LoopField))
+{
+howManyCharIfVar++
+}
+}
+howManyCharIfVar2 := 0
+Loop, Parse, A_LoopField
+{
+howManyCharIfVar2++
+}
+istAvar := 0
+if (howManyCharIfVar = howManyCharIfVar2)
+{
+istAvar := 1
+}
+
+if (istAvar = 1)
+{
+
+howManyCharIfVar := 0
+Loop, Parse, A_LoopField
+{
+if (isVarAnumKindaVar(A_LoopField))
+{
+howManyCharIfVar++
+}
+}
+
+howManyCharIfVar2 := 0
+Loop, Parse, A_LoopField
+{
+howManyCharIfVar2++
+}
+isNumKindaVar := 0
+if (howManyCharIfVar2 = howManyCharIfVar)
+{
+isNumKindaVar := 1
+}
+
+if (isNumKindaVar = 1)
+{
+outOftranspileVariables .= A_LoopField . Chr(32)
+}
+else
+{
+
+if (InStr(A_LoopField, "%"))
+{
+var1 := StrSplit(A_LoopField, "%", 1)
+var2 := StrSplit(A_LoopField, "%", 2)
+out1 := "variables[f" . Chr(39) . var1 . "{variables[" . Chr(34) . var2 . Chr(34) . "]}" . Chr(39) . "]"
+outOftranspileVariables .= out1 . Chr(32)
+}
+else
+{
+out1 := "variables[" . Chr(39) . A_LoopField . Chr(39) . "]"
+outOftranspileVariables .= out1 . Chr(32)
+}
+}
+
+
+}
+else
+{
+outOftranspileVariables .= A_LoopField . Chr(32)
+}
+wasHereVarTryUhBug := 0
+}
+
+if (wasHereVarTryUhBug = 1)
+{
+outOftranspileVariables := outOftranspileVariablesOut
+}
+
+;OutputDebug, |%outOftranspileVariables%|
+
+
+Loop, Parse, functionNames, "|"
+{
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['" . A_LoopField . "']", A_LoopField)
+}
+
+
+Loop, % numOfStrings
+{
+outOftranspileVariables := StrReplace(outOftranspileVariables, "freeeeepaestine-sav-etehmtyeah-freee-n" . A_Index, Chr(34) . theString%A_Index% . Chr(34))
+}
+
+weEverUseVars := "# Define a dictionary to store dynamic variables`nvariables = {}`n`n"
+;OutputDebug, |%outOftranspileVariables%|
+outOftranspileVariables := Trim(outOftranspileVariables)
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, Chr(96), Chr(92))
+outOftranspileVariables := StrReplace(outOftranspileVariables, Chr(92) . Chr(92), Chr(96))
+outOftranspileVariables := StrReplace(outOftranspileVariables, "cyiasasasasstAYtheummonlyemlpystringya-a-" . Chr(100), Chr(34) . Chr(34))
+
+
+;OutputDebug, %outOftranspileVariables%
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['True']", "True")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['False']", "False")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['true']", "True")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['false']", "False")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['if']", "if")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['else']", "else")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['and']", "and")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "variables['or']", "or")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "!", " not ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " && ", " and ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " || ", " or ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " < = ", " <= ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " > = ", " >= ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "not ==", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "  not == ", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " not == ", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " not ==", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "not ==", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "  not = ", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "not =", " != ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
+
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, " ( ", Chr(40))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " ) ", Chr(41))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " )", Chr(41))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " < ", Chr(60))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " > ", Chr(62))
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "  >= ", " >= ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "  <= ", " <= ")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, ".", " + ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " ,  ", ", ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " [ ", "[")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " ] ", "]")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, "!=", " !=")
+
+;OutputDebug, %outOftranspileVariables%
+
+return outOftranspileVariables
+}
+
+
+
+
+
+
+
+transpileLowVariables(sstr)
+{
+sstr := Trim(sstr)
+
+outOftranspileVariablesOut := Chr(34)
+if (InStr(sstr, Chr(37)))
+{
+Loop, Parse, sstr, "%"
+{
+
+if (Mod(A_Index, 2))
+{
+outOftranspileVariablesOut .= A_LoopField
+}
+else
+{
+outOftranspileVariablesOut .= Chr(34) . " + variables['" . A_LoopField . Chr(39) . Chr(93) . " + " . Chr(34)
+}
+
+}
+}
+else
+{
+sstr := Chr(34) . sstr . Chr(34)
+return sstr
+}
+
+outOftranspileVariablesOut := outOftranspileVariablesOut . Chr(34)
+return outOftranspileVariablesOut
+}
+
+
+; the compiler
+compiler(HTpyCode)
+{
+
+
+pyCode := ""
+out := ""
+HTpyCodeD1 := ""
+skipLeftCuleyForFuncPLS := 0
+eavbnsalvbaslv := 0
+Loop, Parse, HTpyCode, `n, `r
+{
+if (A_Index = 1)
+{
+HTpyCodeD1 .= Trim(A_LoopField) . "`n"
+}
+else
+{
+
+if (Trim(A_LoopField) = Chr(123)) && (eavbnsalvbaslv = 1)
+{
+; nothing
+nothing := ""
+}
+else
+{
+HTpyCodeD1 .= Trim(A_LoopField) . "`n"
+}
+
+eavbnsalvbaslv := 0
+if (Trim(A_LoopField) = "")
+{
+eavbnsalvbaslv := 1
+}
+
+
+}
+
+
+
+}
+StringTrimRight, HTpyCode, HTpyCodeD1, 1
+
+
+
+HTpyCodeOUT754754 := ""
+areWEinSome34sNum := 0
+theIdNumOfThe34 := 0
+
+Loop, Parse, HTpyCode
+{
+theIdNumOfThe34theVar%A_Index% := Chr(34)
+}
+
+Loop, Parse, HTpyCode
+{
+if (A_LoopField = Chr(34))
+{
+areWEinSome34sNum++
+}
+
+
+if (areWEinSome34sNum = 1)
+{
+
+
+
+if (A_LoopField != Chr(34))
+{
+if (A_LoopField = Chr(96))
+{
+theIdNumOfThe34theVar%theIdNumOfThe34% .= Chr(92)
+}
+else
+{
+theIdNumOfThe34theVar%theIdNumOfThe34% .= A_LoopField
+}
+}
+else
+{
+theIdNumOfThe34++
+HTpyCodeOUT754754 .= "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-" . Chr(65) . Chr(65) . str(theIdNumOfThe34) . Chr(65) . Chr(65)
+}
+
+}
+
+
+if (areWEinSome34sNum = 2) or (areWEinSome34sNum = 0)
+{
+if (A_LoopField != Chr(34))
+{
+HTpyCodeOUT754754 .= A_LoopField
+}
+
+areWEinSome34sNum := 0
+}
+
+
+
+}
+HTpyCode := HTpyCodeOUT754754
+
+Loop, % theIdNumOfThe34
+{
+theIdNumOfThe34theVar%A_Index% .= Chr(34)
+}
+
+
+str23IfFuncInNAMEnum := 0
+
+CheckIFandElsesss1 := "if ("
+CheckIFandElsesss2 := "if("
+CheckIFandElsesss3 := "if !("
+CheckIFandElsesss4 := "if!("
+CheckIFandElsesss5 := "else if ("
+CheckIFandElsesss6 := "else if("
+CheckIFandElsesss7 := "else if !("
+CheckIFandElsesss8 := "else if!("
+CheckIFandElsesssNum := 0
+
+functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy"
+awesdrtf := "|A" . Chr(95) . "LoopField|A" . Chr(95) . "Index"
+
+willNextLineBeCurlyBracee := 0
+theFuncWeFound := ""
+theFuncWeFoundAllNames := ""
+haveWeEverUsedAloop := 0
+;OutputDebug, %HTpyCode%
+Loop, Parse, HTpyCode, `n, `r
+{
+
+if (willNextLineBeCurlyBracee = 1)
+{
+; 123 is {
+if (A_LoopField = Chr(123))
+{
+willNextLineBeCurlyBracee := 0
+
+functionNames .= "|" . lastFuncName
+;lastFuncFullName
+theFuncWeFound .= lastFuncFullName . "`n"
+theFuncWeFoundAllNames .= lastFuncName . Chr(40) . "`n"
+}
+}
+
+
+
+if (SubStr(StrLower(A_LoopField), 1, 4) = CheckIFandElsesss1) or (SubStr(StrLower(A_LoopField), 1, 3) = CheckIFandElsesss2) or (SubStr(StrLower(A_LoopField), 1, 5) = CheckIFandElsesss3) or (SubStr(StrLower(A_LoopField), 1, 4) = CheckIFandElsesss4) or (SubStr(StrLower(A_LoopField), 1, 9) = CheckIFandElsesss5) or (SubStr(StrLower(A_LoopField), 1, 8) = CheckIFandElsesss6) or (SubStr(StrLower(A_LoopField), 1, 10) = CheckIFandElsesss7) or (SubStr(StrLower(A_LoopField), 1, 9) = CheckIFandElsesss8) or (SubStr(StrLower(A_LoopField), 1, 5) = "loop,")
+{
+; not a func
+willNextLineBeCurlyBracee := 0
+;OutputDebug, %A_LoopField%
+}
+else
+{
+;OutputDebug, ||%A_LoopField%||
+strForCheckIfFunc := StrSplit(A_LoopField, Chr(40), 1)
+;OutputDebug, |%strForCheckIfFunc%|
+if (funcToChecIfVaidNameForFunc(Trim(strForCheckIfFunc))) && (strForCheckIfFunc != "") && (InStr(A_LoopField, Chr(40)))
+{
+willNextLineBeCurlyBracee := 1
+lastFuncName := strForCheckIfFunc
+lastFuncFullName := A_LoopField
+;OutputDebug, %lastFuncFullName%
+}
+else
+{
+willNextLineBeCurlyBracee := 0
+
+}
+
+}
+
+
+}
+
+
+StringTrimRight, theFuncWeFound, theFuncWeFound, 1
+StringTrimRight, theFuncWeFoundAllNames, theFuncWeFoundAllNames, 1
+;OutputDebug, %theFuncWeFound%
+;OutputDebug, %functionNames%
+;OutputDebug, %theFuncWeFoundAllNames%
+
+
+onceImportTime := 0
+weUseRandomAtLeastOnce := 0
+weEverUseVars := ""
+usedLib := ""
+AindexcharLength := 1
+pycodeAcurlyBraceAddSomeVrasFixNL := 0
+pycodeAcurlyBraceAddSomeVrasFixLP := 0
+pycodeLoopfixa := ""
+
+Loop, Parse, HTpyCode, `n, `r
+{
+lineDone := 0
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = StrLower("msgbox, % "))
+{
+StringTrimLeft, var1, A_LoopField, 10
+
+
+var2 := Trim(transpileVariables(var1, functionNames))
+
+
+
+out := "print(" . var2 . ")"
+
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("msgbox, ")) && (SubStr(Trim(StrLower(A_LoopField)), 1, 10) != StrLower("msgbox, % "))
+{
+StringTrimLeft, var1, A_LoopField, 8
+
+OUTvarMsgLow := transpileLowVariables(var1)
+
+out := "print(" . OUTvarMsgLow . ")"
+
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("Random, "))
+{
+varr1 := StrSplit(A_LoopField, ",", 2)
+varr2 := StrSplit(A_LoopField, ",", 3)
+varr3 := StrSplit(A_LoopField, ",", 4)
+
+outt1 := Trim(transpileVariables(varr1, functionNames))
+outt2 := Trim(transpileVariables(varr2, functionNames))
+outt3 := Trim(transpileVariables(varr3, functionNames))
+weUseRandomAtLeastOnce++
+if (weUseRandomAtLeastOnce = 1)
+{
+usedLib .= "import random`n"
+}
+out := outt1 . " = " . "random.randint(" . outt2 . ", " . outt3 . ")"
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 17) = StrLower("StringTrimRight, "))
+{
+varr1 := StrSplit(A_LoopField, ",", 2)
+varr2 := StrSplit(A_LoopField, ",", 3)
+varr3 := StrSplit(A_LoopField, ",", 4)
+
+outt1 := Trim(transpileVariables(varr1, functionNames))
+outt2 := Trim(transpileVariables(varr2, functionNames))
+outt3 := Trim(transpileVariables(varr3, functionNames))
+
+out := outt1 . " = " . "StringTrimRight(" . outt2 . ", " . outt3 . ")"
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 16) = StrLower("StringTrimLeft, "))
+{
+varr1 := StrSplit(A_LoopField, ",", 2)
+varr2 := StrSplit(A_LoopField, ",", 3)
+varr3 := StrSplit(A_LoopField, ",", 4)
+
+outt1 := Trim(transpileVariables(varr1, functionNames))
+outt2 := Trim(transpileVariables(varr2, functionNames))
+outt3 := Trim(transpileVariables(varr3, functionNames))
+
+out := outt1 . " = " . "StringTrimLeft(" . outt2 . ", " . outt3 . ")"
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 7) = StrLower("sleep, "))
+{
+
+StringTrimLeft, var1, A_LoopField, 7
+
+var1 := Trim(transpileVariables(var1, functionNames))
+out := "time.sleep(" . var1 . " / 1000" . ")"
+lineDone := 1
+onceImportTime++
+if (onceImportTime = 1)
+{
+usedLib .= "import time`n"
+}
+pyCode .= out . "`n"
+
+}
+else if (ifTheLineIsAFuncDec(Trim(A_LoopField), theFuncWeFound))
+{
+
+;OutputDebug, %A_LoopField%
+str23IfFuncIn := A_LoopField
+str23IfFuncInNAME := StrSplit(str23IfFuncIn, Chr(40), 1)
+
+
+
+
+str23IfFuncIn := StrSplit(str23IfFuncIn, Chr(40), 2)
+nothing := ""
+str23IfFuncInALL := StrReplace(str23IfFuncIn, Chr(40), nothing)
+str23IfFuncInALL := StrReplace(str23IfFuncInALL, Chr(41), nothing)
+wasHereInfuncAndgetingVar1 := 0
+theVarsPArmFormTheFunc := ""
+if (str23IfFuncInALL != "")
+{
+Loop, Parse, str23IfFuncInALL, `,
+{
+wasHereInfuncAndgetingVar1 := 1
+var1 := Trim(A_LoopField)
+theVarsPArmFormTheFunc .= "variables['" . var1 . "'] = " . var1 . "`n"
+}
+}
+
+skipLeftCuleyForFuncPLS := 0
+if (str23IfFuncInALL != "")
+{
+str234567 := "def " . str23IfFuncInNAME . Chr(40) . str23IfFuncInALL . Chr(41) . ":`n{`n" . theVarsPArmFormTheFunc
+skipLeftCuleyForFuncPLS := 1
+}
+else
+{
+str234567 := "def " . str23IfFuncInNAME . Chr(40) . str23IfFuncInALL . Chr(41) . ":"
+}
+
+
+Loop, % str23IfFuncInNAMEnum
+{
+
+if (str23IfFuncInNAME%A_Index% = str23IfFuncInNAME)
+{
+var12312 := ""
+if (str23IfFuncInALL != "")
+{
+Loop, Parse, str23IfFuncInALL, `,
+{
+wasHereInfuncAndgetingVar1 := 1
+var1 := Trim(A_LoopField)
+
+var12312 .= transpileVariables(var1, functionNames) . ", "
+
+}
+StringTrimRight, var12312, var12312, 2
+}
+
+
+if (wasHereInfuncAndgetingVar1 = 0)
+{
+str2345678 := str23IfFuncInNAME . Chr(40) . Chr(41)
+}
+else
+{
+str2345678 := str23IfFuncInNAME . Chr(40) . var12312 . Chr(41)
+}
+lineDone := 1
+
+}
+
+
+}
+
+str23IfFuncInNAMEnum++
+str23IfFuncInNAME%str23IfFuncInNAMEnum% := str23IfFuncInNAME
+
+
+
+
+
+
+if (lineDone = 1)
+{
+pyCode .= str2345678 . "`n"
+}
+else
+{
+lineDone := 1
+pyCode .= str234567 . "`n"
+}
+
+}
+else if (SubStr(Trim(A_LoopField), 1, 7) = "return ")
+{
+
+StringTrimLeft, strFormReturn, A_LoopField, 7
+
+var12312 := transpileVariables(strFormReturn, functionNames)
+out := "return " . var12312
+
+lineDone := 1
+pyCode .= out . "`n"
+
+}
+else if (StrLower(A_LoopField) = "loop")
+{
+; infinity loops
+haveWeEverUsedAloop := 1
+lineDone := 1
+var1 := "for A" . Chr(95) . "Index" . str(AindexcharLength) . " , value in enumerate(iter(int, 1), start=1):"
+nothing := ""
+AindexcharLengthStr := nothing . str(AindexcharLength) . nothing
+theFixTextLoopNL := "variables['A" . Chr(95) . "Index" . str(AindexcharLength) . "'] = A" . Chr(95) . "Index" . str(AindexcharLength)
+
+pycodeAcurlyBraceAddSomeVrasFixNL := 1
+lineDone := 1
+pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength) . "`n"
+pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength)
+AindexcharLength++
+pyCode .= pycodeLoopfixa1 . "`n" . var1 . "`n"
+
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = "loop, ") && (SubStr(Trim(StrLower(A_LoopField)), 1, 8) != "loop, % ") && (SubStr(Trim(StrLower(A_LoopField)), 1, 7) != "loop % ") && (SubStr(Trim(StrLower(A_LoopField)), 1, 11) != StrLower("Loop, Parse"))
+{
+
+
+
+str123 := A_LoopField
+;MsgBox, % str123
+
+
+StringTrimLeft, out2, str123, 6
+
+;MsgBox % out2
+
+;MsgBox, % out2
+out2 := Trim(out2)
+
+
+myVar := out2
+lineYGI := transpileVariables(myVar, functionNames)
+line := lineYGI
+haveWeEverUsedAloop := 1
+;MsgBox, % line
+var1 := "for A" . Chr(95) . "Index" . str(AindexcharLength) . " in range(1, " . line . " + 1):"
+nothing := ""
+AindexcharLengthStr := nothing . str(AindexcharLength) . nothing
+theFixTextLoopNL := "variables['A" . Chr(95) . "Index" . str(AindexcharLength) . "'] = A" . Chr(95) . "Index" . str(AindexcharLength)
+
+pycodeAcurlyBraceAddSomeVrasFixNL := 1
+
+pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength) . "`n"
+pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength)
+AindexcharLength++
+lineDone := 1
+pyCode .= pycodeLoopfixa1 . "`n" . var1 . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = "loop, % ")
+{
+str123 := A_LoopField
+;MsgBox, % str123
+
+
+StringTrimLeft, out2, str123, 8
+
+;MsgBox % out2
+
+;MsgBox, % out2
+out2 := Trim(out2)
+
+
+myVar := out2
+lineYGI := transpileVariables(myVar, functionNames)
+line := lineYGI
+
+;MsgBox, % line
+var1 := "for A" . Chr(95) . "Index" . str(AindexcharLength) . " in range(1, " . line . " + 1):"
+nothing := ""
+AindexcharLengthStr := nothing . str(AindexcharLength) . nothing
+theFixTextLoopNL := "variables['A" . Chr(95) . "Index" . str(AindexcharLength) . "'] = A" . Chr(95) . "Index" . str(AindexcharLength)
+
+pycodeAcurlyBraceAddSomeVrasFixNL := 1
+haveWeEverUsedAloop := 1
+pycodeLoopfixa .= "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength) . "`n"
+pycodeLoopfixa1 := "nl|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength)
+AindexcharLength++
+lineDone := 1
+pyCode .= pycodeLoopfixa1 . "`n" . var1 . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 13) = StrLower("Loop, Parse, "))
+{
+
+var1 := A_LoopField
+lineDone := 1
+var1 := Trim(var1)
+StringTrimLeft, var1, var1, 13
+
+line1 := Trim(StrSplit(var1, ",", 1))
+
+line1 := transpileVariables(line1, functionNames)
+line2 := ""
+line3 := ""
+itemsOut := ""
+line2 := Trim(StrSplit(var1, ",", 2))
+line3 := Trim(StrSplit(var1, ",", 3))
+
+
+
+if (InStr(var1, Chr(96) . ","))
+{
+line2 := Chr(34) . "," . Chr(34)
+itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ")"
+}
+else
+{
+
+
+
+if (line2 = "") && (line3 = "")
+{
+; nothing so only each char
+itemsOut := "items = LoopParseFunc(" . line1 . ")"
+}
+
+if (line2 != "") && (line3 = "")
+{
+if (InStr(line2, Chr(96)))
+{
+line2 := Chr(34) . line2 . Chr(34)
+}
+itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ")"
+}
+
+if (line2 != "") && (line3 != "")
+{
+if (InStr(line2, Chr(96)))
+{
+line2 := Chr(34) . line2 . Chr(34)
+}
+if (InStr(line3, Chr(96)))
+{
+line3 := Chr(34) . line3 . Chr(34)
+}
+
+itemsOut := "items = LoopParseFunc(" . line1 . ", " . line2 . ", " . line3 . ")"
+}
+
+
+
+itemsOut := StrReplace(itemsOut, Chr(96), Chr(92))
+
+
+
+}
+
+
+var1out := itemsOut . "`n" . "for A" . Chr(95) . "Index" . str(AindexcharLength) . ", A" . Chr(95) . "LoopField" . str(AindexcharLength) . " in enumerate(items, start=1):"
+
+
+
+nothing := ""
+AindexcharLengthStr := nothing . str(AindexcharLength) . nothing
+
+
+theFixTextLoopLP := "variables['A" . Chr(95) . "Index" . str(AindexcharLength) . "'] = A" . Chr(95) . "Index" . str(AindexcharLength) . "`n" . "variables['A" . Chr(95) . "LoopField" . str(AindexcharLength) . "'] = A" . Chr(95) . "LoopField" . str(AindexcharLength)
+
+pycodeAcurlyBraceAddSomeVrasFixLP := 1
+haveWeEverUsedAloop := 1
+pycodeLoopfixa .= "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength) . "`n"
+pycodeLoopfixa1 := "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength)
+AindexcharLength++
+pyCode .= pycodeLoopfixa1 . "`n" . var1out . "`n"
+}
+else if (SubStr(A_LoopField, -1) = "++")
+{
+str123 := Trim(A_LoopField)
+StringTrimRight, str123, str123, 2
+
+str123 := Trim(transpileVariables(str123, functionNames))
+
+out := str123 . " += 1"
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(A_LoopField, -1) = "--")
+{
+str123 := Trim(A_LoopField)
+StringTrimRight, str123, str123, 2
+
+str123 := Trim(transpileVariables(str123, functionNames))
+
+out := str123 . " -= 1"
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss1)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 3) = StrLower(CheckIFandElsesss2)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 5) = StrLower(CheckIFandElsesss3)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss4)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss5)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower(CheckIFandElsesss6)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = StrLower(CheckIFandElsesss7)) or (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss8))
+{
+
+
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss1))
+{
+CheckIFandElsesssNum := 4
+CheckIFandElsesssNumNum := 1
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 3) = StrLower(CheckIFandElsesss2))
+{
+CheckIFandElsesssNum := 3
+CheckIFandElsesssNumNum := 2
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 5) = StrLower(CheckIFandElsesss3))
+{
+CheckIFandElsesssNum := 5
+CheckIFandElsesssNumNum := 3
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 4) = StrLower(CheckIFandElsesss4))
+{
+CheckIFandElsesssNum := 4
+CheckIFandElsesssNumNum := 4
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss5))
+{
+CheckIFandElsesssNum := 9
+CheckIFandElsesssNumNum := 5
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower(CheckIFandElsesss6))
+{
+CheckIFandElsesssNum := 8
+CheckIFandElsesssNumNum := 6
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = StrLower(CheckIFandElsesss7))
+{
+CheckIFandElsesssNum := 10
+CheckIFandElsesssNumNum := 7
+}
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 9) = StrLower(CheckIFandElsesss8))
+{
+CheckIFandElsesssNum := 9
+CheckIFandElsesssNumNum := 8
+}
+
+StringTrimLeft, str123, A_LoopField, CheckIFandElsesssNum
+
+str123 := CheckIFandElsesss%CheckIFandElsesssNumNum% . Chr(32) . transpileVariables(str123, functionNames)
+
+
+if (SubStr(Trim(StrLower(str123)), 1, 7) = StrLower("else if"))
+{
+str123 := StrReplace(str123, "else if", "elif")
+}
+else
+{
+str123 := str123
+StringTrimLeft, str123, str123, 2
+str123 := "if" . str123
+}
+
+
+str123 := Trim(str123) . ":"
+
+str123 := StrReplace(str123, "if " . Chr(40) . Chr(32), "if " . Chr(40))
+str123 := StrReplace(str123, Chr(32) . Chr(41) . ":", Chr(41) . ":")
+
+
+out := str123
+
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (StrLower(A_LoopField) = StrLower("else"))
+{
+
+out := "else:"
+
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (InStr(A_LoopField, " := ")) or (InStr(A_LoopField, " .= ")) or (InStr(A_LoopField, " += ")) or (InStr(A_LoopField, " -= ")) or (InStr(A_LoopField, " *= ")) && (lineDone = 0)
+{
+lineDone := 1
+str123 := A_LoopField
+
+whatVarWeUse := ""
+if (InStr(A_LoopField, " := "))
+{
+whatVarWeUse := " = "
+}
+if (InStr(A_LoopField, " .= "))
+{
+whatVarWeUse := " += "
+}
+if (InStr(A_LoopField, " += "))
+{
+whatVarWeUse := " += "
+}
+if (InStr(A_LoopField, " -= "))
+{
+whatVarWeUse := " -= "
+}
+if (InStr(A_LoopField, " *= "))
+{
+whatVarWeUse := " *= "
+}
+
+
+
+
+str123 := StrReplace(str123, ":=", "=")
+str123 := StrReplace(str123, ".=", "=")
+str123 := StrReplace(str123, "+=", "=")
+str123 := StrReplace(str123, "-=", "=")
+str123 := StrReplace(str123, "*=", "=")
+
+
+var1avavavavva := Trim(StrSplit(str123, "=", 1))
+var2avavavavva := Trim(StrSplit(str123, "=", 2))
+;OutputDebug, ||||||||||||%var2%||||||||||||
+
+varOUT1avavavavva := transpileVariables(var1avavavavva, functionNames)
+varOUT2avavavavva := transpileVariables(var2avavavavva, functionNames)
+
+
+out := varOUT1avavavavva . whatVarWeUse . varOUT2avavavavva
+
+
+pyCode .= out . "`n"
+
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(59)) && (lineDone = 0)
+{
+StringTrimLeft, str123, A_LoopField, 1
+
+str123 := "#" . str123
+out := str123
+lineDone := 1
+pyCode .= out . "`n"
+}
+else
+{
+; this is THE else
+if (lineDone != 1)
+{
+if (skipLeftCuleyForFuncPLS != 1)
+{
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(125))
+{
+pyCode .= Chr(125) . "`n"
+}
+else
+{
+if (pycodeAcurlyBraceAddSomeVrasFixLP = 1) && (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(123))
+{
+pycodeAcurlyBraceAddSomeVrasFixLP := 0
+
+
+pyCode .= A_LoopField . "`n" . theFixTextLoopLP . "`n"
+}
+else
+{
+if (pycodeAcurlyBraceAddSomeVrasFixNL = 1) && (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(123))
+{
+pycodeAcurlyBraceAddSomeVrasFixNL := 0
+pyCode .= A_LoopField . "`n" . theFixTextLoopNL . "`n"
+}
+else
+{
+pyCode .= A_LoopField . "`n"
+}
+}
+}
+}
+else
+{
+skipLeftCuleyForFuncPLS := 0
+}
+}
+}
+
+} ; end of the parsing loop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (haveWeEverUsedAloop = 1)
+{
+
+StringTrimRight, pycodeLoopfixa, pycodeLoopfixa, 1
+
+;OutputDebug, |%pycodeLoopfixa%|
+AIndexLoopCurlyFix := 1
+Loop, Parse, pycodeLoopfixa, `n, `r
+{
+
+
+
+str123 := A_LoopField
+fixLoopLokingFor := A_LoopField
+fixLoopLokingForfound := 1
+out1 := StrSplit(str123 ,"|" , 1)
+out2 := StrSplit(str123 ,"|" , 3)
+;OutputDebug, |%out1%|
+;OutputDebug, |%out2%|
+
+
+
+wasAtanyIfsElseAddAIndexLoopCurlyFix := 0
+
+
+if (out1 = "nl")
+{
+
+
+inTarget := 0
+insideBracket := 0
+netsedCurly := 0
+eldLoopNestedBADlol := 0
+readyToEnd := 0
+endBracketDOntPutThere := 0
+dontSaveStr := 0
+weAreDoneHereCurly := 0
+DeleayOneCuzOfLoopParse := 0
+fixLoopLokingForNum := 0
+insdeAnestedLoopBAD := 0
+foundTheTopLoop := 0
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% := ""
+Loop, Parse, pyCode, `n, `r
+{
+;MsgBox, dsfgsdefgesrdg1
+;MsgBox, |%A_LoopField%|`n|%fixLoopLokingFor%|
+
+
+if (InStr(A_LoopField, fixLoopLokingFor)) && (insdeAnestedLoopBAD != 1)
+{
+fixLoopLokingForNum := 1
+
+;MsgBox, do we came here 1
+}
+
+if (InStr(A_LoopField, "for ")) && (weAreDoneHereCurly != 1) && (insdeAnestedLoopBAD != 1) && (fixLoopLokingForNum = 1)
+{
+
+s := StrSplit(A_LoopField ,"A" . Chr(95) . "Index", 2)
+out1z := s
+
+
+s := StrSplit(out1z, " ", 1)
+out1z := Trim(s)
+
+
+;MsgBox, % out1z
+
+;MsgBox, do we came here 2
+fixLoopLokingForNum := 0
+foundTheTopLoop++
+  inTarget := 1
+	;MsgBox, % A_LoopField
+	dontSaveStr := 1
+
+	ALoopField := A_LoopField
+
+	;ALoopField := StrReplace(ALoopField, "for (/* Loop parse */", "for (/* Loop parse */ /* From AHK */")
+DeleayOneCuzOfLoopParse := 1
+	out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= ALoopField . "`n"
+}
+
+if (inTarget = 1) && (InStr(A_LoopField, Chr(123))) && (insdeAnestedLoopBAD != 1)
+{
+insideBracket := 1
+}
+
+if (insideBracket = 1) && (InStr(A_LoopField, Chr(123))) && (insdeAnestedLoopBAD != 1)
+{
+netsedCurly++
+}
+
+if (insideBracket = 1) && (InStr(A_LoopField, Chr(125))) && (insdeAnestedLoopBAD != 1)
+{
+netsedCurly--
+readyToEnd := 1
+}
+
+if (InStr(A_LoopField, "for ")) && (insdeAnestedLoopBAD != 1) && (foundTheTopLoop >= 2)
+{
+insdeAnestedLoopBAD := 1
+insideBracket1 := 0
+netsedCurly1 := 0
+}
+if (inTarget = 1)
+{
+foundTheTopLoop++
+}
+if (insdeAnestedLoopBAD = 1)
+{
+
+
+
+if (InStr(A_LoopField, Chr(123)))
+{
+insideBracket1 := 1
+}
+
+if (insideBracket1 = 1) && (InStr(A_LoopField, Chr(123)))
+{
+netsedCurly1++
+}
+
+if (insideBracket1 = 1) && (InStr(A_LoopField, Chr(125)))
+{
+netsedCurly1--
+readyToEnd1 := 1
+}
+
+
+if (InStr(A_LoopField, Chr(125))) && (readyToEnd1 = 1) && (netsedCurly1 = 0) && (insideBracket = 1)
+{
+;MsgBox, % A_LoopField
+eldLoopNestedBADlol := 1
+;out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+}
+
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+
+}
+
+
+if (inTarget = 1) && (dontSaveStr != 1) && (fixLoopLokingForNum != 1) && (insdeAnestedLoopBAD != 1)
+{
+
+ALoopField := A_LoopField
+
+
+
+
+; Replace "A_Index" with or without a following digit with "A_Index" + out1z
+ALoopField := RegExReplace(ALoopField, "A" . Chr(95) . "Index(?:\\d+)?", "A" . Chr(95) . "Index" . out1z)
+
+
+
+;ALoopField := StrReplace(ALoopField, "A_LoopField", "A_LoopField" . AIndexLoopCurlyFix)
+
+
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= ALoopField . "`n"
+
+}
+
+
+if (inTarget = 1) && (InStr(A_LoopField, Chr(125))) && (readyToEnd = 1) && (netsedCurly = 0) && (weAreDoneHereCurly = 0) && (dontSaveStr != 1) && (insdeAnestedLoopBAD != 1)
+{
+;MsgBox, % A_LoopField
+weAreDoneHereCurly := 1
+inTarget := 0
+endBracketDOntPutThere := 1
+;out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+}
+dontSaveStr := 0
+
+if (inTarget != 1) && (endBracketDOntPutThere != 1) && (insdeAnestedLoopBAD != 1)
+{
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+
+}
+endBracketDOntPutThere := 0
+
+if (eldLoopNestedBADlol = 1)
+{
+ insdeAnestedLoopBAD := 0
+}
+
+
+}
+strstysrstsytTRIMHELP := out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+StringTrimRight, strstysrstsytTRIMHELP, strstysrstsytTRIMHELP, 1
+;MsgBox, % out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+
+
+pyCode := strstysrstsytTRIMHELP
+
+;MsgBox, % jsCode
+wasAtanyIfsElseAddAIndexLoopCurlyFix := 1
+}
+else
+{
+
+
+inTarget := 0
+insideBracket := 0
+netsedCurly := 0
+eldLoopNestedBADlol := 0
+readyToEnd := 0
+endBracketDOntPutThere := 0
+dontSaveStr := 0
+weAreDoneHereCurly := 0
+DeleayOneCuzOfLoopParse := 0
+fixLoopLokingForNum := 0
+insdeAnestedLoopBAD := 0
+foundTheTopLoop := 0
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% := ""
+Loop, Parse, pyCode, `n, `r
+{
+
+if (InStr(A_LoopField , fixLoopLokingFor)) && (insdeAnestedLoopBAD != 1)
+{
+fixLoopLokingForNum := 1
+;MsgBox, do we came here 3
+}
+
+if (InStr(A_LoopField , "for ")) && (weAreDoneHereCurly != 1) && (insdeAnestedLoopBAD != 1) && (fixLoopLokingForNum = 1)
+{
+
+
+s := StrSplit(A_LoopField ,"A" . Chr(95) . "LoopField", 2)
+out1z := s
+
+s := StrSplit(out1z, " ", 1)
+out1z := Trim(s)
+
+;MsgBox, % out1z
+
+fixLoopLokingForNum := 0
+;MsgBox, do we came here 4
+foundTheTopLoop++
+  inTarget := 1
+	;MsgBox, % A_LoopField
+	dontSaveStr := 1
+
+	ALoopField := A_LoopField
+
+	;ALoopField := StrReplace(ALoopField, "for (/* Loop parse */", "for (/* Loop parse */ /* From AHK */")
+DeleayOneCuzOfLoopParse := 1
+	out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= ALoopField . "`n"
+}
+
+if (inTarget = 1) && (InStr(A_LoopField, Chr(123))) && (insdeAnestedLoopBAD != 1)
+{
+insideBracket := 1
+}
+
+if (insideBracket = 1) && (InStr(A_LoopField, Chr(123))) && (insdeAnestedLoopBAD != 1)
+{
+netsedCurly++
+}
+
+if (insideBracket = 1) && (InStr(A_LoopField, Chr(125))) && (insdeAnestedLoopBAD != 1)
+{
+netsedCurly--
+readyToEnd := 1
+}
+
+if (InStr(A_LoopField, "for ")) && (insdeAnestedLoopBAD != 1) && (foundTheTopLoop >= 2)
+{
+insdeAnestedLoopBAD := 1
+insideBracket1 := 0
+netsedCurly1 := 0
+}
+if (inTarget = 1)
+{
+foundTheTopLoop++
+}
+if (insdeAnestedLoopBAD = 1)
+{
+
+
+
+if (InStr(A_LoopField, Chr(123)))
+{
+insideBracket1 := 1
+}
+
+if (insideBracket1 = 1) && (InStr(A_LoopField, Chr(123)))
+{
+netsedCurly1++
+}
+
+if (insideBracket1 = 1) && (InStr(A_LoopField, Chr(125)))
+{
+netsedCurly1--
+readyToEnd1 := 1
+}
+
+
+if (InStr(A_LoopField, Chr(125))) && (readyToEnd1 = 1) && (netsedCurly1 = 0) && (insideBracket = 1)
+{
+;MsgBox, % A_LoopField
+eldLoopNestedBADlol := 1
+;out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+}
+
+
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+
+}
+
+
+if (inTarget = 1) && (dontSaveStr != 1) && (fixLoopLokingForNum != 1) && (insdeAnestedLoopBAD != 1)
+{
+
+ALoopField := A_LoopField
+
+
+; Replace "A_Index" with or without a following digit with "A_Index" + out1z
+ALoopField := RegExReplace(ALoopField, "A" . Chr(95) . "Index(?:\\d+)?", "A" . Chr(95) . "Index" . out1z)
+; Replace "A_Index" with or without a following digit with "A_Index" + out1z
+ALoopField := RegExReplace(ALoopField, "A" . Chr(95) . "LoopField(?:\\d+)?", "A" . Chr(95) . "LoopField" . out1z)
+
+
+
+
+
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= ALoopField . "`n"
+
+}
+
+
+if (inTarget = 1) && (InStr(A_LoopField, Chr(125))) && (readyToEnd = 1) && (netsedCurly = 0) && (weAreDoneHereCurly = 0) && (dontSaveStr != 1) && (insdeAnestedLoopBAD != 1)
+{
+;MsgBox, % A_LoopField
+weAreDoneHereCurly := 1
+inTarget := 0
+endBracketDOntPutThere := 1
+;out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+}
+dontSaveStr := 0
+
+if (inTarget != 1) && (endBracketDOntPutThere != 1) && (insdeAnestedLoopBAD != 1)
+{
+out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField . "`n"
+
+}
+endBracketDOntPutThere := 0
+
+if (eldLoopNestedBADlol = 1)
+{
+ insdeAnestedLoopBAD := 0
+}
+
+
+}
+
+strstysrstsytTRIMHELP := out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+StringTrimRight, strstysrstsytTRIMHELP, strstysrstsytTRIMHELP, 1
+;MsgBox, % out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+
+
+pyCode := strstysrstsytTRIMHELP
+
+;MsgBox, % jsCode
+wasAtanyIfsElseAddAIndexLoopCurlyFix := 1
+}
+
+if (wasAtanyIfsElseAddAIndexLoopCurlyFix = 1)
+{
+AIndexLoopCurlyFix++
+wasAtanyIfsElseAddAIndexLoopCurlyFix := 0
+}
+}
+
+
+out4758686d86dgt8r754444444 := ""
+hold := 0
+Loop, Parse, pyCode, `n, `r
+{
+ignore := 0
+if (InStr(A_LoopField, "for "))
+{
+if (hold = 1) && (holdText = A_LoopField)
+{
+ignore := 1
+}
+else
+{
+holdText := A_LoopField
+hold := 1
+}
+}
+
+if (!(ignore))
+{
+out4758686d86dgt8r754444444 .= A_LoopField . "`n"
+}
+}
+
+StringTrimRight, out4758686d86dgt8r754444444, out4758686d86dgt8r754444444, 1
+pyCode := out4758686d86dgt8r754444444
+
+
+}
+
+
+
+
+
+pyCode := indent_nested_curly_braces(pyCode)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pyCodeOut1234565432 := ""
+Loop, Parse, pyCode, `n, `r
+{
+
+if (Trim(A_LoopField) != Chr(123)) && (Trim(A_LoopField) != Chr(125))
+{
+out := A_LoopField
+
+StringTrimLeft, out, out, 1
+
+if (InStr(out, "variables['A" . Chr(95) . "Index")) or (InStr(out, "variables['A" . Chr(95) . "LoopField"))
+{
+
+out := StrReplace(out, Chr(39) . Chr(34) . Chr(93) . Chr(125) . Chr(39) . Chr(93), Chr(34) . Chr(93) . Chr(125) . Chr(39) . Chr(93))
+out := StrReplace(out, Chr(39) . Chr(39) . Chr(93), Chr(39) . Chr(93))
+}
+
+if (!(InStr(out, "|itsaersdtgtgfergsdgfsegdfsedAA|")))
+{
+if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) != Chr(59))
+{
+pyCodeOut1234565432 .= out . "`n"
+}
+}
+
+
+}
+
+}
+
+
+StringTrimRight, pyCode, pyCodeOut1234565432, 1
+pyCodeFinal := pyCode
+
+
+
+
+func_LoopParseFunc_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(76) . Chr(111) . Chr(111) . Chr(112) . Chr(80) . Chr(97) . Chr(114) . Chr(115) . Chr(101) . Chr(70) . Chr(117) . Chr(110) . Chr(99) . Chr(40) . Chr(118) . Chr(97) . Chr(114) . Chr(44) . Chr(32) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(49) . Chr(61) . Chr(34) . Chr(34) . Chr(44) . Chr(32) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(50) . Chr(61) . Chr(34) . Chr(34) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(114) . Chr(101) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(49) . Chr(32) . Chr(97) . Chr(110) . Chr(100) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(50) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(73) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(32) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(115) . Chr(32) . Chr(97) . Chr(114) . Chr(101) . Chr(32) . Chr(112) . Chr(114) . Chr(111) . Chr(118) . Chr(105) . Chr(100) . Chr(101) . Chr(100) . Chr(44) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(97) . Chr(32) . Chr(108) . Chr(105) . Chr(115) . Chr(116) . Chr(32) . Chr(111) . Chr(102) . Chr(32) . Chr(99) . Chr(104) . Chr(97) . Chr(114) . Chr(97) . Chr(99) . Chr(116) . Chr(101) . Chr(114) . Chr(115) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(116) . Chr(101) . Chr(109) . Chr(115) . Chr(32) . Chr(61) . Chr(32) . Chr(108) . Chr(105) . Chr(115) . Chr(116) . Chr(40) . Chr(118) . Chr(97) . Chr(114) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(108) . Chr(115) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(111) . Chr(110) . Chr(115) . Chr(116) . Chr(114) . Chr(117) . Chr(99) . Chr(116) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(114) . Chr(101) . Chr(103) . Chr(117) . Chr(108) . Chr(97) . Chr(114) . Chr(32) . Chr(101) . Chr(120) . Chr(112) . Chr(114) . Chr(101) . Chr(115) . Chr(115) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(116) . Chr(101) . Chr(114) . Chr(110) . Chr(32) . Chr(102) . Chr(111) . Chr(114) . Chr(32) . Chr(115) . Chr(112) . Chr(108) . Chr(105) . Chr(116) . Chr(116) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(116) . Chr(101) . Chr(114) . Chr(110) . Chr(32) . Chr(61) . Chr(32) . Chr(114) . Chr(39) . Chr(91) . Chr(39) . Chr(32) . Chr(43) . Chr(32) . Chr(114) . Chr(101) . Chr(46) . Chr(101) . Chr(115) . Chr(99) . Chr(97) . Chr(112) . Chr(101) . Chr(40) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(49) . Chr(41) . Chr(32) . Chr(43) . Chr(32) . Chr(114) . Chr(101) . Chr(46) . Chr(101) . Chr(115) . Chr(99) . Chr(97) . Chr(112) . Chr(101) . Chr(40) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(50) . Chr(41) . Chr(32) . Chr(43) . Chr(32) . Chr(114) . Chr(39) . Chr(93) . Chr(43) . Chr(39) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(83) . Chr(112) . Chr(108) . Chr(105) . Chr(116) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(117) . Chr(115) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(115) . Chr(116) . Chr(114) . Chr(117) . Chr(99) . Chr(116) . Chr(101) . Chr(100) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(116) . Chr(101) . Chr(114) . Chr(110) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(116) . Chr(101) . Chr(109) . Chr(115) . Chr(32) . Chr(61) . Chr(32) . Chr(114) . Chr(101) . Chr(46) . Chr(115) . Chr(112) . Chr(108) . Chr(105) . Chr(116) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(116) . Chr(101) . Chr(114) . Chr(110) . Chr(44) . Chr(32) . Chr(118) . Chr(97) . Chr(114) . Chr(41) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(105) . Chr(116) . Chr(101) . Chr(109) . Chr(115) . Chr(13) . Chr(10) . Chr(13) . Chr(10)
+
+
+func_InStr_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(73) . Chr(110) . Chr(83) . Chr(116) . Chr(114) . Chr(40) . Chr(72) . Chr(97) . Chr(121) . Chr(115) . Chr(116) . Chr(97) . Chr(99) . Chr(107) . Chr(44) . Chr(32) . Chr(78) . Chr(101) . Chr(101) . Chr(100) . Chr(108) . Chr(101) . Chr(44) . Chr(32) . Chr(67) . Chr(97) . Chr(115) . Chr(101) . Chr(83) . Chr(101) . Chr(110) . Chr(115) . Chr(105) . Chr(116) . Chr(105) . Chr(118) . Chr(101) . Chr(61) . Chr(84) . Chr(114) . Chr(117) . Chr(101) . Chr(44) . Chr(32) . Chr(83) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(105) . Chr(110) . Chr(103) . Chr(80) . Chr(111) . Chr(115) . Chr(61) . Chr(49) . Chr(44) . Chr(32) . Chr(79) . Chr(99) . Chr(99) . Chr(117) . Chr(114) . Chr(114) . Chr(101) . Chr(110) . Chr(99) . Chr(101) . Chr(61) . Chr(49) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(72) . Chr(97) . Chr(121) . Chr(115) . Chr(116) . Chr(97) . Chr(99) . Chr(107) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(32) . Chr(111) . Chr(114) . Chr(32) . Chr(78) . Chr(101) . Chr(101) . Chr(100) . Chr(108) . Chr(101) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(70) . Chr(97) . Chr(108) . Chr(115) . Chr(101) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(83) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(105) . Chr(110) . Chr(103) . Chr(80) . Chr(111) . Chr(115) . Chr(32) . Chr(61) . Chr(32) . Chr(109) . Chr(97) . Chr(120) . Chr(40) . Chr(83) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(105) . Chr(110) . Chr(103) . Chr(80) . Chr(111) . Chr(115) . Chr(44) . Chr(32) . Chr(49) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(67) . Chr(97) . Chr(115) . Chr(101) . Chr(83) . Chr(101) . Chr(110) . Chr(115) . Chr(105) . Chr(116) . Chr(105) . Chr(118) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(72) . Chr(97) . Chr(121) . Chr(115) . Chr(116) . Chr(97) . Chr(99) . Chr(107) . Chr(32) . Chr(61) . Chr(32) . Chr(72) . Chr(97) . Chr(121) . Chr(115) . Chr(116) . Chr(97) . Chr(99) . Chr(107) . Chr(46) . Chr(108) . Chr(111) . Chr(119) . Chr(101) . Chr(114) . Chr(40) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(78) . Chr(101) . Chr(101) . Chr(100) . Chr(108) . Chr(101) . Chr(32) . Chr(61) . Chr(32) . Chr(78) . Chr(101) . Chr(101) . Chr(100) . Chr(108) . Chr(101) . Chr(46) . Chr(108) . Chr(111) . Chr(119) . Chr(101) . Chr(114) . Chr(40) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(99) . Chr(111) . Chr(117) . Chr(110) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(48) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(102) . Chr(111) . Chr(114) . Chr(32) . Chr(105) . Chr(32) . Chr(105) . Chr(110) . Chr(32) . Chr(114) . Chr(97) . Chr(110) . Chr(103) . Chr(101) . Chr(40) . Chr(83) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(105) . Chr(110) . Chr(103) . Chr(80) . Chr(111) . Chr(115) . Chr(32) . Chr(45) . Chr(32) . Chr(49) . Chr(44) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(40) . Chr(72) . Chr(97) . Chr(121) . Chr(115) . Chr(116) . Chr(97) . Chr(99) . Chr(107) . Chr(41) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(72) . Chr(97) . Chr(121) . Chr(115) . Chr(116) . Chr(97) . Chr(99) . Chr(107) . Chr(91) . Chr(105) . Chr(58) . Chr(105) . Chr(32) . Chr(43) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(40) . Chr(78) . Chr(101) . Chr(101) . Chr(100) . Chr(108) . Chr(101) . Chr(41) . Chr(93) . Chr(32) . Chr(61) . Chr(61) . Chr(32) . Chr(78) . Chr(101) . Chr(101) . Chr(100) . Chr(108) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(99) . Chr(111) . Chr(117) . Chr(110) . Chr(116) . Chr(32) . Chr(43) . Chr(61) . Chr(32) . Chr(49) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(99) . Chr(111) . Chr(117) . Chr(110) . Chr(116) . Chr(32) . Chr(61) . Chr(61) . Chr(32) . Chr(79) . Chr(99) . Chr(99) . Chr(117) . Chr(114) . Chr(114) . Chr(101) . Chr(110) . Chr(99) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(84) . Chr(114) . Chr(117) . Chr(101) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(70) . Chr(97) . Chr(108) . Chr(115) . Chr(101) . Chr(32) . Chr(32) . Chr(13) . Chr(10)
+
+func_SubStr_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(83) . Chr(117) . Chr(98) . Chr(83) . Chr(116) . Chr(114) . Chr(40) . Chr(115) . Chr(116) . Chr(114) . Chr(44) . Chr(32) . Chr(115) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(80) . Chr(111) . Chr(115) . Chr(44) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(103) . Chr(116) . Chr(104) . Chr(61) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(32) . Chr(111) . Chr(114) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(32) . Chr(61) . Chr(61) . Chr(32) . Chr(34) . Chr(34) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(34) . Chr(34) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(103) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(32) . Chr(111) . Chr(114) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(103) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(61) . Chr(32) . Chr(34) . Chr(34) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(103) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(40) . Chr(115) . Chr(116) . Chr(114) . Chr(41) . Chr(32) . Chr(45) . Chr(32) . Chr(115) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(80) . Chr(111) . Chr(115) . Chr(32) . Chr(43) . Chr(32) . Chr(49) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(115) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(80) . Chr(111) . Chr(115) . Chr(32) . Chr(60) . Chr(32) . Chr(49) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(115) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(80) . Chr(111) . Chr(115) . Chr(32) . Chr(61) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(40) . Chr(115) . Chr(116) . Chr(114) . Chr(41) . Chr(32) . Chr(43) . Chr(32) . Chr(115) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(80) . Chr(111) . Chr(115) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(91) . Chr(115) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(80) . Chr(111) . Chr(115) . Chr(32) . Chr(45) . Chr(32) . Chr(49) . Chr(58) . Chr(115) . Chr(116) . Chr(97) . Chr(114) . Chr(116) . Chr(80) . Chr(111) . Chr(115) . Chr(32) . Chr(45) . Chr(32) . Chr(49) . Chr(32) . Chr(43) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(103) . Chr(116) . Chr(104) . Chr(93) . Chr(13) . Chr(10)
+
+
+func_Trim_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(84) . Chr(114) . Chr(105) . Chr(109) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(34) . Chr(34) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(46) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(112) . Chr(40) . Chr(41) . Chr(13) . Chr(10)
+
+
+func_StrReplace_func := Chr(32) . Chr(32) . Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(83) . Chr(116) . Chr(114) . Chr(82) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(40) . Chr(111) . Chr(114) . Chr(105) . Chr(103) . Chr(105) . Chr(110) . Chr(97) . Chr(108) . Chr(83) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(44) . Chr(32) . Chr(102) . Chr(105) . Chr(110) . Chr(100) . Chr(44) . Chr(32) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(87) . Chr(105) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(85) . Chr(115) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(32) . Chr(109) . Chr(101) . Chr(116) . Chr(104) . Chr(111) . Chr(100) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(32) . Chr(111) . Chr(99) . Chr(99) . Chr(117) . Chr(114) . Chr(114) . Chr(101) . Chr(110) . Chr(99) . Chr(101) . Chr(115) . Chr(32) . Chr(111) . Chr(102) . Chr(32) . Chr(39) . Chr(102) . Chr(105) . Chr(110) . Chr(100) . Chr(39) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(39) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(87) . Chr(105) . Chr(116) . Chr(104) . Chr(39) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(111) . Chr(114) . Chr(105) . Chr(103) . Chr(105) . Chr(110) . Chr(97) . Chr(108) . Chr(83) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(46) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(40) . Chr(102) . Chr(105) . Chr(110) . Chr(100) . Chr(44) . Chr(32) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(87) . Chr(105) . Chr(116) . Chr(104) . Chr(41) . Chr(13) . Chr(10)
+
+
+func_StringTrimLeft_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(83) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(84) . Chr(114) . Chr(105) . Chr(109) . Chr(76) . Chr(101) . Chr(102) . Chr(116) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(44) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(67) . Chr(104) . Chr(97) . Chr(114) . Chr(115) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(111) . Chr(110) . Chr(118) . Chr(101) . Chr(114) . Chr(116) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(97) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(105) . Chr(116) . Chr(39) . Chr(115) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(97) . Chr(108) . Chr(114) . Chr(101) . Chr(97) . Chr(100) . Chr(121) . Chr(32) . Chr(97) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(105) . Chr(115) . Chr(105) . Chr(110) . Chr(115) . Chr(116) . Chr(97) . Chr(110) . Chr(99) . Chr(101) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(44) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(41) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(111) . Chr(110) . Chr(118) . Chr(101) . Chr(114) . Chr(116) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(104) . Chr(101) . Chr(99) . Chr(107) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(108) . Chr(111) . Chr(110) . Chr(103) . Chr(32) . Chr(101) . Chr(110) . Chr(111) . Chr(117) . Chr(103) . Chr(104) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(112) . Chr(101) . Chr(114) . Chr(102) . Chr(111) . Chr(114) . Chr(109) . Chr(32) . Chr(116) . Chr(114) . Chr(105) . Chr(109) . Chr(109) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(41) . Chr(32) . Chr(62) . Chr(61) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(67) . Chr(104) . Chr(97) . Chr(114) . Chr(115) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(91) . Chr(110) . Chr(117) . Chr(109) . Chr(67) . Chr(104) . Chr(97) . Chr(114) . Chr(115) . Chr(58) . Chr(93) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(84) . Chr(114) . Chr(105) . Chr(109) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(102) . Chr(114) . Chr(111) . Chr(109) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(108) . Chr(101) . Chr(102) . Chr(116) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(108) . Chr(115) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(117) . Chr(110) . Chr(99) . Chr(104) . Chr(97) . Chr(110) . Chr(103) . Chr(101) . Chr(100) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(67) . Chr(104) . Chr(97) . Chr(114) . Chr(115) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(108) . Chr(97) . Chr(114) . Chr(103) . Chr(101) . Chr(114) . Chr(32) . Chr(116) . Chr(104) . Chr(97) . Chr(110) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(103) . Chr(116) . Chr(104) . Chr(13) . Chr(10)
+
+
+func_StringTrimRight_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(83) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(84) . Chr(114) . Chr(105) . Chr(109) . Chr(82) . Chr(105) . Chr(103) . Chr(104) . Chr(116) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(44) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(67) . Chr(104) . Chr(97) . Chr(114) . Chr(115) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(111) . Chr(110) . Chr(118) . Chr(101) . Chr(114) . Chr(116) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(97) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(105) . Chr(116) . Chr(39) . Chr(115) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(97) . Chr(108) . Chr(114) . Chr(101) . Chr(97) . Chr(100) . Chr(121) . Chr(32) . Chr(97) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(105) . Chr(115) . Chr(105) . Chr(110) . Chr(115) . Chr(116) . Chr(97) . Chr(110) . Chr(99) . Chr(101) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(44) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(41) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(111) . Chr(110) . Chr(118) . Chr(101) . Chr(114) . Chr(116) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(104) . Chr(101) . Chr(99) . Chr(107) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(108) . Chr(111) . Chr(110) . Chr(103) . Chr(32) . Chr(101) . Chr(110) . Chr(111) . Chr(117) . Chr(103) . Chr(104) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(112) . Chr(101) . Chr(114) . Chr(102) . Chr(111) . Chr(114) . Chr(109) . Chr(32) . Chr(116) . Chr(114) . Chr(105) . Chr(109) . Chr(109) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(41) . Chr(32) . Chr(62) . Chr(61) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(67) . Chr(104) . Chr(97) . Chr(114) . Chr(115) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(91) . Chr(58) . Chr(45) . Chr(110) . Chr(117) . Chr(109) . Chr(67) . Chr(104) . Chr(97) . Chr(114) . Chr(115) . Chr(93) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(84) . Chr(114) . Chr(105) . Chr(109) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(102) . Chr(114) . Chr(111) . Chr(109) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(114) . Chr(105) . Chr(103) . Chr(104) . Chr(116) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(108) . Chr(115) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(117) . Chr(110) . Chr(99) . Chr(104) . Chr(97) . Chr(110) . Chr(103) . Chr(101) . Chr(100) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(67) . Chr(104) . Chr(97) . Chr(114) . Chr(115) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(108) . Chr(97) . Chr(114) . Chr(103) . Chr(101) . Chr(114) . Chr(32) . Chr(116) . Chr(104) . Chr(97) . Chr(110) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(103) . Chr(116) . Chr(104) . Chr(13) . Chr(10)
+
+
+func_StrLower_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(83) . Chr(116) . Chr(114) . Chr(76) . Chr(111) . Chr(119) . Chr(101) . Chr(114) . Chr(40) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(46) . Chr(108) . Chr(111) . Chr(119) . Chr(101) . Chr(114) . Chr(40) . Chr(41) . Chr(13) . Chr(10)
+
+
+func_RegExReplace_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(82) . Chr(101) . Chr(103) . Chr(69) . Chr(120) . Chr(82) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(44) . Chr(32) . Chr(114) . Chr(101) . Chr(103) . Chr(101) . Chr(120) . Chr(80) . Chr(97) . Chr(116) . Chr(116) . Chr(101) . Chr(114) . Chr(110) . Chr(44) . Chr(32) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(109) . Chr(101) . Chr(110) . Chr(116) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(114) . Chr(101) . Chr(97) . Chr(116) . Chr(101) . Chr(32) . Chr(97) . Chr(32) . Chr(114) . Chr(101) . Chr(103) . Chr(117) . Chr(108) . Chr(97) . Chr(114) . Chr(32) . Chr(101) . Chr(120) . Chr(112) . Chr(114) . Chr(101) . Chr(115) . Chr(115) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(111) . Chr(98) . Chr(106) . Chr(101) . Chr(99) . Chr(116) . Chr(32) . Chr(117) . Chr(115) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(114) . Chr(111) . Chr(118) . Chr(105) . Chr(100) . Chr(101) . Chr(100) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(116) . Chr(101) . Chr(114) . Chr(110) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(114) . Chr(101) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(103) . Chr(101) . Chr(120) . Chr(32) . Chr(61) . Chr(32) . Chr(114) . Chr(101) . Chr(46) . Chr(99) . Chr(111) . Chr(109) . Chr(112) . Chr(105) . Chr(108) . Chr(101) . Chr(40) . Chr(114) . Chr(101) . Chr(103) . Chr(101) . Chr(120) . Chr(80) . Chr(97) . Chr(116) . Chr(116) . Chr(101) . Chr(114) . Chr(110) . Chr(44) . Chr(32) . Chr(114) . Chr(101) . Chr(46) . Chr(77) . Chr(85) . Chr(76) . Chr(84) . Chr(73) . Chr(76) . Chr(73) . Chr(78) . Chr(69) . Chr(41) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(114) . Chr(101) . Chr(46) . Chr(77) . Chr(85) . Chr(76) . Chr(84) . Chr(73) . Chr(76) . Chr(73) . Chr(78) . Chr(69) . Chr(32) . Chr(102) . Chr(111) . Chr(114) . Chr(32) . Chr(109) . Chr(117) . Chr(108) . Chr(116) . Chr(105) . Chr(45) . Chr(108) . Chr(105) . Chr(110) . Chr(101) . Chr(32) . Chr(109) . Chr(97) . Chr(116) . Chr(99) . Chr(104) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(85) . Chr(115) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(115) . Chr(117) . Chr(98) . Chr(40) . Chr(41) . Chr(32) . Chr(109) . Chr(101) . Chr(116) . Chr(104) . Chr(111) . Chr(100) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(112) . Chr(101) . Chr(114) . Chr(102) . Chr(111) . Chr(114) . Chr(109) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(114) . Chr(101) . Chr(103) . Chr(101) . Chr(120) . Chr(32) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(109) . Chr(101) . Chr(110) . Chr(116) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(115) . Chr(117) . Chr(108) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(32) . Chr(61) . Chr(32) . Chr(114) . Chr(101) . Chr(103) . Chr(101) . Chr(120) . Chr(46) . Chr(115) . Chr(117) . Chr(98) . Chr(40) . Chr(114) . Chr(101) . Chr(112) . Chr(108) . Chr(97) . Chr(99) . Chr(101) . Chr(109) . Chr(101) . Chr(110) . Chr(116) . Chr(44) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(41) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(109) . Chr(111) . Chr(100) . Chr(105) . Chr(102) . Chr(105) . Chr(101) . Chr(100) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(114) . Chr(101) . Chr(115) . Chr(117) . Chr(108) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(13) . Chr(10)
+
+
+func_StrSplit_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(83) . Chr(116) . Chr(114) . Chr(83) . Chr(112) . Chr(108) . Chr(105) . Chr(116) . Chr(40) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(44) . Chr(32) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(44) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(83) . Chr(112) . Chr(108) . Chr(105) . Chr(116) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(98) . Chr(97) . Chr(115) . Chr(101) . Chr(100) . Chr(32) . Chr(111) . Chr(110) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(114) . Chr(116) . Chr(115) . Chr(32) . Chr(61) . Chr(32) . Chr(105) . Chr(110) . Chr(112) . Chr(117) . Chr(116) . Chr(83) . Chr(116) . Chr(114) . Chr(46) . Chr(115) . Chr(112) . Chr(108) . Chr(105) . Chr(116) . Chr(40) . Chr(100) . Chr(101) . Chr(108) . Chr(105) . Chr(109) . Chr(105) . Chr(116) . Chr(101) . Chr(114) . Chr(41) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(114) . Chr(116) . Chr(32) . Chr(115) . Chr(112) . Chr(101) . Chr(99) . Chr(105) . Chr(102) . Chr(105) . Chr(101) . Chr(100) . Chr(32) . Chr(98) . Chr(121) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(32) . Chr(112) . Chr(97) . Chr(114) . Chr(97) . Chr(109) . Chr(101) . Chr(116) . Chr(101) . Chr(114) . Chr(32) . Chr(40) . Chr(49) . Chr(45) . Chr(98) . Chr(97) . Chr(115) . Chr(101) . Chr(100) . Chr(32) . Chr(105) . Chr(110) . Chr(100) . Chr(101) . Chr(120) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(48) . Chr(32) . Chr(60) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(32) . Chr(60) . Chr(61) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(114) . Chr(116) . Chr(115) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(112) . Chr(97) . Chr(114) . Chr(116) . Chr(115) . Chr(91) . Chr(110) . Chr(117) . Chr(109) . Chr(32) . Chr(45) . Chr(32) . Chr(49) . Chr(93) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(115) . Chr(112) . Chr(101) . Chr(99) . Chr(105) . Chr(102) . Chr(105) . Chr(101) . Chr(100) . Chr(32) . Chr(112) . Chr(97) . Chr(114) . Chr(116) . Chr(32) . Chr(40) . Chr(48) . Chr(45) . Chr(98) . Chr(97) . Chr(115) . Chr(101) . Chr(100) . Chr(32) . Chr(105) . Chr(110) . Chr(100) . Chr(101) . Chr(120) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(108) . Chr(115) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(39) . Chr(39) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(97) . Chr(110) . Chr(32) . Chr(101) . Chr(109) . Chr(112) . Chr(116) . Chr(121) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(111) . Chr(117) . Chr(116) . Chr(32) . Chr(111) . Chr(102) . Chr(32) . Chr(114) . Chr(97) . Chr(110) . Chr(103) . Chr(101) . Chr(13) . Chr(10)
+
+
+func_Chr_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(67) . Chr(104) . Chr(114) . Chr(40) . Chr(110) . Chr(117) . Chr(109) . Chr(98) . Chr(101) . Chr(114) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(104) . Chr(101) . Chr(99) . Chr(107) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(98) . Chr(101) . Chr(114) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(98) . Chr(101) . Chr(114) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(97) . Chr(110) . Chr(32) . Chr(101) . Chr(109) . Chr(112) . Chr(116) . Chr(121) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(34) . Chr(34) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(104) . Chr(101) . Chr(99) . Chr(107) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(98) . Chr(101) . Chr(114) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(105) . Chr(110) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(118) . Chr(97) . Chr(108) . Chr(105) . Chr(100) . Chr(32) . Chr(85) . Chr(110) . Chr(105) . Chr(99) . Chr(111) . Chr(100) . Chr(101) . Chr(32) . Chr(114) . Chr(97) . Chr(110) . Chr(103) . Chr(101) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(48) . Chr(32) . Chr(60) . Chr(61) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(98) . Chr(101) . Chr(114) . Chr(32) . Chr(60) . Chr(61) . Chr(32) . Chr(48) . Chr(120) . Chr(49) . Chr(48) . Chr(70) . Chr(70) . Chr(70) . Chr(70) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(111) . Chr(110) . Chr(118) . Chr(101) . Chr(114) . Chr(116) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(98) . Chr(101) . Chr(114) . Chr(32) . Chr(116) . Chr(111) . Chr(32) . Chr(97) . Chr(32) . Chr(99) . Chr(104) . Chr(97) . Chr(114) . Chr(97) . Chr(99) . Chr(116) . Chr(101) . Chr(114) . Chr(32) . Chr(117) . Chr(115) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(99) . Chr(104) . Chr(114) . Chr(40) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(99) . Chr(104) . Chr(114) . Chr(40) . Chr(110) . Chr(117) . Chr(109) . Chr(98) . Chr(101) . Chr(114) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(108) . Chr(115) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(97) . Chr(110) . Chr(32) . Chr(101) . Chr(109) . Chr(112) . Chr(116) . Chr(121) . Chr(32) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(102) . Chr(111) . Chr(114) . Chr(32) . Chr(105) . Chr(110) . Chr(118) . Chr(97) . Chr(108) . Chr(105) . Chr(100) . Chr(32) . Chr(110) . Chr(117) . Chr(109) . Chr(98) . Chr(101) . Chr(114) . Chr(115) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(34) . Chr(34) . Chr(13) . Chr(10) . Chr(13) . Chr(10)
+
+func_Mod_func := Chr(13) . Chr(10) . Chr(35) . Chr(32) . Chr(67) . Chr(117) . Chr(115) . Chr(116) . Chr(111) . Chr(109) . Chr(32) . Chr(77) . Chr(111) . Chr(100) . Chr(32) . Chr(102) . Chr(117) . Chr(110) . Chr(99) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(105) . Chr(110) . Chr(32) . Chr(80) . Chr(121) . Chr(116) . Chr(104) . Chr(111) . Chr(110) . Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(77) . Chr(111) . Chr(100) . Chr(40) . Chr(100) . Chr(105) . Chr(118) . Chr(105) . Chr(100) . Chr(101) . Chr(110) . Chr(100) . Chr(44) . Chr(32) . Chr(100) . Chr(105) . Chr(118) . Chr(105) . Chr(115) . Chr(111) . Chr(114) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(100) . Chr(105) . Chr(118) . Chr(105) . Chr(100) . Chr(101) . Chr(110) . Chr(100) . Chr(32) . Chr(37) . Chr(32) . Chr(100) . Chr(105) . Chr(118) . Chr(105) . Chr(115) . Chr(111) . Chr(114) . Chr(13) . Chr(10)
+
+
+
+func_HTpy_func := Chr(13) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(72) . Chr(84) . Chr(112) . Chr(121) . Chr(40) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(115) . Chr(121) . Chr(115) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(108) . Chr(101) . Chr(110) . Chr(40) . Chr(115) . Chr(121) . Chr(115) . Chr(46) . Chr(97) . Chr(114) . Chr(103) . Chr(118) . Chr(41) . Chr(32) . Chr(60) . Chr(32) . Chr(50) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(114) . Chr(105) . Chr(110) . Chr(116) . Chr(40) . Chr(34) . Chr(85) . Chr(115) . Chr(97) . Chr(103) . Chr(101) . Chr(58) . Chr(32) . Chr(112) . Chr(121) . Chr(116) . Chr(104) . Chr(111) . Chr(110) . Chr(32) . Chr(97) . Chr(112) . Chr(112) . Chr(46) . Chr(112) . Chr(121) . Chr(32) . Chr(60) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(95) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(62) . Chr(34) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(115) . Chr(121) . Chr(115) . Chr(46) . Chr(101) . Chr(120) . Chr(105) . Chr(116) . Chr(40) . Chr(49) . Chr(41) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(95) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(115) . Chr(121) . Chr(115) . Chr(46) . Chr(97) . Chr(114) . Chr(103) . Chr(118) . Chr(91) . Chr(49) . Chr(93) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(67) . Chr(104) . Chr(101) . Chr(99) . Chr(107) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(114) . Chr(111) . Chr(118) . Chr(105) . Chr(100) . Chr(101) . Chr(100) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(95) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(32) . Chr(118) . Chr(97) . Chr(108) . Chr(105) . Chr(100) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(40) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(95) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(114) . Chr(105) . Chr(110) . Chr(116) . Chr(40) . Chr(102) . Chr(34) . Chr(69) . Chr(114) . Chr(114) . Chr(111) . Chr(114) . Chr(58) . Chr(32) . Chr(39) . Chr(123) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(95) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(125) . Chr(39) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(97) . Chr(32) . Chr(118) . Chr(97) . Chr(108) . Chr(105) . Chr(100) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(34) . Chr(41) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(115) . Chr(121) . Chr(115) . Chr(46) . Chr(101) . Chr(120) . Chr(105) . Chr(116) . Chr(40) . Chr(49) . Chr(41) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(97) . Chr(100) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(32) . Chr(102) . Chr(114) . Chr(111) . Chr(109) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(115) . Chr(112) . Chr(101) . Chr(99) . Chr(105) . Chr(102) . Chr(105) . Chr(101) . Chr(100) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(95) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(114) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(95) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(114) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(41) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(80) . Chr(114) . Chr(111) . Chr(99) . Chr(101) . Chr(115) . Chr(115) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(32) . Chr(117) . Chr(115) . Chr(105) . Chr(110) . Chr(103) . Chr(32) . Chr(121) . Chr(111) . Chr(117) . Chr(114) . Chr(32) . Chr(39) . Chr(99) . Chr(111) . Chr(109) . Chr(112) . Chr(105) . Chr(108) . Chr(101) . Chr(114) . Chr(39) . Chr(32) . Chr(102) . Chr(117) . Chr(110) . Chr(99) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(99) . Chr(111) . Chr(109) . Chr(112) . Chr(105) . Chr(108) . Chr(101) . Chr(100) . Chr(95) . Chr(114) . Chr(101) . Chr(115) . Chr(117) . Chr(108) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(99) . Chr(111) . Chr(109) . Chr(112) . Chr(105) . Chr(108) . Chr(101) . Chr(114) . Chr(40) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(95) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(41) . Chr(13) . Chr(10) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(80) . Chr(114) . Chr(105) . Chr(110) . Chr(116) . Chr(32) . Chr(111) . Chr(114) . Chr(32) . Chr(117) . Chr(115) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(99) . Chr(111) . Chr(109) . Chr(112) . Chr(105) . Chr(108) . Chr(101) . Chr(100) . Chr(32) . Chr(114) . Chr(101) . Chr(115) . Chr(117) . Chr(108) . Chr(116) . Chr(13) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(114) . Chr(105) . Chr(110) . Chr(116) . Chr(40) . Chr(99) . Chr(111) . Chr(109) . Chr(112) . Chr(105) . Chr(108) . Chr(101) . Chr(100) . Chr(95) . Chr(114) . Chr(101) . Chr(115) . Chr(117) . Chr(108) . Chr(116) . Chr(41) . Chr(13) . Chr(10) . Chr(13) . Chr(10)
+
+
+
+funcs_func := "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy"
+
+allFuncsHere := ""
+Loop, Parse, funcs_func, "|"
+{
+if (InStr(pyCodeFinal, A_LoopField . Chr(40)))
+{
+hererererehre := A_LoopField . "_func"
+allFuncsHere .= func_%hererererehre%
+}
+}
+
+pyCodeFinal := allFuncsHere . "`n" . pyCodeFinal . "`n"
+
+if (usedLib = "")
+{
+pyCode := weEverUseVars . "`n" . pyCodeFinal
+
+if (weEverUseVars = "")
+{
+pyCode := pyCodeFinal
+}
+else
+{
+pyCode := weEverUseVars . "`n" . pyCodeFinal
+}
+
+}
+else
+{
+pyCode := usedLib . "`n" . weEverUseVars . "`n" . pyCodeFinal
+}
+
+
+
+
+pyCode := StrReplace(pyCode, "`n`n", "`n")
+
+
+Loop, % theIdNumOfThe34
+{
+pyCode := StrReplace(pyCode, "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-" . Chr(65) . Chr(65) . str(A_Index) . Chr(65) . Chr(65), theIdNumOfThe34theVar%A_Index%)
+}
+
+
+
+return pyCode
+
+}
+
+HTpy()
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
