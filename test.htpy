@@ -9,6 +9,7 @@ AIndex := str(A_Index)
 if (userNum = ran)
 {
 msgbox, % "You win in " . AIndex . " tries"
+break
 }
 else if (userNum < ran)
 {
