@@ -1,1 +1,23 @@
-msgbox, hello from HTpy
+
+
+
+Random, ran , 1, 100
+Loop
+{
+userNum := int(input("guess a num form 1 to 100: "))
+AIndex := str(A_Index)
+if (userNum = ran)
+{
+msgbox, % "You win in " . AIndex . " tries"
+}
+else if (userNum < ran)
+{
+msgbox, higher
+}
+else
+{
+msgbox, lower
+}
+
+}
+

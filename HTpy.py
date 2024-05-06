@@ -1,294 +1,166 @@
 # Define a dictionary to store dynamic variables
 variables = {}
 
-
-
-def LoopParseFunc(var, delimiter1="", delimiter2=""):
-
-    import re
-
-    if not delimiter1 and not delimiter2:
-
-        # If no delimiters are provided, return a list of characters
-
-        items = list(var)
-
-    else:
-
-        # Construct the regular expression pattern for splitting the string
-
-        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'
-
-
-
-        # Split the string using the constructed pattern
-
-        items = re.split(pattern, var)
-
-
-
-    return items
-
-
-
-
-
-def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
-
-    if Haystack is None or Needle is None:
-
-        return False
-
-    StartingPos = max(StartingPos, 1)
-
-    if not CaseSensitive:
-
-        Haystack = Haystack.lower()
-
-        Needle = Needle.lower()
-
-    count = 0
-
-    for i in range(StartingPos - 1, len(Haystack)):
-
-        if Haystack[i:i + len(Needle)] == Needle:
-
-            count += 1
-
-            if count == Occurrence:
-
-                return True
-
-    return False
-
-
-
-def SubStr(str, startPos, length=None):
-
-    if str is None or str == "":
-
-        return ""
-
-
-
-    if length is None or length == "":
-
-        length = len(str) - startPos + 1
-
-
-
-    if startPos < 1:
-
-        startPos = len(str) + startPos
-
-
-
-    return str[startPos - 1:startPos - 1 + length]
-
-
-
-def Trim(inputString):
-
-    if inputString is None:
-
-        return ""
-
-
-
-    return inputString.strip()
-
-
-
-def StrReplace(originalString, find, replaceWith):
-
-    # Use the replace method to replace occurrences of 'find' with 'replaceWith'
-
-    return originalString.replace(find, replaceWith)
-
-
-
-def StringTrimLeft(input, numChars):
-
-    # Convert input to a string if it's not already a string
-
-    if not isinstance(input, str):
-
-        input = str(input)  # Convert input to string
-
-
-
-    # Check if the input is long enough to perform trimming
-
-    if len(input) >= numChars:
-
-        return input[numChars:]  # Trim the string from the left
-
-    else:
-
-        return input  # Return input unchanged if numChars is larger than string length
-
-
-
-def StringTrimRight(input, numChars):
-
-    # Convert input to a string if it's not already a string
-
-    if not isinstance(input, str):
-
-        input = str(input)  # Convert input to string
-
-
-
-    # Check if the input is long enough to perform trimming
-
-    if len(input) >= numChars:
-
-        return input[:-numChars]  # Trim the string from the right
-
-    else:
-
-        return input  # Return input unchanged if numChars is larger than string length
-
-
-
-def StrLower(string):
-
-    return string.lower()
-
-
-
-def RegExReplace(inputStr, regexPattern, replacement):
-
-    # Create a regular expression object using the provided pattern
-
-    import re
-
-    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching
-
-
-
-    # Use the sub() method to perform the regex replacement
-
-    resultStr = regex.sub(replacement, inputStr)
-
-
-
-    # Return the modified string
-
-    return resultStr
-
-
-
-def StrSplit(inputStr, delimiter, num):
-
-    # Split the input string based on the delimiter
-
-    parts = inputStr.split(delimiter)
-
-
-
-    # Return the part specified by the num parameter (1-based index)
-
-    if 0 < num <= len(parts):
-
-        return parts[num - 1]  # Return the specified part (0-based index)
-
-    else:
-
-        return ''  # Return an empty string if num is out of range
-
-
-
-def Chr(number):
-
-    # Check if the number is None
-
-    if number is None:
-
-        # Return an empty string
-
-        return ""
-
-
-
-    # Check if the number is within the valid Unicode range
-
-    if 0 <= number <= 0x10FFFF:
-
-        # Convert the number to a character using chr()
-
-        return chr(number)
-
-    else:
-
-        # Return an empty string for invalid numbers
-
-        return ""
-
-
-
-
-
-# Custom Mod function in Python
-
-def Mod(dividend, divisor):
-
-    return dividend % divisor
-
-
-
-def HTpy():
-
-    import sys
-
-    import os
-
-
-
-
-
-    if len(sys.argv) < 2:
-
-        print("Usage: python app.py <file_path>")
-
-        sys.exit(1)
-
-
-
-    file_path = sys.argv[1]
-
-
-
-    # Check if the provided file_path is a valid file
-
-    if not os.path.isfile(file_path):
-
-        print(f"Error: '{file_path}' is not a valid file path.")
-
-        sys.exit(1)
-
-
-
-    # Read content from the specified file
-
-    with open(file_path, 'r') as file:
-
-        file_content = file.read()
-
-
-
-    # Process the file content using your 'compiler' function
-
-    compiled_result = compiler(file_content)
-
-
-
-    # Print or use the compiled result
-
-    print(compiled_result)
-
-
-
+
+def LoopParseFunc(var, delimiter1="", delimiter2=""):
+    import re
+    if not delimiter1 and not delimiter2:
+        # If no delimiters are provided, return a list of characters
+        items = list(var)
+    else:
+        # Construct the regular expression pattern for splitting the string
+        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'
+
+        # Split the string using the constructed pattern
+        items = re.split(pattern, var)
+
+    return items
+
+
+def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
+    if Haystack is None or Needle is None:
+        return False
+    StartingPos = max(StartingPos, 1)
+    if not CaseSensitive:
+        Haystack = Haystack.lower()
+        Needle = Needle.lower()
+    count = 0
+    for i in range(StartingPos - 1, len(Haystack)):
+        if Haystack[i:i + len(Needle)] == Needle:
+            count += 1
+            if count == Occurrence:
+                return True
+    return False  
+
+def SubStr(str, startPos, length=None):
+    if str is None or str == "":
+        return ""
+
+    if length is None or length == "":
+        length = len(str) - startPos + 1
+
+    if startPos < 1:
+        startPos = len(str) + startPos
+
+    return str[startPos - 1:startPos - 1 + length]
+
+def Trim(inputString):
+    if inputString is None:
+        return ""
+
+    return inputString.strip()
+  
+def StrReplace(originalString, find, replaceWith):
+    # Use the replace method to replace occurrences of 'find' with 'replaceWith'
+    return originalString.replace(find, replaceWith)
+
+def StringTrimLeft(input, numChars):
+    # Convert input to a string if it's not already a string
+    if not isinstance(input, str):
+        input = str(input)  # Convert input to string
+
+    # Check if the input is long enough to perform trimming
+    if len(input) >= numChars:
+        return input[numChars:]  # Trim the string from the left
+    else:
+        return input  # Return input unchanged if numChars is larger than string length
+
+def StringTrimRight(input, numChars):
+    # Convert input to a string if it's not already a string
+    if not isinstance(input, str):
+        input = str(input)  # Convert input to string
+
+    # Check if the input is long enough to perform trimming
+    if len(input) >= numChars:
+        return input[:-numChars]  # Trim the string from the right
+    else:
+        return input  # Return input unchanged if numChars is larger than string length
+
+def StrLower(string):
+    return string.lower()
+
+def RegExReplace(inputStr, regexPattern, replacement):
+    # Create a regular expression object using the provided pattern
+    import re
+    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching
+
+    # Use the sub() method to perform the regex replacement
+    resultStr = regex.sub(replacement, inputStr)
+
+    # Return the modified string
+    return resultStr
+
+def StrSplit(inputStr, delimiter, num):
+    # Split the input string based on the delimiter
+    parts = inputStr.split(delimiter)
+
+    # Return the part specified by the num parameter (1-based index)
+    if 0 < num <= len(parts):
+        return parts[num - 1]  # Return the specified part (0-based index)
+    else:
+        return ''  # Return an empty string if num is out of range
+
+def Chr(number):
+    # Check if the number is None
+    if number is None:
+        # Return an empty string
+        return ""
+
+    # Check if the number is within the valid Unicode range
+    if 0 <= number <= 0x10FFFF:
+        # Convert the number to a character using chr()
+        return chr(number)
+    else:
+        # Return an empty string for invalid numbers
+        return ""
+
+
+# Custom Mod function in Python
+def Mod(dividend, divisor):
+    return dividend % divisor
+
+def HTpy():
+    import sys
+    import os
+    if len(sys.argv) < 2 or len(sys.argv) > 3:
+        print("Usage: python app.py <input_file.htpy> [run]")
+        sys.exit(1)
+
+    input_file = sys.argv[1]
+
+    # Ensure the input_file ends with '.htpy'
+    if not input_file.endswith('.htpy'):
+        print("Error: Input file must have a .htpy extension.")
+        sys.exit(1)
+
+    # Check if the input_file exists
+    if not os.path.isfile(input_file):
+        print(f"Error: '{input_file}' is not a valid file path.")
+        sys.exit(1)
+
+    # Determine the output .py file name based on input file name
+    output_file = os.path.splitext(input_file)[0] + '.py'
+
+    # Compile the .htpy content using the compiler function
+    with open(input_file, 'r') as file:
+        htpy_content = file.read()
+
+    compiled_result = compiler(htpy_content)
+
+    # Save the compiled result to the determined .py output file
+    with open(output_file, 'w') as file:
+        file.write(compiled_result)
+
+    print(f"Compiled result saved to '{output_file}'.")
+
+    # Check if 'run' parameter is provided and execute the compiled Python script
+    if len(sys.argv) == 3 and sys.argv[2] == 'run':
+        print(f"Running '{output_file}'...")
+        try:
+            exec(compile(open(output_file).read(), output_file, 'exec'), globals())
+        except Exception as e:
+            print(f"Error occurred while running the compiled file: {e}")
+
 
 def indent_nested_curly_braces(input_string):
     variables['input_string'] = input_string
@@ -1204,7 +1076,7 @@ def compiler(HTpyCode):
     variables['func_StrSplit_func'] = Chr(13) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(83) +  Chr(116) +  Chr(114) +  Chr(83) +  Chr(112) +  Chr(108) +  Chr(105) +  Chr(116) +  Chr(40) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(83) +  Chr(116) +  Chr(114) +  Chr(44) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(44) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(83) +  Chr(112) +  Chr(108) +  Chr(105) +  Chr(116) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(32) +  Chr(115) +  Chr(116) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(98) +  Chr(97) +  Chr(115) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(111) +  Chr(110) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(114) +  Chr(116) +  Chr(115) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(83) +  Chr(116) +  Chr(114) +  Chr(46) +  Chr(115) +  Chr(112) +  Chr(108) +  Chr(105) +  Chr(116) +  Chr(40) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(82) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(115) +  Chr(112) +  Chr(101) +  Chr(99) +  Chr(105) +  Chr(102) +  Chr(105) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(98) +  Chr(121) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(114) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(40) +  Chr(49) +  Chr(45) +  Chr(98) +  Chr(97) +  Chr(115) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(100) +  Chr(101) +  Chr(120) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(48) +  Chr(32) +  Chr(60) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(32) +  Chr(60) +  Chr(61) +  Chr(32) +  Chr(108) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(112) +  Chr(97) +  Chr(114) +  Chr(116) +  Chr(115) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(114) +  Chr(116) +  Chr(115) +  Chr(91) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(32) +  Chr(45) +  Chr(32) +  Chr(49) +  Chr(93) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(82) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(115) +  Chr(112) +  Chr(101) +  Chr(99) +  Chr(105) +  Chr(102) +  Chr(105) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(40) +  Chr(48) +  Chr(45) +  Chr(98) +  Chr(97) +  Chr(115) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(100) +  Chr(101) +  Chr(120) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(101) +  Chr(108) +  Chr(115) +  Chr(101) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(39) +  Chr(39) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(82) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(97) +  Chr(110) +  Chr(32) +  Chr(101) +  Chr(109) +  Chr(112) +  Chr(116) +  Chr(121) +  Chr(32) +  Chr(115) +  Chr(116) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(32) +  Chr(105) +  Chr(115) +  Chr(32) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(102) +  Chr(32) +  Chr(114) +  Chr(97) +  Chr(110) +  Chr(103) +  Chr(101) +  Chr(13) +  Chr(10)
     variables['func_Chr_func'] = Chr(13) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(67) +  Chr(104) +  Chr(114) +  Chr(40) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(98) +  Chr(101) +  Chr(114) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(104) +  Chr(101) +  Chr(99) +  Chr(107) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(98) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(105) +  Chr(115) +  Chr(32) +  Chr(78) +  Chr(111) +  Chr(110) +  Chr(101) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(98) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(105) +  Chr(115) +  Chr(32) +  Chr(78) +  Chr(111) +  Chr(110) +  Chr(101) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(82) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(97) +  Chr(110) +  Chr(32) +  Chr(101) +  Chr(109) +  Chr(112) +  Chr(116) +  Chr(121) +  Chr(32) +  Chr(115) +  Chr(116) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(34) +  Chr(34) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(104) +  Chr(101) +  Chr(99) +  Chr(107) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(98) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(105) +  Chr(115) +  Chr(32) +  Chr(119) +  Chr(105) +  Chr(116) +  Chr(104) +  Chr(105) +  Chr(110) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(118) +  Chr(97) +  Chr(108) +  Chr(105) +  Chr(100) +  Chr(32) +  Chr(85) +  Chr(110) +  Chr(105) +  Chr(99) +  Chr(111) +  Chr(100) +  Chr(101) +  Chr(32) +  Chr(114) +  Chr(97) +  Chr(110) +  Chr(103) +  Chr(101) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(48) +  Chr(32) +  Chr(60) +  Chr(61) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(98) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(60) +  Chr(61) +  Chr(32) +  Chr(48) +  Chr(120) +  Chr(49) +  Chr(48) +  Chr(70) +  Chr(70) +  Chr(70) +  Chr(70) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(111) +  Chr(110) +  Chr(118) +  Chr(101) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(98) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(116) +  Chr(111) +  Chr(32) +  Chr(97) +  Chr(32) +  Chr(99) +  Chr(104) +  Chr(97) +  Chr(114) +  Chr(97) +  Chr(99) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(117) +  Chr(115) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(99) +  Chr(104) +  Chr(114) +  Chr(40) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(99) +  Chr(104) +  Chr(114) +  Chr(40) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(98) +  Chr(101) +  Chr(114) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(101) +  Chr(108) +  Chr(115) +  Chr(101) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(82) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(97) +  Chr(110) +  Chr(32) +  Chr(101) +  Chr(109) +  Chr(112) +  Chr(116) +  Chr(121) +  Chr(32) +  Chr(115) +  Chr(116) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(102) +  Chr(111) +  Chr(114) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(118) +  Chr(97) +  Chr(108) +  Chr(105) +  Chr(100) +  Chr(32) +  Chr(110) +  Chr(117) +  Chr(109) +  Chr(98) +  Chr(101) +  Chr(114) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(34) +  Chr(34) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10)
     variables['func_Mod_func'] = Chr(13) +  Chr(10) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(117) +  Chr(115) +  Chr(116) +  Chr(111) +  Chr(109) +  Chr(32) +  Chr(77) +  Chr(111) +  Chr(100) +  Chr(32) +  Chr(102) +  Chr(117) +  Chr(110) +  Chr(99) +  Chr(116) +  Chr(105) +  Chr(111) +  Chr(110) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(32) +  Chr(80) +  Chr(121) +  Chr(116) +  Chr(104) +  Chr(111) +  Chr(110) +  Chr(13) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(77) +  Chr(111) +  Chr(100) +  Chr(40) +  Chr(100) +  Chr(105) +  Chr(118) +  Chr(105) +  Chr(100) +  Chr(101) +  Chr(110) +  Chr(100) +  Chr(44) +  Chr(32) +  Chr(100) +  Chr(105) +  Chr(118) +  Chr(105) +  Chr(115) +  Chr(111) +  Chr(114) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(100) +  Chr(105) +  Chr(118) +  Chr(105) +  Chr(100) +  Chr(101) +  Chr(110) +  Chr(100) +  Chr(32) +  Chr(37) +  Chr(32) +  Chr(100) +  Chr(105) +  Chr(118) +  Chr(105) +  Chr(115) +  Chr(111) +  Chr(114) +  Chr(13) +  Chr(10)
-    variables['func_HTpy_func'] = Chr(13) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(72) +  Chr(84) +  Chr(112) +  Chr(121) +  Chr(40) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(108) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(97) +  Chr(114) +  Chr(103) +  Chr(118) +  Chr(41) +  Chr(32) +  Chr(60) +  Chr(32) +  Chr(50) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(34) +  Chr(85) +  Chr(115) +  Chr(97) +  Chr(103) +  Chr(101) +  Chr(58) +  Chr(32) +  Chr(112) +  Chr(121) +  Chr(116) +  Chr(104) +  Chr(111) +  Chr(110) +  Chr(32) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(46) +  Chr(112) +  Chr(121) +  Chr(32) +  Chr(60) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(62) +  Chr(34) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(101) +  Chr(120) +  Chr(105) +  Chr(116) +  Chr(40) +  Chr(49) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(97) +  Chr(114) +  Chr(103) +  Chr(118) +  Chr(91) +  Chr(49) +  Chr(93) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(104) +  Chr(101) +  Chr(99) +  Chr(107) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(111) +  Chr(118) +  Chr(105) +  Chr(100) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(32) +  Chr(105) +  Chr(115) +  Chr(32) +  Chr(97) +  Chr(32) +  Chr(118) +  Chr(97) +  Chr(108) +  Chr(105) +  Chr(100) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(115) +  Chr(46) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(105) +  Chr(115) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(40) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(102) +  Chr(34) +  Chr(69) +  Chr(114) +  Chr(114) +  Chr(111) +  Chr(114) +  Chr(58) +  Chr(32) +  Chr(39) +  Chr(123) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(125) +  Chr(39) +  Chr(32) +  Chr(105) +  Chr(115) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(97) +  Chr(32) +  Chr(118) +  Chr(97) +  Chr(108) +  Chr(105) +  Chr(100) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(34) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(101) +  Chr(120) +  Chr(105) +  Chr(116) +  Chr(40) +  Chr(49) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(82) +  Chr(101) +  Chr(97) +  Chr(100) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(110) +  Chr(116) +  Chr(101) +  Chr(110) +  Chr(116) +  Chr(32) +  Chr(102) +  Chr(114) +  Chr(111) +  Chr(109) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(115) +  Chr(112) +  Chr(101) +  Chr(99) +  Chr(105) +  Chr(102) +  Chr(105) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(119) +  Chr(105) +  Chr(116) +  Chr(104) +  Chr(32) +  Chr(111) +  Chr(112) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(44) +  Chr(32) +  Chr(39) +  Chr(114) +  Chr(39) +  Chr(41) +  Chr(32) +  Chr(97) +  Chr(115) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(99) +  Chr(111) +  Chr(110) +  Chr(116) +  Chr(101) +  Chr(110) +  Chr(116) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(46) +  Chr(114) +  Chr(101) +  Chr(97) +  Chr(100) +  Chr(40) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(80) +  Chr(114) +  Chr(111) +  Chr(99) +  Chr(101) +  Chr(115) +  Chr(115) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(110) +  Chr(116) +  Chr(101) +  Chr(110) +  Chr(116) +  Chr(32) +  Chr(117) +  Chr(115) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(121) +  Chr(111) +  Chr(117) +  Chr(114) +  Chr(32) +  Chr(39) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(114) +  Chr(39) +  Chr(32) +  Chr(102) +  Chr(117) +  Chr(110) +  Chr(99) +  Chr(116) +  Chr(105) +  Chr(111) +  Chr(110) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(95) +  Chr(114) +  Chr(101) +  Chr(115) +  Chr(117) +  Chr(108) +  Chr(116) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(114) +  Chr(40) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(99) +  Chr(111) +  Chr(110) +  Chr(116) +  Chr(101) +  Chr(110) +  Chr(116) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(80) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(114) +  Chr(32) +  Chr(117) +  Chr(115) +  Chr(101) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(115) +  Chr(117) +  Chr(108) +  Chr(116) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(95) +  Chr(114) +  Chr(101) +  Chr(115) +  Chr(117) +  Chr(108) +  Chr(116) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10)
+    variables['func_HTpy_func'] = Chr(13) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(72) +  Chr(84) +  Chr(112) +  Chr(121) +  Chr(40) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(108) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(97) +  Chr(114) +  Chr(103) +  Chr(118) +  Chr(41) +  Chr(32) +  Chr(60) +  Chr(32) +  Chr(50) +  Chr(32) +  Chr(111) +  Chr(114) +  Chr(32) +  Chr(108) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(97) +  Chr(114) +  Chr(103) +  Chr(118) +  Chr(41) +  Chr(32) +  Chr(62) +  Chr(32) +  Chr(51) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(34) +  Chr(85) +  Chr(115) +  Chr(97) +  Chr(103) +  Chr(101) +  Chr(58) +  Chr(32) +  Chr(112) +  Chr(121) +  Chr(116) +  Chr(104) +  Chr(111) +  Chr(110) +  Chr(32) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(46) +  Chr(112) +  Chr(121) +  Chr(32) +  Chr(60) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(46) +  Chr(104) +  Chr(116) +  Chr(112) +  Chr(121) +  Chr(62) +  Chr(32) +  Chr(91) +  Chr(114) +  Chr(117) +  Chr(110) +  Chr(93) +  Chr(34) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(101) +  Chr(120) +  Chr(105) +  Chr(116) +  Chr(40) +  Chr(49) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(97) +  Chr(114) +  Chr(103) +  Chr(118) +  Chr(91) +  Chr(49) +  Chr(93) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(69) +  Chr(110) +  Chr(115) +  Chr(117) +  Chr(114) +  Chr(101) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(101) +  Chr(110) +  Chr(100) +  Chr(115) +  Chr(32) +  Chr(119) +  Chr(105) +  Chr(116) +  Chr(104) +  Chr(32) +  Chr(39) +  Chr(46) +  Chr(104) +  Chr(116) +  Chr(112) +  Chr(121) +  Chr(39) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(46) +  Chr(101) +  Chr(110) +  Chr(100) +  Chr(115) +  Chr(119) +  Chr(105) +  Chr(116) +  Chr(104) +  Chr(40) +  Chr(39) +  Chr(46) +  Chr(104) +  Chr(116) +  Chr(112) +  Chr(121) +  Chr(39) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(34) +  Chr(69) +  Chr(114) +  Chr(114) +  Chr(111) +  Chr(114) +  Chr(58) +  Chr(32) +  Chr(73) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(109) +  Chr(117) +  Chr(115) +  Chr(116) +  Chr(32) +  Chr(104) +  Chr(97) +  Chr(118) +  Chr(101) +  Chr(32) +  Chr(97) +  Chr(32) +  Chr(46) +  Chr(104) +  Chr(116) +  Chr(112) +  Chr(121) +  Chr(32) +  Chr(101) +  Chr(120) +  Chr(116) +  Chr(101) +  Chr(110) +  Chr(115) +  Chr(105) +  Chr(111) +  Chr(110) +  Chr(46) +  Chr(34) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(101) +  Chr(120) +  Chr(105) +  Chr(116) +  Chr(40) +  Chr(49) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(104) +  Chr(101) +  Chr(99) +  Chr(107) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(101) +  Chr(120) +  Chr(105) +  Chr(115) +  Chr(116) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(115) +  Chr(46) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(105) +  Chr(115) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(40) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(102) +  Chr(34) +  Chr(69) +  Chr(114) +  Chr(114) +  Chr(111) +  Chr(114) +  Chr(58) +  Chr(32) +  Chr(39) +  Chr(123) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(125) +  Chr(39) +  Chr(32) +  Chr(105) +  Chr(115) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(97) +  Chr(32) +  Chr(118) +  Chr(97) +  Chr(108) +  Chr(105) +  Chr(100) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(34) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(101) +  Chr(120) +  Chr(105) +  Chr(116) +  Chr(40) +  Chr(49) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(68) +  Chr(101) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(109) +  Chr(105) +  Chr(110) +  Chr(101) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(32) +  Chr(46) +  Chr(112) +  Chr(121) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(110) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(32) +  Chr(98) +  Chr(97) +  Chr(115) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(111) +  Chr(110) +  Chr(32) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(110) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(111) +  Chr(115) +  Chr(46) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(115) +  Chr(112) +  Chr(108) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(120) +  Chr(116) +  Chr(40) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(41) +  Chr(91) +  Chr(48) +  Chr(93) +  Chr(32) +  Chr(43) +  Chr(32) +  Chr(39) +  Chr(46) +  Chr(112) +  Chr(121) +  Chr(39) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(46) +  Chr(104) +  Chr(116) +  Chr(112) +  Chr(121) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(110) +  Chr(116) +  Chr(101) +  Chr(110) +  Chr(116) +  Chr(32) +  Chr(117) +  Chr(115) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(102) +  Chr(117) +  Chr(110) +  Chr(99) +  Chr(116) +  Chr(105) +  Chr(111) +  Chr(110) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(119) +  Chr(105) +  Chr(116) +  Chr(104) +  Chr(32) +  Chr(111) +  Chr(112) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(105) +  Chr(110) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(44) +  Chr(32) +  Chr(39) +  Chr(114) +  Chr(39) +  Chr(41) +  Chr(32) +  Chr(97) +  Chr(115) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(104) +  Chr(116) +  Chr(112) +  Chr(121) +  Chr(95) +  Chr(99) +  Chr(111) +  Chr(110) +  Chr(116) +  Chr(101) +  Chr(110) +  Chr(116) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(46) +  Chr(114) +  Chr(101) +  Chr(97) +  Chr(100) +  Chr(40) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(95) +  Chr(114) +  Chr(101) +  Chr(115) +  Chr(117) +  Chr(108) +  Chr(116) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(114) +  Chr(40) +  Chr(104) +  Chr(116) +  Chr(112) +  Chr(121) +  Chr(95) +  Chr(99) +  Chr(111) +  Chr(110) +  Chr(116) +  Chr(101) +  Chr(110) +  Chr(116) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(83) +  Chr(97) +  Chr(118) +  Chr(101) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(115) +  Chr(117) +  Chr(108) +  Chr(116) +  Chr(32) +  Chr(116) +  Chr(111) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(109) +  Chr(105) +  Chr(110) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(46) +  Chr(112) +  Chr(121) +  Chr(32) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(119) +  Chr(105) +  Chr(116) +  Chr(104) +  Chr(32) +  Chr(111) +  Chr(112) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(44) +  Chr(32) +  Chr(39) +  Chr(119) +  Chr(39) +  Chr(41) +  Chr(32) +  Chr(97) +  Chr(115) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(46) +  Chr(119) +  Chr(114) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(40) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(95) +  Chr(114) +  Chr(101) +  Chr(115) +  Chr(117) +  Chr(108) +  Chr(116) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(102) +  Chr(34) +  Chr(67) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(115) +  Chr(117) +  Chr(108) +  Chr(116) +  Chr(32) +  Chr(115) +  Chr(97) +  Chr(118) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(116) +  Chr(111) +  Chr(32) +  Chr(39) +  Chr(123) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(125) +  Chr(39) +  Chr(46) +  Chr(34) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(104) +  Chr(101) +  Chr(99) +  Chr(107) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(39) +  Chr(114) +  Chr(117) +  Chr(110) +  Chr(39) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(114) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(32) +  Chr(105) +  Chr(115) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(111) +  Chr(118) +  Chr(105) +  Chr(100) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(97) +  Chr(110) +  Chr(100) +  Chr(32) +  Chr(101) +  Chr(120) +  Chr(101) +  Chr(99) +  Chr(117) +  Chr(116) +  Chr(101) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(80) +  Chr(121) +  Chr(116) +  Chr(104) +  Chr(111) +  Chr(110) +  Chr(32) +  Chr(115) +  Chr(99) +  Chr(114) +  Chr(105) +  Chr(112) +  Chr(116) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(108) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(97) +  Chr(114) +  Chr(103) +  Chr(118) +  Chr(41) +  Chr(32) +  Chr(61) +  Chr(61) +  Chr(32) +  Chr(51) +  Chr(32) +  Chr(97) +  Chr(110) +  Chr(100) +  Chr(32) +  Chr(115) +  Chr(121) +  Chr(115) +  Chr(46) +  Chr(97) +  Chr(114) +  Chr(103) +  Chr(118) +  Chr(91) +  Chr(50) +  Chr(93) +  Chr(32) +  Chr(61) +  Chr(61) +  Chr(32) +  Chr(39) +  Chr(114) +  Chr(117) +  Chr(110) +  Chr(39) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(102) +  Chr(34) +  Chr(82) +  Chr(117) +  Chr(110) +  Chr(110) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(39) +  Chr(123) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(125) +  Chr(39) +  Chr(46) +  Chr(46) +  Chr(46) +  Chr(34) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(116) +  Chr(114) +  Chr(121) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(101) +  Chr(120) +  Chr(101) +  Chr(99) +  Chr(40) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(40) +  Chr(111) +  Chr(112) +  Chr(101) +  Chr(110) +  Chr(40) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(41) +  Chr(46) +  Chr(114) +  Chr(101) +  Chr(97) +  Chr(100) +  Chr(40) +  Chr(41) +  Chr(44) +  Chr(32) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(112) +  Chr(117) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(44) +  Chr(32) +  Chr(39) +  Chr(101) +  Chr(120) +  Chr(101) +  Chr(99) +  Chr(39) +  Chr(41) +  Chr(44) +  Chr(32) +  Chr(103) +  Chr(108) +  Chr(111) +  Chr(98) +  Chr(97) +  Chr(108) +  Chr(115) +  Chr(40) +  Chr(41) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(101) +  Chr(120) +  Chr(99) +  Chr(101) +  Chr(112) +  Chr(116) +  Chr(32) +  Chr(69) +  Chr(120) +  Chr(99) +  Chr(101) +  Chr(112) +  Chr(116) +  Chr(105) +  Chr(111) +  Chr(110) +  Chr(32) +  Chr(97) +  Chr(115) +  Chr(32) +  Chr(101) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(116) +  Chr(40) +  Chr(102) +  Chr(34) +  Chr(69) +  Chr(114) +  Chr(114) +  Chr(111) +  Chr(114) +  Chr(32) +  Chr(111) +  Chr(99) +  Chr(99) +  Chr(117) +  Chr(114) +  Chr(114) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(119) +  Chr(104) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(32) +  Chr(114) +  Chr(117) +  Chr(110) +  Chr(110) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(109) +  Chr(112) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(58) +  Chr(32) +  Chr(123) +  Chr(101) +  Chr(125) +  Chr(34) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10)
     variables['funcs_func'] = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy"
     variables['allFuncsHere'] = ""
     items = LoopParseFunc(variables['funcs_func'], "|")
@@ -1267,6 +1139,4 @@ HTpy()
 #;;;;;;;;;;;;;;;;;;;;;;;
 #;;;;;;;;;;;;;;;;;;;;;;;
 #;;;;;;;;;;;;;;;;;;;;;;;
-
-
 
