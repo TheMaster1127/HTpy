@@ -1,4 +1,5 @@
-endpoint, hksavhs
+Endpoint, request_data, endpointName
 {
-msgbox, sadfdg
+var1 := request_data
+msgbox, % var1
 }
