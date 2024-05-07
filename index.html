@@ -2198,6 +2198,10 @@ variables.weEverUseVars =  ""
 
 variables.usedLib =  ""
 
+variables.putEndPointFlask1Up =  ""
+
+variables.putEndPointFlask2Down =  ""
+
 variables.AindexcharLength =  1;
 
 variables.pycodeAcurlyBraceAddSomeVrasFixNL =  0;
@@ -2503,6 +2507,30 @@ variables.strFormReturn = StringTrimLeft(variables.A_LoopField23, 7)
 variables.var12312 =  await transpileVariables ( variables.strFormReturn, variables.functionNames )
 
 variables.out =  "return " + variables.var12312;
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( SubStr( Trim( variables.A_LoopField23 ) , 1, 10 ) == "endpoint, " )
+
+{
+
+variables.strFormEndpoint = StringTrimLeft(variables.A_LoopField23, 10)
+
+variables.putEndPointFlask1Up =  String.fromCharCode( 102 )  + String.fromCharCode( 114 )  + String.fromCharCode( 111 )  + String.fromCharCode( 109 )  + String.fromCharCode( 32 )  + String.fromCharCode( 102 )  + String.fromCharCode( 108 )  + String.fromCharCode( 97 )  + String.fromCharCode( 115 )  + String.fromCharCode( 107 )  + String.fromCharCode( 32 )  + String.fromCharCode( 105 )  + String.fromCharCode( 109 )  + String.fromCharCode( 112 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 70 )  + String.fromCharCode( 108 )  + String.fromCharCode( 97 )  + String.fromCharCode( 115 )  + String.fromCharCode( 107 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 115 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 100 )  + String.fromCharCode( 95 )  + String.fromCharCode( 102 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 113 )  + String.fromCharCode( 117 )  + String.fromCharCode( 101 )  + String.fromCharCode( 115 )  + String.fromCharCode( 116 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 106 )  + String.fromCharCode( 115 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 105 )  + String.fromCharCode( 102 )  + String.fromCharCode( 121 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 105 )  + String.fromCharCode( 109 )  + String.fromCharCode( 112 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 97 )  + String.fromCharCode( 112 )  + String.fromCharCode( 112 )  + String.fromCharCode( 32 )  + String.fromCharCode( 61 )  + String.fromCharCode( 32 )  + String.fromCharCode( 70 )  + String.fromCharCode( 108 )  + String.fromCharCode( 97 )  + String.fromCharCode( 115 )  + String.fromCharCode( 107 )  + String.fromCharCode( 40 )  + String.fromCharCode( 95 )  + String.fromCharCode( 95 )  + String.fromCharCode( 110 )  + String.fromCharCode( 97 )  + String.fromCharCode( 109 )  + String.fromCharCode( 101 )  + String.fromCharCode( 95 )  + String.fromCharCode( 95 )  + String.fromCharCode( 41 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 64 )  + String.fromCharCode( 97 )  + String.fromCharCode( 112 )  + String.fromCharCode( 112 )  + String.fromCharCode( 46 )  + String.fromCharCode( 114 )  + String.fromCharCode( 111 )  + String.fromCharCode( 117 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 40 )  + String.fromCharCode( 39 )  + String.fromCharCode( 47 )  + String.fromCharCode( 39 )  + String.fromCharCode( 41 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 100 )  + String.fromCharCode( 101 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 97 )  + String.fromCharCode( 112 )  + String.fromCharCode( 112 )  + String.fromCharCode( 95 )  + String.fromCharCode( 114 )  + String.fromCharCode( 111 )  + String.fromCharCode( 117 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 40 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 110 )  + String.fromCharCode( 32 )  + String.fromCharCode( 115 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 100 )  + String.fromCharCode( 95 )  + String.fromCharCode( 102 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 40 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 106 )  + String.fromCharCode( 111 )  + String.fromCharCode( 105 )  + String.fromCharCode( 110 )  + String.fromCharCode( 40 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 100 )  + String.fromCharCode( 105 )  + String.fromCharCode( 114 )  + String.fromCharCode( 110 )  + String.fromCharCode( 97 )  + String.fromCharCode( 109 )  + String.fromCharCode( 101 )  + String.fromCharCode( 40 )  + String.fromCharCode( 95 )  + String.fromCharCode( 95 )  + String.fromCharCode( 102 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 95 )  + String.fromCharCode( 95 )  + String.fromCharCode( 41 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 39 )  + String.fromCharCode( 105 )  + String.fromCharCode( 110 )  + String.fromCharCode( 100 )  + String.fromCharCode( 101 )  + String.fromCharCode( 120 )  + String.fromCharCode( 46 )  + String.fromCharCode( 104 )  + String.fromCharCode( 116 )  + String.fromCharCode( 109 )  + String.fromCharCode( 108 )  + String.fromCharCode( 39 )  + String.fromCharCode( 41 )  + String.fromCharCode( 41 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 50 )  + String.fromCharCode( 48 )  + String.fromCharCode( 48 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )
+
+variables.putEndPointFlask2Down =  String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 64 )  + String.fromCharCode( 97 )  + String.fromCharCode( 112 )  + String.fromCharCode( 112 )  + String.fromCharCode( 46 )  + String.fromCharCode( 101 )  + String.fromCharCode( 114 )  + String.fromCharCode( 114 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 104 )  + String.fromCharCode( 97 )  + String.fromCharCode( 110 )  + String.fromCharCode( 100 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 114 )  + String.fromCharCode( 40 )  + String.fromCharCode( 52 )  + String.fromCharCode( 48 )  + String.fromCharCode( 52 )  + String.fromCharCode( 41 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 100 )  + String.fromCharCode( 101 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 110 )  + String.fromCharCode( 111 )  + String.fromCharCode( 116 )  + String.fromCharCode( 95 )  + String.fromCharCode( 102 )  + String.fromCharCode( 111 )  + String.fromCharCode( 117 )  + String.fromCharCode( 110 )  + String.fromCharCode( 100 )  + String.fromCharCode( 40 )  + String.fromCharCode( 101 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 110 )  + String.fromCharCode( 32 )  + String.fromCharCode( 34 )  + String.fromCharCode( 80 )  + String.fromCharCode( 97 )  + String.fromCharCode( 103 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 110 )  + String.fromCharCode( 111 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 102 )  + String.fromCharCode( 111 )  + String.fromCharCode( 117 )  + String.fromCharCode( 110 )  + String.fromCharCode( 100 )  + String.fromCharCode( 34 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 52 )  + String.fromCharCode( 48 )  + String.fromCharCode( 52 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 105 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 95 )  + String.fromCharCode( 95 )  + String.fromCharCode( 110 )  + String.fromCharCode( 97 )  + String.fromCharCode( 109 )  + String.fromCharCode( 101 )  + String.fromCharCode( 95 )  + String.fromCharCode( 95 )  + String.fromCharCode( 32 )  + String.fromCharCode( 61 )  + String.fromCharCode( 61 )  + String.fromCharCode( 32 )  + String.fromCharCode( 39 )  + String.fromCharCode( 95 )  + String.fromCharCode( 95 )  + String.fromCharCode( 109 )  + String.fromCharCode( 97 )  + String.fromCharCode( 105 )  + String.fromCharCode( 110 )  + String.fromCharCode( 95 )  + String.fromCharCode( 95 )  + String.fromCharCode( 39 )  + String.fromCharCode( 58 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 97 )  + String.fromCharCode( 112 )  + String.fromCharCode( 112 )  + String.fromCharCode( 46 )  + String.fromCharCode( 114 )  + String.fromCharCode( 117 )  + String.fromCharCode( 110 )  + String.fromCharCode( 40 )  + String.fromCharCode( 104 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 116 )  + String.fromCharCode( 61 )  + String.fromCharCode( 39 )  + String.fromCharCode( 48 )  + String.fromCharCode( 46 )  + String.fromCharCode( 48 )  + String.fromCharCode( 46 )  + String.fromCharCode( 48 )  + String.fromCharCode( 46 )  + String.fromCharCode( 48 )  + String.fromCharCode( 39 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 116 )  + String.fromCharCode( 61 )  + String.fromCharCode( 56 )  + String.fromCharCode( 48 )  + String.fromCharCode( 48 )  + String.fromCharCode( 48 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 100 )  + String.fromCharCode( 101 )  + String.fromCharCode( 98 )  + String.fromCharCode( 117 )  + String.fromCharCode( 103 )  + String.fromCharCode( 61 )  + String.fromCharCode( 84 )  + String.fromCharCode( 114 )  + String.fromCharCode( 117 )  + String.fromCharCode( 101 )  + String.fromCharCode( 41 )  + String.fromCharCode( 13 )  + String.fromCharCode( 10 )
+
+variables.firstLineVar1 =  "@app.route('/" + variables.strFormEndpoint + "', methods=['POST'])";
+
+variables.firstLineVar2 =  "def " + variables.strFormEndpoint + "():";
+
+variables.firstLineVar3 =  "|request_data = request.get_json()";
+
+variables.out =  variables.firstLineVar1 + "\n" + variables.firstLineVar2 + "\n" + variables.firstLineVar3;
 
 variables.lineDone =  1;
 
@@ -3718,7 +3746,25 @@ if ( SubStr( Trim( await StrLower ( variables.A_LoopField31 ) ) , 1, 1 ) !== Str
 
 {
 
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField31 ) ) , 1, 1 ) == String.fromCharCode( 124 ) )
+
+{
+
+variables.nothing =  ""
+
+variables.out =  StrReplace( variables.out, "|", variables.nothing )
+
+variables.pyCodeOut1234565432 +=  String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + variables.out + "\n";
+
+}
+
+else
+
+{
+
 variables.pyCodeOut1234565432 +=  variables.out + "\n";
+
+}
 
 }
 
@@ -3731,12 +3777,6 @@ variables.pyCodeOut1234565432 +=  variables.out + "\n";
 variables.pyCode = StringTrimRight(variables.pyCodeOut1234565432, 1)
 
 variables.pyCodeFinal =  variables.pyCode;
-
-//~ FileRead, upCode, upCode.txt
-
-//~ FileRead, downCode, downCode.txt
-
-//~ pyCode := upCode . posStartQuotes1" . usedLib . posStartQuotes2" . weEverUseVars . posStartQuotes3" . pyCode . posStartQuotes4" . downCode
 
 variables.allFuncsHere =  ""
 
@@ -3793,6 +3833,14 @@ variables.pyCode =  variables.usedLib + "\n" + variables.weEverUseVars + "\n" + 
 }
 
 variables.pyCode =  StrReplace( variables.pyCode, "\n\n", "\n" )
+
+if ( variables.putEndPointFlask1Up !== "" )
+
+{
+
+variables.pyCode =  variables.putEndPointFlask1Up + "\n" + variables.pyCode + "\n" + variables.putEndPointFlask2Down + "\n";
+
+}
 
 for (/* Normal Loop */ variables.A_Index33 = 1; variables.A_Index33 <= variables.theIdNumOfThe34; variables.A_Index33++)
 

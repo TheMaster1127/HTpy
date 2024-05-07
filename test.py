@@ -1,18 +1,29 @@
-import random
-# Define a dictionary to store dynamic variables
-variables = {}
+from flask import Flask, send_file, request, jsonify
+import os
+
+app = Flask(__name__)
+
+
+
+@app.route('/')
+def app_route():
+    return send_file(os.path.join(os.path.dirname(__file__), 'index.html')), 200
+
+
 
 
-variables['ran'] = random.randint(1, 100)
-for A_Index1 , value in enumerate(iter(int, 1), start=1):
-    variables['A_Index1'] = A_Index1
-    variables['userNum'] = int(input("guess a num form 1 to 100: "))
-    variables['AIndex'] = str(variables['A_Index1'])
-    if (variables['userNum'] == variables['ran']):
-        print("You win in "  +  variables['AIndex']  +  " tries")
-        break
-    elif (variables['userNum']<variables['ran']):
-        print("higher")
-    else:
-        print("lower")
+@app.route('/hksavhs', methods=['POST'])
+def hksavhs():
+    request_data = request.get_json()
+    print("sadfdg")
+
+
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return "Page not found", 404
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
 

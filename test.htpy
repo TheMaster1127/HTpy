@@ -1,24 +1,4 @@
-
-
-
-Random, ran , 1, 100
-Loop
+endpoint, hksavhs
 {
-userNum := int(input("guess a num form 1 to 100: "))
-AIndex := str(A_Index)
-if (userNum = ran)
-{
-msgbox, % "You win in " . AIndex . " tries"
-break
+msgbox, sadfdg
 }
-else if (userNum < ran)
-{
-msgbox, higher
-}
-else
-{
-msgbox, lower
-}
-
-}
-

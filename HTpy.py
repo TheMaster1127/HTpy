@@ -1,166 +1,166 @@
 # Define a dictionary to store dynamic variables
 variables = {}
 
-
-def LoopParseFunc(var, delimiter1="", delimiter2=""):
-    import re
-    if not delimiter1 and not delimiter2:
-        # If no delimiters are provided, return a list of characters
-        items = list(var)
-    else:
-        # Construct the regular expression pattern for splitting the string
-        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'
-
-        # Split the string using the constructed pattern
-        items = re.split(pattern, var)
-
-    return items
-
-
-def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
-    if Haystack is None or Needle is None:
-        return False
-    StartingPos = max(StartingPos, 1)
-    if not CaseSensitive:
-        Haystack = Haystack.lower()
-        Needle = Needle.lower()
-    count = 0
-    for i in range(StartingPos - 1, len(Haystack)):
-        if Haystack[i:i + len(Needle)] == Needle:
-            count += 1
-            if count == Occurrence:
-                return True
-    return False  
-
-def SubStr(str, startPos, length=None):
-    if str is None or str == "":
-        return ""
-
-    if length is None or length == "":
-        length = len(str) - startPos + 1
-
-    if startPos < 1:
-        startPos = len(str) + startPos
-
-    return str[startPos - 1:startPos - 1 + length]
-
-def Trim(inputString):
-    if inputString is None:
-        return ""
-
-    return inputString.strip()
-  
-def StrReplace(originalString, find, replaceWith):
-    # Use the replace method to replace occurrences of 'find' with 'replaceWith'
-    return originalString.replace(find, replaceWith)
-
-def StringTrimLeft(input, numChars):
-    # Convert input to a string if it's not already a string
-    if not isinstance(input, str):
-        input = str(input)  # Convert input to string
-
-    # Check if the input is long enough to perform trimming
-    if len(input) >= numChars:
-        return input[numChars:]  # Trim the string from the left
-    else:
-        return input  # Return input unchanged if numChars is larger than string length
-
-def StringTrimRight(input, numChars):
-    # Convert input to a string if it's not already a string
-    if not isinstance(input, str):
-        input = str(input)  # Convert input to string
-
-    # Check if the input is long enough to perform trimming
-    if len(input) >= numChars:
-        return input[:-numChars]  # Trim the string from the right
-    else:
-        return input  # Return input unchanged if numChars is larger than string length
-
-def StrLower(string):
-    return string.lower()
-
-def RegExReplace(inputStr, regexPattern, replacement):
-    # Create a regular expression object using the provided pattern
-    import re
-    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching
-
-    # Use the sub() method to perform the regex replacement
-    resultStr = regex.sub(replacement, inputStr)
-
-    # Return the modified string
-    return resultStr
-
-def StrSplit(inputStr, delimiter, num):
-    # Split the input string based on the delimiter
-    parts = inputStr.split(delimiter)
-
-    # Return the part specified by the num parameter (1-based index)
-    if 0 < num <= len(parts):
-        return parts[num - 1]  # Return the specified part (0-based index)
-    else:
-        return ''  # Return an empty string if num is out of range
-
-def Chr(number):
-    # Check if the number is None
-    if number is None:
-        # Return an empty string
-        return ""
-
-    # Check if the number is within the valid Unicode range
-    if 0 <= number <= 0x10FFFF:
-        # Convert the number to a character using chr()
-        return chr(number)
-    else:
-        # Return an empty string for invalid numbers
-        return ""
-
-
-# Custom Mod function in Python
-def Mod(dividend, divisor):
-    return dividend % divisor
-
-def HTpy():
-    import sys
-    import os
-    if len(sys.argv) < 2 or len(sys.argv) > 3:
-        print("Usage: python app.py <input_file.htpy> [run]")
-        sys.exit(1)
-
-    input_file = sys.argv[1]
-
-    # Ensure the input_file ends with '.htpy'
-    if not input_file.endswith('.htpy'):
-        print("Error: Input file must have a .htpy extension.")
-        sys.exit(1)
-
-    # Check if the input_file exists
-    if not os.path.isfile(input_file):
-        print(f"Error: '{input_file}' is not a valid file path.")
-        sys.exit(1)
-
-    # Determine the output .py file name based on input file name
-    output_file = os.path.splitext(input_file)[0] + '.py'
-
-    # Compile the .htpy content using the compiler function
-    with open(input_file, 'r') as file:
-        htpy_content = file.read()
-
-    compiled_result = compiler(htpy_content)
-
-    # Save the compiled result to the determined .py output file
-    with open(output_file, 'w') as file:
-        file.write(compiled_result)
-
-    print(f"Compiled result saved to '{output_file}'.")
-
-    # Check if 'run' parameter is provided and execute the compiled Python script
-    if len(sys.argv) == 3 and sys.argv[2] == 'run':
-        print(f"Running '{output_file}'...")
-        try:
-            exec(compile(open(output_file).read(), output_file, 'exec'), globals())
-        except Exception as e:
-            print(f"Error occurred while running the compiled file: {e}")
-
+
+def LoopParseFunc(var, delimiter1="", delimiter2=""):
+    import re
+    if not delimiter1 and not delimiter2:
+        # If no delimiters are provided, return a list of characters
+        items = list(var)
+    else:
+        # Construct the regular expression pattern for splitting the string
+        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'
+
+        # Split the string using the constructed pattern
+        items = re.split(pattern, var)
+
+    return items
+
+
+def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
+    if Haystack is None or Needle is None:
+        return False
+    StartingPos = max(StartingPos, 1)
+    if not CaseSensitive:
+        Haystack = Haystack.lower()
+        Needle = Needle.lower()
+    count = 0
+    for i in range(StartingPos - 1, len(Haystack)):
+        if Haystack[i:i + len(Needle)] == Needle:
+            count += 1
+            if count == Occurrence:
+                return True
+    return False  
+
+def SubStr(str, startPos, length=None):
+    if str is None or str == "":
+        return ""
+
+    if length is None or length == "":
+        length = len(str) - startPos + 1
+
+    if startPos < 1:
+        startPos = len(str) + startPos
+
+    return str[startPos - 1:startPos - 1 + length]
+
+def Trim(inputString):
+    if inputString is None:
+        return ""
+
+    return inputString.strip()
+  
+def StrReplace(originalString, find, replaceWith):
+    # Use the replace method to replace occurrences of 'find' with 'replaceWith'
+    return originalString.replace(find, replaceWith)
+
+def StringTrimLeft(input, numChars):
+    # Convert input to a string if it's not already a string
+    if not isinstance(input, str):
+        input = str(input)  # Convert input to string
+
+    # Check if the input is long enough to perform trimming
+    if len(input) >= numChars:
+        return input[numChars:]  # Trim the string from the left
+    else:
+        return input  # Return input unchanged if numChars is larger than string length
+
+def StringTrimRight(input, numChars):
+    # Convert input to a string if it's not already a string
+    if not isinstance(input, str):
+        input = str(input)  # Convert input to string
+
+    # Check if the input is long enough to perform trimming
+    if len(input) >= numChars:
+        return input[:-numChars]  # Trim the string from the right
+    else:
+        return input  # Return input unchanged if numChars is larger than string length
+
+def StrLower(string):
+    return string.lower()
+
+def RegExReplace(inputStr, regexPattern, replacement):
+    # Create a regular expression object using the provided pattern
+    import re
+    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching
+
+    # Use the sub() method to perform the regex replacement
+    resultStr = regex.sub(replacement, inputStr)
+
+    # Return the modified string
+    return resultStr
+
+def StrSplit(inputStr, delimiter, num):
+    # Split the input string based on the delimiter
+    parts = inputStr.split(delimiter)
+
+    # Return the part specified by the num parameter (1-based index)
+    if 0 < num <= len(parts):
+        return parts[num - 1]  # Return the specified part (0-based index)
+    else:
+        return ''  # Return an empty string if num is out of range
+
+def Chr(number):
+    # Check if the number is None
+    if number is None:
+        # Return an empty string
+        return ""
+
+    # Check if the number is within the valid Unicode range
+    if 0 <= number <= 0x10FFFF:
+        # Convert the number to a character using chr()
+        return chr(number)
+    else:
+        # Return an empty string for invalid numbers
+        return ""
+
+
+# Custom Mod function in Python
+def Mod(dividend, divisor):
+    return dividend % divisor
+
+def HTpy():
+    import sys
+    import os
+    if len(sys.argv) < 2 or len(sys.argv) > 3:
+        print("Usage: python app.py <input_file.htpy> [run]")
+        sys.exit(1)
+
+    input_file = sys.argv[1]
+
+    # Ensure the input_file ends with '.htpy'
+    if not input_file.endswith('.htpy'):
+        print("Error: Input file must have a .htpy extension.")
+        sys.exit(1)
+
+    # Check if the input_file exists
+    if not os.path.isfile(input_file):
+        print(f"Error: '{input_file}' is not a valid file path.")
+        sys.exit(1)
+
+    # Determine the output .py file name based on input file name
+    output_file = os.path.splitext(input_file)[0] + '.py'
+
+    # Compile the .htpy content using the compiler function
+    with open(input_file, 'r') as file:
+        htpy_content = file.read()
+
+    compiled_result = compiler(htpy_content)
+
+    # Save the compiled result to the determined .py output file
+    with open(output_file, 'w') as file:
+        file.write(compiled_result)
+
+    print(f"Compiled result saved to '{output_file}'.")
+
+    # Check if 'run' parameter is provided and execute the compiled Python script
+    if len(sys.argv) == 3 and sys.argv[2] == 'run':
+        print(f"Running '{output_file}'...")
+        try:
+            exec(compile(open(output_file).read(), output_file, 'exec'), globals())
+        except Exception as e:
+            print(f"Error occurred while running the compiled file: {e}")
+
 
 def indent_nested_curly_braces(input_string):
     variables['input_string'] = input_string
@@ -518,6 +518,8 @@ def compiler(HTpyCode):
     variables['weUseRandomAtLeastOnce'] = 0
     variables['weEverUseVars'] = ""
     variables['usedLib'] = ""
+    variables['putEndPointFlask1Up'] = ""
+    variables['putEndPointFlask2Down'] = ""
     variables['AindexcharLength'] = 1
     variables['pycodeAcurlyBraceAddSomeVrasFixNL'] = 0
     variables['pycodeAcurlyBraceAddSomeVrasFixLP'] = 0
@@ -634,6 +636,16 @@ def compiler(HTpyCode):
             variables['strFormReturn'] = StringTrimLeft(variables['A_LoopField23'], 7)
             variables['var12312'] = transpileVariables(variables['strFormReturn'] , variables['functionNames'])
             variables['out'] = "return "  +  variables['var12312']
+            variables['lineDone'] = 1
+            variables['pyCode'] += variables['out']  +  "\n"
+        elif (SubStr(Trim(variables['A_LoopField23']), 1 , 10)== "endpoint, "):
+            variables['strFormEndpoint'] = StringTrimLeft(variables['A_LoopField23'], 10)
+            variables['putEndPointFlask1Up'] = Chr(102) +  Chr(114) +  Chr(111) +  Chr(109) +  Chr(32) +  Chr(102) +  Chr(108) +  Chr(97) +  Chr(115) +  Chr(107) +  Chr(32) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(70) +  Chr(108) +  Chr(97) +  Chr(115) +  Chr(107) +  Chr(44) +  Chr(32) +  Chr(115) +  Chr(101) +  Chr(110) +  Chr(100) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(44) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(113) +  Chr(117) +  Chr(101) +  Chr(115) +  Chr(116) +  Chr(44) +  Chr(32) +  Chr(106) +  Chr(115) +  Chr(111) +  Chr(110) +  Chr(105) +  Chr(102) +  Chr(121) +  Chr(13) +  Chr(10) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(70) +  Chr(108) +  Chr(97) +  Chr(115) +  Chr(107) +  Chr(40) +  Chr(95) +  Chr(95) +  Chr(110) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(95) +  Chr(95) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(64) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(46) +  Chr(114) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(101) +  Chr(40) +  Chr(39) +  Chr(47) +  Chr(39) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(95) +  Chr(114) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(101) +  Chr(40) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(115) +  Chr(101) +  Chr(110) +  Chr(100) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(40) +  Chr(111) +  Chr(115) +  Chr(46) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(106) +  Chr(111) +  Chr(105) +  Chr(110) +  Chr(40) +  Chr(111) +  Chr(115) +  Chr(46) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(100) +  Chr(105) +  Chr(114) +  Chr(110) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(40) +  Chr(95) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(95) +  Chr(41) +  Chr(44) +  Chr(32) +  Chr(39) +  Chr(105) +  Chr(110) +  Chr(100) +  Chr(101) +  Chr(120) +  Chr(46) +  Chr(104) +  Chr(116) +  Chr(109) +  Chr(108) +  Chr(39) +  Chr(41) +  Chr(41) +  Chr(44) +  Chr(32) +  Chr(50) +  Chr(48) +  Chr(48) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10)
+            variables['putEndPointFlask2Down'] = Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(64) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(46) +  Chr(101) +  Chr(114) +  Chr(114) +  Chr(111) +  Chr(114) +  Chr(104) +  Chr(97) +  Chr(110) +  Chr(100) +  Chr(108) +  Chr(101) +  Chr(114) +  Chr(40) +  Chr(52) +  Chr(48) +  Chr(52) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(111) +  Chr(117) +  Chr(110) +  Chr(100) +  Chr(40) +  Chr(101) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(34) +  Chr(80) +  Chr(97) +  Chr(103) +  Chr(101) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(102) +  Chr(111) +  Chr(117) +  Chr(110) +  Chr(100) +  Chr(34) +  Chr(44) +  Chr(32) +  Chr(52) +  Chr(48) +  Chr(52) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(95) +  Chr(95) +  Chr(110) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(95) +  Chr(95) +  Chr(32) +  Chr(61) +  Chr(61) +  Chr(32) +  Chr(39) +  Chr(95) +  Chr(95) +  Chr(109) +  Chr(97) +  Chr(105) +  Chr(110) +  Chr(95) +  Chr(95) +  Chr(39) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(46) +  Chr(114) +  Chr(117) +  Chr(110) +  Chr(40) +  Chr(104) +  Chr(111) +  Chr(115) +  Chr(116) +  Chr(61) +  Chr(39) +  Chr(48) +  Chr(46) +  Chr(48) +  Chr(46) +  Chr(48) +  Chr(46) +  Chr(48) +  Chr(39) +  Chr(44) +  Chr(32) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(61) +  Chr(56) +  Chr(48) +  Chr(48) +  Chr(48) +  Chr(44) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(98) +  Chr(117) +  Chr(103) +  Chr(61) +  Chr(84) +  Chr(114) +  Chr(117) +  Chr(101) +  Chr(41) +  Chr(13) +  Chr(10)
+            variables['firstLineVar1'] = "@app.route('/"  +  variables['strFormEndpoint']  +  "', methods=['POST'])"
+            variables['firstLineVar2'] = "def "  +  variables['strFormEndpoint']  +  "():"
+            variables['firstLineVar3'] = "|request_data = request.get_json()"
+            variables['out'] = variables['firstLineVar1']  +  "\n"  +  variables['firstLineVar2']  +  "\n"  +  variables['firstLineVar3']
             variables['lineDone'] = 1
             variables['pyCode'] += variables['out']  +  "\n"
         elif (StrLower(variables['A_LoopField23'])== "loop"):
@@ -1061,7 +1073,12 @@ def compiler(HTpyCode):
                 variables['out'] = StrReplace(variables['out'] , Chr(39) +  Chr(39) +  Chr(93), Chr(39) +  Chr(93))
             if ( not (InStr(variables['out'] , "|itsaersdtgtgfergsdgfsegdfsedAA|"))):
                 if (SubStr(Trim(StrLower(variables['A_LoopField31'])) , 1 , 1) != Chr(59)):
-                    variables['pyCodeOut1234565432'] += variables['out']  +  "\n"
+                    if (SubStr(Trim(StrLower(variables['A_LoopField31'])) , 1 , 1)== Chr(124)):
+                        variables['nothing'] = ""
+                        variables['out'] = StrReplace(variables['out'] , "|" , variables['nothing'])
+                        variables['pyCodeOut1234565432'] += Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  variables['out']  +  "\n"
+                    else:
+                        variables['pyCodeOut1234565432'] += variables['out']  +  "\n"
     variables['pyCode'] = StringTrimRight(variables['pyCodeOut1234565432'], 1)
     variables['pyCodeFinal'] = variables['pyCode']
     variables['func_LoopParseFunc_func'] = Chr(13) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(76) +  Chr(111) +  Chr(111) +  Chr(112) +  Chr(80) +  Chr(97) +  Chr(114) +  Chr(115) +  Chr(101) +  Chr(70) +  Chr(117) +  Chr(110) +  Chr(99) +  Chr(40) +  Chr(118) +  Chr(97) +  Chr(114) +  Chr(44) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(49) +  Chr(61) +  Chr(34) +  Chr(34) +  Chr(44) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(50) +  Chr(61) +  Chr(34) +  Chr(34) +  Chr(41) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(49) +  Chr(32) +  Chr(97) +  Chr(110) +  Chr(100) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(50) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(73) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(115) +  Chr(32) +  Chr(97) +  Chr(114) +  Chr(101) +  Chr(32) +  Chr(112) +  Chr(114) +  Chr(111) +  Chr(118) +  Chr(105) +  Chr(100) +  Chr(101) +  Chr(100) +  Chr(44) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(97) +  Chr(32) +  Chr(108) +  Chr(105) +  Chr(115) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(102) +  Chr(32) +  Chr(99) +  Chr(104) +  Chr(97) +  Chr(114) +  Chr(97) +  Chr(99) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(109) +  Chr(115) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(108) +  Chr(105) +  Chr(115) +  Chr(116) +  Chr(40) +  Chr(118) +  Chr(97) +  Chr(114) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(101) +  Chr(108) +  Chr(115) +  Chr(101) +  Chr(58) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(67) +  Chr(111) +  Chr(110) +  Chr(115) +  Chr(116) +  Chr(114) +  Chr(117) +  Chr(99) +  Chr(116) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(103) +  Chr(117) +  Chr(108) +  Chr(97) +  Chr(114) +  Chr(32) +  Chr(101) +  Chr(120) +  Chr(112) +  Chr(114) +  Chr(101) +  Chr(115) +  Chr(115) +  Chr(105) +  Chr(111) +  Chr(110) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(102) +  Chr(111) +  Chr(114) +  Chr(32) +  Chr(115) +  Chr(112) +  Chr(108) +  Chr(105) +  Chr(116) +  Chr(116) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(115) +  Chr(116) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(114) +  Chr(39) +  Chr(91) +  Chr(39) +  Chr(32) +  Chr(43) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(46) +  Chr(101) +  Chr(115) +  Chr(99) +  Chr(97) +  Chr(112) +  Chr(101) +  Chr(40) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(49) +  Chr(41) +  Chr(32) +  Chr(43) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(46) +  Chr(101) +  Chr(115) +  Chr(99) +  Chr(97) +  Chr(112) +  Chr(101) +  Chr(40) +  Chr(100) +  Chr(101) +  Chr(108) +  Chr(105) +  Chr(109) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(50) +  Chr(41) +  Chr(32) +  Chr(43) +  Chr(32) +  Chr(114) +  Chr(39) +  Chr(93) +  Chr(43) +  Chr(39) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(35) +  Chr(32) +  Chr(83) +  Chr(112) +  Chr(108) +  Chr(105) +  Chr(116) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(115) +  Chr(116) +  Chr(114) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(117) +  Chr(115) +  Chr(105) +  Chr(110) +  Chr(103) +  Chr(32) +  Chr(116) +  Chr(104) +  Chr(101) +  Chr(32) +  Chr(99) +  Chr(111) +  Chr(110) +  Chr(115) +  Chr(116) +  Chr(114) +  Chr(117) +  Chr(99) +  Chr(116) +  Chr(101) +  Chr(100) +  Chr(32) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(110) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(109) +  Chr(115) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(46) +  Chr(115) +  Chr(112) +  Chr(108) +  Chr(105) +  Chr(116) +  Chr(40) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(116) +  Chr(101) +  Chr(114) +  Chr(110) +  Chr(44) +  Chr(32) +  Chr(118) +  Chr(97) +  Chr(114) +  Chr(41) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(105) +  Chr(116) +  Chr(101) +  Chr(109) +  Chr(115) +  Chr(13) +  Chr(10) +  Chr(13) +  Chr(10)
@@ -1096,6 +1113,8 @@ def compiler(HTpyCode):
     else:
         variables['pyCode'] = variables['usedLib']  +  "\n"  +  variables['weEverUseVars']  +  "\n"  +  variables['pyCodeFinal']
     variables['pyCode'] = StrReplace(variables['pyCode'] , "\n\n" , "\n")
+    if (variables['putEndPointFlask1Up']  != ""):
+        variables['pyCode'] = variables['putEndPointFlask1Up']  +  "\n"  +  variables['pyCode']  +  "\n"  +  variables['putEndPointFlask2Down']  +  "\n"
     for A_Index33 in range(1, variables['theIdNumOfThe34'] + 1):
         variables['A_Index33'] = A_Index33
         variables['pyCode'] = StrReplace(variables['pyCode'] , "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-"  +  Chr(65) +  Chr(65) +  str(variables['A_Index33']) +  Chr(65) +  Chr(65), variables[f'theIdNumOfThe34theVar{variables["A_Index33"]}'])
