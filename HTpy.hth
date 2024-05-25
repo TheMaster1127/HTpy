@@ -838,6 +838,46 @@ usedLib .= "import time`n"
 pyCode .= out . "`n"
 
 }
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = "fileread, ")
+{
+StringTrimLeft, filereadCommand, A_LoopField, 10
+filereadCommand1varname := StrSplit(filereadCommand, ", ", 1)
+filereadCommand2path := StrSplit(filereadCommand, ", ", 2)
+
+filereadCommand2path := StrReplace(filereadCommand2path, Chr(92), Chr(92) . Chr(92))
+
+filereadCommand2path := Trim(transpileVariables(filereadCommand2path, functionNames))
+filereadCommand1varname := Trim(transpileVariables(filereadCommand1varname, functionNames))
+pyCode .= filereadCommand1varname . " = FileRead(" . filereadCommand2path . ")`n"
+lineDone := 1
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 12) = "fileappend, ")
+{
+StringTrimLeft, fileAppendCommand, A_LoopField, 12
+fileAppendCommand1varname := StrSplit(fileAppendCommand, ", ", 1)
+fileAppendCommand2path := StrSplit(fileAppendCommand, ", ", 2)
+
+fileAppendCommand2path := StrReplace(fileAppendCommand2path, Chr(92), Chr(92) . Chr(92))
+
+fileAppendCommand1varname := Trim(transpileVariables(fileAppendCommand1varname, functionNames))
+fileAppendCommand2path := Trim(transpileVariables(fileAppendCommand2path, functionNames))
+
+pyCode .= "FileAppend(" . fileAppendCommand1varname . ", " . fileAppendCommand2path . ")`n"
+lineDone := 1
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 12) = "filedelete, ")
+{
+StringTrimLeft, fileDeleteCommand, A_LoopField, 12
+
+fileDeleteCommand2path := StrSplit(fileDeleteCommand, ", ", 1)
+
+fileDeleteCommand2path := StrReplace(fileDeleteCommand2path, Chr(92), Chr(92) . Chr(92))
+fileDeleteCommand2path := Trim(transpileVariables(fileDeleteCommand2path, functionNames))
+
+
+pyCode .= "FileDelete(" . fileDeleteCommand2path . ")`n"
+lineDone := 1
+}
 else if (ifTheLineIsAFuncDec(Trim(A_LoopField), theFuncWeFound))
 {
 

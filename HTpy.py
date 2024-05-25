@@ -549,6 +549,31 @@ def compiler(HTpyCode):
             if (variables['onceImportTime'] == 1):
                 variables['usedLib'] += "import time\n"
             variables['pyCode'] += variables['out']  +  "\n"
+        elif (SubStr(Trim(StrLower(variables['A_LoopField23'])) , 1 , 10)== "fileread, "):
+            variables['filereadCommand'] = StringTrimLeft(variables['A_LoopField23'], 10)
+            variables['filereadCommand1varname'] = StrSplit(variables['filereadCommand'] , ", " , 1)
+            variables['filereadCommand2path'] = StrSplit(variables['filereadCommand'] , ", " , 2)
+            variables['filereadCommand2path'] = StrReplace(variables['filereadCommand2path'] , "\\" , "\\\\")
+            variables['filereadCommand2path'] = Trim(transpileVariables(variables['filereadCommand2path'] , variables['functionNames']))
+            variables['filereadCommand1varname'] = Trim(transpileVariables(variables['filereadCommand1varname'] , variables['functionNames']))
+            variables['pyCode'] += variables['filereadCommand1varname']  +  " = FileRead("  +  variables['filereadCommand2path']  +  ")\n"
+            variables['lineDone'] = 1
+        elif (SubStr(Trim(StrLower(variables['A_LoopField23'])) , 1 , 12)== "fileappend, "):
+            variables['fileAppendCommand'] = StringTrimLeft(variables['A_LoopField23'], 12)
+            variables['fileAppendCommand1varname'] = StrSplit(variables['fileAppendCommand'] , ", " , 1)
+            variables['fileAppendCommand2path'] = StrSplit(variables['fileAppendCommand'] , ", " , 2)
+            variables['fileAppendCommand2path'] = StrReplace(variables['fileAppendCommand2path'] , "\\" , "\\\\")
+            variables['fileAppendCommand1varname'] = Trim(transpileVariables(variables['fileAppendCommand1varname'] , variables['functionNames']))
+            variables['fileAppendCommand2path'] = Trim(transpileVariables(variables['fileAppendCommand2path'] , variables['functionNames']))
+            variables['pyCode'] += "FileAppend("  +  variables['fileAppendCommand1varname']  +  ", "  +  variables['fileAppendCommand2path']  +  ")\n"
+            variables['lineDone'] = 1
+        elif (SubStr(Trim(StrLower(variables['A_LoopField23'])) , 1 , 12)== "filedelete, "):
+            variables['fileDeleteCommand'] = StringTrimLeft(variables['A_LoopField23'], 12)
+            variables['fileDeleteCommand2path'] = StrSplit(variables['fileDeleteCommand'] , ", " , 1)
+            variables['fileDeleteCommand2path'] = StrReplace(variables['fileDeleteCommand2path'] , "\\" , "\\\\")
+            variables['fileDeleteCommand2path'] = Trim(transpileVariables(variables['fileDeleteCommand2path'] , variables['functionNames']))
+            variables['pyCode'] += "FileDelete("  +  variables['fileDeleteCommand2path']  +  ")\n"
+            variables['lineDone'] = 1
         elif (ifTheLineIsAFuncDec(Trim(variables['A_LoopField23']), variables['theFuncWeFound'])):
             #OutputDebug, %A_LoopField23%
             variables['str23IfFuncIn'] = variables['A_LoopField23']
@@ -608,8 +633,8 @@ def compiler(HTpyCode):
             variables['strFormEndpoint'] = StringTrimLeft(variables['A_LoopField23'], 10)
             variables['strFormEndpoint1'] = Trim(StrSplit(variables['strFormEndpoint'] , "," , 1))
             variables['strFormEndpoint2'] = Trim(StrSplit(variables['strFormEndpoint'] , "," , 2))
-            variables['putEndPointFlask1Up'] = Chr(102) +  Chr(114) +  Chr(111) +  Chr(109) +  Chr(32) +  Chr(102) +  Chr(108) +  Chr(97) +  Chr(115) +  Chr(107) +  Chr(32) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(70) +  Chr(108) +  Chr(97) +  Chr(115) +  Chr(107) +  Chr(44) +  Chr(32) +  Chr(115) +  Chr(101) +  Chr(110) +  Chr(100) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(44) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(113) +  Chr(117) +  Chr(101) +  Chr(115) +  Chr(116) +  Chr(44) +  Chr(32) +  Chr(106) +  Chr(115) +  Chr(111) +  Chr(110) +  Chr(105) +  Chr(102) +  Chr(121) +  Chr(10) +  Chr(105) +  Chr(109) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(32) +  Chr(111) +  Chr(115) +  Chr(10) +  Chr(118) +  Chr(97) +  Chr(114) +  Chr(105) +  Chr(97) +  Chr(98) +  Chr(108) +  Chr(101) +  Chr(115) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(123) +  Chr(125) +  Chr(10) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(32) +  Chr(61) +  Chr(32) +  Chr(70) +  Chr(108) +  Chr(97) +  Chr(115) +  Chr(107) +  Chr(40) +  Chr(95) +  Chr(95) +  Chr(110) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(95) +  Chr(95) +  Chr(41) +  Chr(10) +  Chr(10) +  Chr(64) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(46) +  Chr(114) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(101) +  Chr(40) +  Chr(39) +  Chr(47) +  Chr(39) +  Chr(41) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(95) +  Chr(114) +  Chr(111) +  Chr(117) +  Chr(116) +  Chr(101) +  Chr(40) +  Chr(41) +  Chr(58) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(115) +  Chr(101) +  Chr(110) +  Chr(100) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(40) +  Chr(111) +  Chr(115) +  Chr(46) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(106) +  Chr(111) +  Chr(105) +  Chr(110) +  Chr(40) +  Chr(111) +  Chr(115) +  Chr(46) +  Chr(112) +  Chr(97) +  Chr(116) +  Chr(104) +  Chr(46) +  Chr(100) +  Chr(105) +  Chr(114) +  Chr(110) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(40) +  Chr(95) +  Chr(95) +  Chr(102) +  Chr(105) +  Chr(108) +  Chr(101) +  Chr(95) +  Chr(95) +  Chr(41) +  Chr(44) +  Chr(32) +  Chr(39) +  Chr(105) +  Chr(110) +  Chr(100) +  Chr(101) +  Chr(120) +  Chr(46) +  Chr(104) +  Chr(116) +  Chr(109) +  Chr(108) +  Chr(39) +  Chr(41) +  Chr(41) +  Chr(44) +  Chr(32) +  Chr(50) +  Chr(48) +  Chr(48) +  Chr(10)
-            variables['putEndPointFlask2Down'] = Chr(10) +  Chr(64) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(46) +  Chr(101) +  Chr(114) +  Chr(114) +  Chr(111) +  Chr(114) +  Chr(104) +  Chr(97) +  Chr(110) +  Chr(100) +  Chr(108) +  Chr(101) +  Chr(114) +  Chr(40) +  Chr(52) +  Chr(48) +  Chr(52) +  Chr(41) +  Chr(10) +  Chr(100) +  Chr(101) +  Chr(102) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(95) +  Chr(102) +  Chr(111) +  Chr(117) +  Chr(110) +  Chr(100) +  Chr(40) +  Chr(101) +  Chr(41) +  Chr(58) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(114) +  Chr(101) +  Chr(116) +  Chr(117) +  Chr(114) +  Chr(110) +  Chr(32) +  Chr(34) +  Chr(80) +  Chr(97) +  Chr(103) +  Chr(101) +  Chr(32) +  Chr(110) +  Chr(111) +  Chr(116) +  Chr(32) +  Chr(102) +  Chr(111) +  Chr(117) +  Chr(110) +  Chr(100) +  Chr(34) +  Chr(44) +  Chr(32) +  Chr(52) +  Chr(48) +  Chr(52) +  Chr(10) +  Chr(10) +  Chr(105) +  Chr(102) +  Chr(32) +  Chr(95) +  Chr(95) +  Chr(110) +  Chr(97) +  Chr(109) +  Chr(101) +  Chr(95) +  Chr(95) +  Chr(32) +  Chr(61) +  Chr(61) +  Chr(32) +  Chr(39) +  Chr(95) +  Chr(95) +  Chr(109) +  Chr(97) +  Chr(105) +  Chr(110) +  Chr(95) +  Chr(95) +  Chr(39) +  Chr(58) +  Chr(10) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  Chr(97) +  Chr(112) +  Chr(112) +  Chr(46) +  Chr(114) +  Chr(117) +  Chr(110) +  Chr(40) +  Chr(104) +  Chr(111) +  Chr(115) +  Chr(116) +  Chr(61) +  Chr(39) +  Chr(48) +  Chr(46) +  Chr(48) +  Chr(46) +  Chr(48) +  Chr(46) +  Chr(48) +  Chr(39) +  Chr(44) +  Chr(32) +  Chr(112) +  Chr(111) +  Chr(114) +  Chr(116) +  Chr(61) +  Chr(56) +  Chr(48) +  Chr(48) +  Chr(48) +  Chr(44) +  Chr(32) +  Chr(100) +  Chr(101) +  Chr(98) +  Chr(117) +  Chr(103) +  Chr(61) +  Chr(84) +  Chr(114) +  Chr(117) +  Chr(101) +  Chr(41)
+            variables['putEndPointFlask1Up'] = "from flask import Flask, send_file, request, jsonify\nimport os\nvariables = {}\napp = Flask(__name__)\n\n@app.route('/')\ndef app_route():\n    return send_file(os.path.join(os.path.dirname(__file__), 'index.html')), 200\n"
+            variables['putEndPointFlask2Down'] = "\n@app.errorhandler(404)\ndef not_found(e):\n    return "  +  Chr(34) +  "Page not found"  +  Chr(34) +  ", 404\n\nif __name__ == '__main__':\n    app.run(host='0.0.0.0', port=8000, debug=True)"
             variables['firstLineVar1'] = "@app.route('/"  +  variables['strFormEndpoint2']  +  "', methods=['POST'])"
             variables['firstLineVar2'] = "def "  +  variables['strFormEndpoint2']  +  "():"
             variables['firstLineVar3'] = "|variables['"  +  variables['strFormEndpoint1']  +  "'] = request.get_json()"

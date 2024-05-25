@@ -868,9 +868,8 @@ def Mod(dividend, divisor):
 
 variables.func_FileRead_func = `
 
-import os
-
 def FileRead(path):
+    import os
     # Check if the path is absolute
     if not os.path.isabs(path):
         path = os.path.join(os.getcwd(), path)
@@ -886,9 +885,8 @@ def FileRead(path):
 
 variables.func_FileAppend_func = `
 
-import os
-
 def FileAppend(content, path):
+    import os
     # Check if the path is absolute
     if not os.path.isabs(path):
         path = os.path.join(os.getcwd(), path)
@@ -903,9 +901,8 @@ def FileAppend(content, path):
 
 variables.func_FileDelete_func = `
 
-import os
-
 def FileDelete(path):
+    import os
     # Check if the path is absolute
     if not os.path.isabs(path):
         path = os.path.join(os.getcwd(), path)
@@ -913,7 +910,6 @@ def FileDelete(path):
     try:
         if os.path.exists(path):
             os.remove(path)
-            print("File successfully deleted.")
         else:
             raise RuntimeError("Error: File does not exist.")
     except Exception as e:
@@ -923,10 +919,9 @@ def FileDelete(path):
 
 variables.func_GetParams_func = `
 
-import os
-import sys
-
 def GetParams():
+    import os
+    import sys
     # Check if any command line arguments are provided
     if len(sys.argv) < 2:
         return ""
