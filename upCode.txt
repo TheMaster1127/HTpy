@@ -865,7 +865,85 @@ def Mod(dividend, divisor):
 
 `;
 
-variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod"
+
+variables.func_FileRead_func = `
+
+import os
+
+def FileRead(path):
+    # Check if the path is absolute
+    if not os.path.isabs(path):
+        path = os.path.join(os.getcwd(), path)
+
+    try:
+        with open(path, 'r') as file:
+            content = file.read()
+        return content
+    except Exception as e:
+        raise RuntimeError(f"Error: Could not open the file. {e}")
+
+`;
+
+variables.func_FileAppend_func = `
+
+import os
+
+def FileAppend(content, path):
+    # Check if the path is absolute
+    if not os.path.isabs(path):
+        path = os.path.join(os.getcwd(), path)
+
+    try:
+        with open(path, 'a') as file:
+            file.write(content)
+    except Exception as e:
+        raise RuntimeError(f"Error: Could not open the file for appending. {e}")
+
+`;
+
+variables.func_FileDelete_func = `
+
+import os
+
+def FileDelete(path):
+    # Check if the path is absolute
+    if not os.path.isabs(path):
+        path = os.path.join(os.getcwd(), path)
+
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+            print("File successfully deleted.")
+        else:
+            raise RuntimeError("Error: File does not exist.")
+    except Exception as e:
+        raise RuntimeError(f"Error: Failed to delete the file. {e}")
+
+`;
+
+variables.func_GetParams_func = `
+
+import os
+import sys
+
+def GetParams():
+    # Check if any command line arguments are provided
+    if len(sys.argv) < 2:
+        return []
+
+    # Store the provided command line arguments
+    params = []
+    for arg in sys.argv[1:]:
+        if os.path.exists(arg):
+            arg = os.path.abspath(arg)
+        params.append(arg)
+
+    return params
+
+`;
+
+variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams"
+
 
 
         Gui1.style.position = "absolute";
