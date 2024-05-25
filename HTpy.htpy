@@ -517,7 +517,7 @@ CheckIFandElsesss7 := "else if !("
 CheckIFandElsesss8 := "else if!("
 CheckIFandElsesssNum := 0
 
-functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams"
+functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount"
 
 
 awesdrtf := "|A" . Chr(95) . "LoopField|A" . Chr(95) . "Index"
@@ -1118,7 +1118,6 @@ str123 := StrReplace(str123, Chr(32) . Chr(41) . ":", Chr(41) . ":")
 
 
 out := str123
-
 
 lineDone := 1
 pyCode .= out . "`n"
@@ -1819,7 +1818,11 @@ func_FileDelete_func := "`nimport os`n`ndef FileDelete(path):`n    # Check if th
 func_GetParams_func := "`nimport os`nimport sys`n`ndef GetParams():`n    # Check if any command line arguments are provided`n    if len(sys.argv) < 2:`n        return " . Chr(34) . "" . Chr(34) . "`n`n    # Store the provided command line arguments`n    params = []`n    for arg in sys.argv[1:]:`n        if os.path.exists(arg):`n            arg = os.path.abspath(arg)`n        params.append(arg)`n`n    return " . Chr(34) . "" . Chr(92) . "n" . Chr(34) . ".join(params)`n"
 
 
-funcs_func := "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams"
+func_Floor_func := "`ndef Floor(num):`n    import math`n    if num is None or not isinstance(num, (int, float)):`n        return None`n    return math.floor(num)`n"
+
+func_A_TickCount_func := "`nimport time`n`nstart_timestamp = int(time.time() * 1000)  # Initialize with current timestamp in milliseconds`n`n# Function to calculate tick count in milliseconds`ndef A_TickCount():`n    return int(time.time() * 1000) - start_timestamp`n"
+
+funcs_func := "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount"
 
 allFuncsHere := ""
 Loop, Parse, funcs_func, "|"

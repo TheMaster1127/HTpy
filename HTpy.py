@@ -441,7 +441,7 @@ def compiler(HTpyCode):
     variables['CheckIFandElsesss7'] = "else if !("
     variables['CheckIFandElsesss8'] = "else if!("
     variables['CheckIFandElsesssNum'] = 0
-    variables['functionNames'] = "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams"
+    variables['functionNames'] = "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount"
     variables['awesdrtf'] = "|A"  +  Chr(95) +  "LoopField|A"  +  Chr(95) +  "Index"
     variables['willNextLineBeCurlyBracee'] = 0
     variables['theFuncWeFound'] = ""
@@ -1091,7 +1091,9 @@ def compiler(HTpyCode):
     variables['func_FileAppend_func'] = "\nimport os\n\ndef FileAppend(content, path):\n    # Check if the path is absolute\n    if not os.path.isabs(path):\n        path = os.path.join(os.getcwd(), path)\n\n    try:\n        with open(path, 'a') as file:\n            file.write(content)\n    except Exception as e:\n        raise RuntimeError(f"  +  Chr(34) +  "Error: Could not open the file for appending. {e}"  +  Chr(34) +  ")\n"
     variables['func_FileDelete_func'] = "\nimport os\n\ndef FileDelete(path):\n    # Check if the path is absolute\n    if not os.path.isabs(path):\n        path = os.path.join(os.getcwd(), path)\n\n    try:\n        if os.path.exists(path):\n            os.remove(path)\n            print("  +  Chr(34) +  "File successfully deleted."  +  Chr(34) +  ")\n        else:\n            raise RuntimeError("  +  Chr(34) +  "Error: File does not exist."  +  Chr(34) +  ")\n    except Exception as e:\n        raise RuntimeError(f"  +  Chr(34) +  "Error: Failed to delete the file. {e}"  +  Chr(34) +  ")\n"
     variables['func_GetParams_func'] = "\nimport os\nimport sys\n\ndef GetParams():\n    # Check if any command line arguments are provided\n    if len(sys.argv) < 2:\n        return "  +  Chr(34) +  ""  +  Chr(34) +  "\n\n    # Store the provided command line arguments\n    params = []\n    for arg in sys.argv[1:]:\n        if os.path.exists(arg):\n            arg = os.path.abspath(arg)\n        params.append(arg)\n\n    return "  +  Chr(34) +  ""  +  Chr(92) +  "n"  +  Chr(34) +  ".join(params)\n"
-    variables['funcs_func'] = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams"
+    variables['func_Floor_func'] = "\ndef Floor(num):\n    import math\n    if num is None or not isinstance(num, (int, float)):\n        return None\n    return math.floor(num)\n"
+    variables['func_A_TickCount_func'] = "\nimport time\n\nstart_timestamp = int(time.time() * 1000)  # Initialize with current timestamp in milliseconds\n\n# Function to calculate tick count in milliseconds\ndef A_TickCount():\n    return int(time.time() * 1000) - start_timestamp\n"
+    variables['funcs_func'] = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount"
     variables['allFuncsHere'] = ""
     items = LoopParseFunc(variables['funcs_func'], "|")
     for A_Index32, A_LoopField32 in enumerate(items, start=1):

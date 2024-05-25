@@ -937,7 +937,29 @@ def GetParams():
 
 `;
 
-variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams"
+variables.func_Floor_func = `
+
+def Floor(num):
+    import math
+    if num is None or not isinstance(num, (int, float)):
+        return None
+    return math.floor(num)
+
+`;
+
+variables.func_A_TickCount_func = `
+
+import time
+
+start_timestamp = int(time.time() * 1000)  # Initialize with current timestamp in milliseconds
+
+# Function to calculate tick count in milliseconds
+def A_TickCount():
+    return int(time.time() * 1000) - start_timestamp
+
+`;
+
+variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount"
 
 
 
