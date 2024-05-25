@@ -929,7 +929,7 @@ import sys
 def GetParams():
     # Check if any command line arguments are provided
     if len(sys.argv) < 2:
-        return []
+        return ""
 
     # Store the provided command line arguments
     params = []
@@ -938,7 +938,7 @@ def GetParams():
             arg = os.path.abspath(arg)
         params.append(arg)
 
-    return params
+    return "\\n".join(params)
 
 `;
 

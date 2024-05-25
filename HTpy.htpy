@@ -1777,7 +1777,7 @@ func_FileDelete_func := "`nimport os`n`ndef FileDelete(path):`n    # Check if th
 
 
 
-func_GetParams_func := "`nimport os`nimport sys`n`ndef GetParams():`n    # Check if any command line arguments are provided`n    if len(sys.argv) < 2:`n        return []`n`n    # Store the provided command line arguments`n    params = []`n    for arg in sys.argv[1:]:`n        if os.path.exists(arg):`n            arg = os.path.abspath(arg)`n        params.append(arg)`n`n    return params`n"
+func_GetParams_func := "`nimport os`nimport sys`n`ndef GetParams():`n    # Check if any command line arguments are provided`n    if len(sys.argv) < 2:`n        return " . Chr(34) . "" . Chr(34) . "`n`n    # Store the provided command line arguments`n    params = []`n    for arg in sys.argv[1:]:`n        if os.path.exists(arg):`n            arg = os.path.abspath(arg)`n        params.append(arg)`n`n    return " . Chr(34) . "" . Chr(92) . "n" . Chr(34) . ".join(params)`n"
 
 
 funcs_func := "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams"
