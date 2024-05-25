@@ -441,7 +441,7 @@ def compiler(HTpyCode):
     variables['CheckIFandElsesss7'] = "else if !("
     variables['CheckIFandElsesss8'] = "else if!("
     variables['CheckIFandElsesssNum'] = 0
-    variables['functionNames'] = "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy"
+    variables['functionNames'] = "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams"
     variables['awesdrtf'] = "|A"  +  Chr(95) +  "LoopField|A"  +  Chr(95) +  "Index"
     variables['willNextLineBeCurlyBracee'] = 0
     variables['theFuncWeFound'] = ""

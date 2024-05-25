@@ -667,7 +667,8 @@ CheckIFandElsesss7 := "else if !("
 CheckIFandElsesss8 := "else if!("
 CheckIFandElsesssNum := 0
 
-functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod"
+functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams"
+
 awesdrtf := "|A" . Chr(95) . "LoopField|A" . Chr(95) . "Index"
 
 willNextLineBeCurlyBracee := 0
