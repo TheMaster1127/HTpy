@@ -827,6 +827,11 @@ def RegExReplace(inputStr, regexPattern, replacement):
 variables.func_StrSplit_func = `
 
 def StrSplit(inputStr, delimiter, num):
+    # Check if the delimiter is empty
+    if delimiter == '':
+        # Return an empty string since splitting with an empty delimiter is not possible
+        return ''
+
     # Split the input string based on the delimiter
     parts = inputStr.split(delimiter)
 
