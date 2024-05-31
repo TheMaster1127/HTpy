@@ -3,196 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>HTpy</title>
     <style>
-      #Gui1editBox {
-        width: 500px;
-        height: 300px;
-
-        font-size: 1em;
-        border-radius: 0.3rem;
-        z-index: 9999;
-      }
-
-      #Gui1codeBox {
-        width: 500px;
-        height: 300px;
-
-        font-size: 1em;
-        border-radius: 0.3rem;
-        z-index: 9999;
-      }
-
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #1a1818;
-        color: #ffffff;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .controls {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem;
-        margin: 1rem;
-        padding: 1rem;
-      }
-
-      button,
-      .delay-wrapper {
-        margin: 0.5rem;
-        padding: 0.7rem;
-
-        font-size: 1.2em;
-        cursor: pointer;
-        margin: 0.5rem;
-        background-color: #bababa;
-        color: #000000;
-        border: none;
-        border-radius: 0.2rem;
-        transition: background-color 0.3s;
-        align-self: center;
-        text-wrap: nowrap;
-        min-width: 8rem;
-      }
-
-      button:hover {
-        background-color: #27ae60;
-      }
-
-      #result {
-        margin-top: 1rem;
-        font-size: 1.2em;
-        color: #999c9a;
-        font-weight: bold;
-      }
-
-      .pop-up {
-        background-color: #1a1818;
-        text-align: center;
-      }
-
-      .pop-up .content {
-        display: flex;
-        height: 90dvh;
-        width: 80dvw;
-        flex-direction: column;
-        justify-content: space-between;
-        margin: 0;
-        padding: 0;
-      }
-
-      .delay {
-        background-color: transparent;
-        align-self: center;
-        border: none;
-        color: #ffffff;
-        /* Set the text color to white */
-        font-size: 1.5rem;
-        padding: 0;
-        text-align: center;
-        width: 3.5rem;
-        height: 1.5rem;
-      }
-
-      .delay:focus,
-      .delay:active {
-        outline: none !important;
-      }
-
-      .delay-wrapper i {
-        align-self: center;
-      }
-
-      .delay-wrapper {
-        display: flex;
-        padding-left: 0.5rem;
-        background-color: #27ae60;
-        justify-content: space-evenly;
-      }
-
-      .show-bt {
-        height: 2.7rem;
-        padding: 0;
-        margin: 0;
-      }
-
-      img {
-        height: 75dvh !important;
-      }
-
-      .ace_print-margin {
-        visibility: hidden !important;
-      }
-
-      .ace-monokai .ace_marker-layer .ace_active-line {
-        background-color: #103010 !important;
-      }
-
-      .ace-monokai {
-        background-color: #121212 !important;
-        color: #f8f8f2;
-      }
-
-      .ace-monokai .ace_gutter {
-        background: #204020 !important;
-        color: #cbcdc3 !important;
-      }
-
-      .ace-monokai .ace_gutter-active-line {
-        background-color: transparent !important;
-      }
-
-      .ace-monokai .ace_entity.ace_name.ace_tag,
-      .ace-monokai .ace_keyword,
-      .ace-monokai .ace_meta.ace_tag,
-      .ace-monokai .ace_storage {
-        color: #40a0e0 !important;
-      }
-
-      .ace-monokai .ace_entity.ace_name.ace_function,
-      .ace-monokai .ace_entity.ace_other,
-      .ace-monokai .ace_entity.ace_other.ace_attribute-name,
-      .ace-monokai .ace_variable {
-        color: #ff80df !important;
-      }
-
-      .ace-monokai .ace_comment {
-        color: #40d080 !important;
-      }
-
-      .ace-monokai .ace_string {
-        color: #ffa0a0 !important;
-      }
-
-      .ace-monokai .ace_punctuation,
-      .ace-monokai .ace_punctuation.ace _tag {
-        color: #ffa0a0 !important;
-      }
-
-      *::-webkit-scrollbar {
-        width: 1em;
-      }
-
-      *::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-      }
-
-      *::-webkit-scrollbar-thumb {
-        background-color: darkgrey;
-        outline: 1px solid slategrey;
+        background-color: #202020;
+        font-family:
+          "Open Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen-Sans,
+          Ubuntu,
+          Cantarell,
+          "Helvetica Neue",
+          Helvetica,
+          Arial,
+          sans-serif;
       }
     </style>
-  </head>
+    
 
-  <body>
-    <!-- <textarea id="ahkCode" placeholder="Write your AHK code here..."></textarea> -->
-
+    
+<!-- Include Ace Editor CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js" integrity="sha512-JLIRlxWh96sND3uUgI2RVHZJpgkWHg3+xoUY8XkgTPKpqRaqdk7zD/ck/XHXFSMW84o6GrP67dlqN3b98NB/yA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  </head>
+  <body>
     <script>
+
       // JavaScript equivalent code with variables
 
       function changeFaviconAtTheBeginning(faviconUrl) {
@@ -301,6 +141,69 @@
         }
       }
 
+      function MakeHotKey(hotkey, callback) {
+        document.addEventListener("keydown", function (event) {
+          const keys = hotkey.split("+").map((key) => key.trim().toLowerCase());
+          const modifiers = {
+            ctrl: event.ctrlKey,
+            shift: event.shiftKey,
+            alt: event.altKey,
+          };
+
+          let hotkeyPressed = true;
+          keys.forEach((key) => {
+            if (key === "ctrl" || key === "shift" || key === "alt") {
+              if (!modifiers[key]) {
+                hotkeyPressed = false;
+              }
+            } else if (key === "backspace") {
+              if (event.key !== "Backspace") {
+                hotkeyPressed = false;
+              }
+            } else if (key.startsWith("arrow")) {
+              const arrowDirection = key.replace("arrow", "");
+              if (arrowDirection === "up" && event.key !== "ArrowUp") {
+                hotkeyPressed = false;
+              } else if (arrowDirection === "down" && event.key !== "ArrowDown") {
+                hotkeyPressed = false;
+              } else if (arrowDirection === "left" && event.key !== "ArrowLeft") {
+                hotkeyPressed = false;
+              } else if (arrowDirection === "right" && event.key !== "ArrowRight") {
+                hotkeyPressed = false;
+              }
+            } else if (key === "enter") {
+              if (event.key !== "Enter") {
+                hotkeyPressed = false;
+              }
+            } else if (!event.key.match(/^[0-9a-zA-Z]$/) && event.key !== key) {
+              hotkeyPressed = false;
+            } else if (event.key.toLowerCase() !== key && event.key.match(/^[a-zA-Z]$/)) {
+              hotkeyPressed = false;
+            }
+          });
+
+          if (hotkeyPressed) {
+            if (modifiers["shift"]) {
+              callback(hotkey.toUpperCase());
+            } else {
+              callback(hotkey.toLowerCase());
+            }
+          }
+        });
+      }
+
+      // Flooring
+      function Floor(num) {
+        if (num === null || isNaN(num)) return null;
+        return Math.floor(num);
+      }
+
+      // Base-10 logarithm
+      function Log(num) {
+        if (num === null || isNaN(num)) return null;
+        return Math.log10(num);
+      }
+
       function Chr(number) {
         // Check if the number is null
         if (number === null) {
@@ -392,22 +295,33 @@
         return originalString.replace(new RegExp(escapedFind, "g"), replaceWith);
       }
 
-      // Function to trim specified number of characters from the left side of a string
-      function StringTrimLeft(input, numChars) {
-        if (input && input.length >= numChars) {
-          return input.substring(numChars);
-        } else {
-          return input; // Return original input if trimming is not possible
-        }
+      // Custom Mod function
+      function Mod(dividend, divisor) {
+        return dividend % divisor;
       }
 
-      // Function to trim specified number of characters from the right side of a string
-      function StringTrimRight(input, numChars) {
-        if (input && input.length >= numChars) {
-          return input.substring(0, input.length - numChars);
-        } else {
-          return input; // Return original input if trimming is not possible
-        }
+// Function to trim specified number of characters from the left side of a string
+function StringTrimLeft(input, numChars) {
+  if (typeof input === 'string' && typeof numChars === 'number' && numChars >= 0) {
+    return input.length > numChars ? input.substring(numChars) : '';
+  } else {
+    console.error("Invalid input provided.");
+    return input; // Return original input if trimming is not possible
+  }
+}
+
+// Function to trim specified number of characters from the right side of a string
+function StringTrimRight(input, numChars) {
+  if (typeof input === 'string' && typeof numChars === 'number' && numChars >= 0) {
+    return input.length > numChars ? input.substring(0, input.length - numChars) : '';
+  } else {
+    console.error("Invalid input provided.");
+    return input; // Return original input if trimming is not possible
+  }
+}
+
+      function isMobileDevice() {
+        return /Mobi|Android/i.test(navigator.userAgent);
       }
 
       // Object to store timer intervals for different functions
@@ -446,7 +360,6 @@
 
       function GuiControl(action, id, param1, param2, param3, param4) {
         const element = document.getElementById(id);
-
         if (element) {
           // Handle DOM elements
           if (action === "move") {
@@ -460,7 +373,7 @@
             element.focus();
           } else if (action === "text") {
             // Set new text content
-            element.value() = param1;
+            element.textContent = param1;
           } else if (action === "hide") {
             // Hide the element
             element.style.display = "none";
@@ -486,6 +399,14 @@
             } else {
               console.error("Element is not an <img> tag, cannot change picture.");
             }
+          } else if (action === "textide") {
+            // Set value for Ace editor
+            var editor = ace.edit(id); // Access the Ace editor instance using its ID
+            if (editor && param1) {
+              editor.session.setValue(param1);
+            } else {
+              console.error("Element is not an Ace editor or parameter is missing.");
+            }
           }
         } else {
           // Handle canvas or non-existing element
@@ -501,18 +422,31 @@
         }
       }
 
-      // Function to simulate AutoHotkey's RegExReplace in JavaScript
-      function RegExReplace(inputStr, regexPattern, replacement) {
-          // Create a regular expression object using the provided pattern
-          const regex = new RegExp(regexPattern, 'g'); // 'g' flag for global match
+      function FileAppend(data, filename) {
+        // Create a blob with the provided data
+        const blob = new Blob([data], { type: "text/plain" });
 
-          // Use the replace() method to perform the regex replacement
-          const resultStr = inputStr.replace(regex, replacement);
+        // Create a temporary anchor element
+        const anchor = document.createElement("a");
+        anchor.style.display = "none";
 
-          // Return the modified string
-          return resultStr;
+        // Set the download attribute and filename
+        anchor.setAttribute("href", window.URL.createObjectURL(blob));
+        anchor.setAttribute("download", filename);
+
+        // Append the anchor element to the body
+        document.body.appendChild(anchor);
+
+        // Trigger a click event on the anchor element
+        anchor.click();
+
+        // Remove the anchor element
+        document.body.removeChild(anchor);
       }
 
+      function StrLower(string) {
+        return string.toLowerCase();
+      }
 
 function StrSplit(inputStr, delimiter, num) {
     // Check if inputStr is a valid string
@@ -531,735 +465,636 @@ function StrSplit(inputStr, delimiter, num) {
     }
 }
 
+      // Function to simulate AutoHotkey's RegExReplace in JavaScript
+      function RegExReplace(inputStr, regexPattern, replacement) {
+          // Create a regular expression object using the provided pattern
+          const regex = new RegExp(regexPattern, 'g'); // 'g' flag for global match
 
-   function MakeHotKey(hotkey, callback) {
-        document.addEventListener("keydown", function (event) {
-          const keys = hotkey.split("+").map((key) => key.trim().toLowerCase());
-          const modifiers = {
-            ctrl: event.ctrlKey,
-            shift: event.shiftKey,
-            alt: event.altKey,
-          };
+          // Use the replace() method to perform the regex replacement
+          const resultStr = inputStr.replace(regex, replacement);
 
-          let hotkeyPressed = true;
-          keys.forEach((key) => {
-            if (key === "ctrl" || key === "shift" || key === "alt") {
-              if (!modifiers[key]) {
-                hotkeyPressed = false;
-              }
-            } else if (key === "backspace") {
-              if (event.key !== "Backspace") {
-                hotkeyPressed = false;
-              }
-            } else if (key.startsWith("arrow")) {
-              const arrowDirection = key.replace("arrow", "");
-              if (arrowDirection === "up" && event.key !== "ArrowUp") {
-                hotkeyPressed = false;
-              } else if (arrowDirection === "down" && event.key !== "ArrowDown") {
-                hotkeyPressed = false;
-              } else if (arrowDirection === "left" && event.key !== "ArrowLeft") {
-                hotkeyPressed = false;
-              } else if (arrowDirection === "right" && event.key !== "ArrowRight") {
-                hotkeyPressed = false;
-              }
-            } else if (key === "enter") {
-              if (event.key !== "Enter") {
-                hotkeyPressed = false;
-              }
-            } else if (!event.key.match(/^[0-9a-zA-Z]$/) && event.key !== key) {
-              hotkeyPressed = false;
-            } else if (event.key.toLowerCase() !== key && event.key.match(/^[a-zA-Z]$/)) {
-              hotkeyPressed = false;
-            }
-          });
+          // Return the modified string
+          return resultStr;
+      }
 
-          if (hotkeyPressed) {
-            if (modifiers["shift"]) {
-              callback(hotkey.toUpperCase());
-            } else {
-              callback(hotkey.toLowerCase());
-            }
+      function AddIDE(parent, xPos, yPos, w, h, id, font = 18, langName = "autohotkey", onChangeFunc, initialText = "") {
+        var langTools = ace.require("ace/ext/language_tools");
+
+        let Completer = {
+          getCompletions: function (editor, session, pos, prefix, callback) {
+
+            let prefixLower = prefix.toLowerCase();
+            let filteredTables = hth.filter(function (table) {
+              return table.name.toLowerCase().startsWith(prefixLower);
+            });
+            // filteredTables.sort(function(a, b) {
+            //     return a.name.length - b.name.length;
+            // });
+            let limitedTables = filteredTables; //.slice(-10);
+
+            callback(
+              null,
+              limitedTables.map(function (table) {
+                return {
+                  caption: table.name,
+                  value: table.name,
+                };
+              }),
+            );
+          },
+        };
+        let hth = [{ name: "#AllowSameLineComments" }, { name: "#ClipboardTimeout" }, { name: "#CommentFlag" }, { name: "#Delimiter" }, { name: "#DerefChar" }, { name: "#ErrorStdOut" }, { name: "#EscapeChar" }, { name: "#HotkeyInterval" }, { name: "#HotkeyModifierTimeout" }, { name: "#Hotstring" }, { name: "#If" }, { name: "#IfTimeout" }, { name: "#IfWinActive" }, { name: "#IfWinExist" }, { name: "#IfWinNotActive" }, { name: "#IfWinNotExist" }, { name: "#Include" }, { name: "#IncludeAgain" }, { name: "#InputLevel" }, { name: "#InstallKeybdHook" }, { name: "#InstallMouseHook" }, { name: "#KeyHistory" }, { name: "#LTrim" }, { name: "#MaxHotkeysPerInterval" }, { name: "#MaxMem" }, { name: "#MaxThreads" }, { name: "#MaxThreadsBuffer" }, { name: "#MaxThreadsPerHotkey" }, { name: "#MenuMaskKey" }, { name: "#NoEnv" }, { name: "#NoTrayIcon" }, { name: "#Persistent" }, { name: "#Requires" }, { name: "#SingleInstance" }, { name: "#UseHook" }, { name: "#Warn" }, { name: "#WinActivateForce" }, { name: "break" }, { name: "case" }, { name: "catch" }, { name: "continue" }, { name: "else" }, { name: "finally" }, { name: "for" }, { name: "gosub" }, { name: "goto" }, { name: "if" }, { name: "IfEqual" }, { name: "IfExist" }, { name: "IfGreater" }, { name: "IfGreaterOrEqual" }, { name: "IfInString" }, { name: "IfLess" }, { name: "IfLessOrEqual" }, { name: "IfMsgBox" }, { name: "IfNotEqual" }, { name: "IfNotExist" }, { name: "IfNotInString" }, { name: "IfWinActive" }, { name: "IfWinExist" }, { name: "IfWinNotActive" }, { name: "IfWinNotExist" }, { name: "Loop" }, { name: "return" }, { name: "switch" }, { name: "throw" }, { name: "try" }, { name: "until" }, { name: "while" }, { name: "__Call" }, { name: "__Delete" }, { name: "__Get" }, { name: "__New" }, { name: "__Set" }, { name: "ahk_class" }, { name: "ahk_exe" }, { name: "ahk_group" }, { name: "ahk_id" }, { name: "ahk_pid" }, { name: "and" }, { name: "base" }, { name: "ByRef" }, { name: "class" }, { name: "extends" }, { name: "false" }, { name: "Files" }, { name: "global" }, { name: "local" }, { name: "new" }, { name: "not" }, { name: "or" }, { name: "Parse" }, { name: "ParseInt" }, { name: "Read" }, { name: "Reg" }, { name: "static" }, { name: "true" }, { name: "A_AhkPath" }, { name: "A_AhkVersion" }, { name: "A_AppData" }, { name: "A_AppDataCommon" }, { name: "A_Args" }, { name: "A_AutoTrim" }, { name: "A_BatchLines" }, { name: "A_CaretX" }, { name: "A_CaretY" }, { name: "A_ComputerName" }, { name: "A_ComSpec" }, { name: "A_ControlDelay" }, { name: "A_CoordModeCaret" }, { name: "A_CoordModeMenu" }, { name: "A_CoordModeMouse" }, { name: "A_CoordModePixel" }, { name: "A_CoordModeToolTip" }, { name: "A_Cursor" }, { name: "A_DD" }, { name: "A_DDD" }, { name: "A_DDDD" }, { name: "A_DefaultGui" }, { name: "A_DefaultListView" }, { name: "A_DefaultMouseSpeed" }, { name: "A_DefaultTreeView" }, { name: "A_Desktop" }, { name: "A_DesktopCommon" }, { name: "A_DetectHiddenText" }, { name: "A_DetectHiddenWindows" }, { name: "A_EndChar" }, { name: "A_EventInfo" }, { name: "A_ExitReason" }, { name: "A_FileEncoding" }, { name: "A_FormatFloat" }, { name: "A_FormatInteger" }, { name: "A_Gui" }, { name: "A_GuiControl" }, { name: "A_GuiControlEvent" }, { name: "A_GuiEvent" }, { name: "A_GuiHeight" }, { name: "A_GuiWidth" }, { name: "A_GuiX" }, { name: "A_GuiY" }, { name: "A_Hour" }, { name: "A_IconFile" }, { name: "A_IconHidden" }, { name: "A_IconNumber" }, { name: "A_IconTip" }, { name: "A_Index" }, { name: "A_IPAddress1" }, { name: "A_IPAddress2" }, { name: "A_IPAddress3" }, { name: "A_IPAddress4" }, { name: "A_Is64bitOS" }, { name: "A_IsAdmin" }, { name: "A_IsCompiled" }, { name: "A_IsCritical" }, { name: "A_IsPaused" }, { name: "A_IsSuspended" }, { name: "A_IsUnicode" }, { name: "A_KeyDelay" }, { name: "A_KeyDelayPlay" }, { name: "A_KeyDuration" }, { name: "A_KeyDurationPlay" }, { name: "A_Language" }, { name: "A_LastKey" }, { name: "A_LastError" }, { name: "A_LineFile" }, { name: "A_LineNumber" }, { name: "A_ListLines" }, { name: "A_LoopField" }, { name: "A_LoopFileAttrib" }, { name: "A_LoopFileDir" }, { name: "A_LoopFileExt" }, { name: "A_LoopFileFullPath" }, { name: "A_LoopFileLongPath" }, { name: "A_LoopFileName" }, { name: "A_LoopFilePath" }, { name: "A_LoopFileShortName" }, { name: "A_LoopFileShortPath" }, { name: "A_LoopFileSize" }, { name: "A_LoopFileSizeKB" }, { name: "A_LoopFileSizeMB" }, { name: "A_LoopFileTimeAccessed" }, { name: "A_LoopFileTimeCreated" }, { name: "A_LoopFileTimeModified" }, { name: "A_LoopReadLine" }, { name: "A_LoopRegKey" }, { name: "A_LoopRegName" }, { name: "A_LoopRegSubKey" }, { name: "A_LoopRegTimeModified" }, { name: "A_LoopRegType" }, { name: "A_MDay" }, { name: "A_Min" }, { name: "A_MM" }, { name: "A_MMM" }, { name: "A_MMMM" }, { name: "A_Mon" }, { name: "A_MouseDelay" }, { name: "A_MouseDelayPlay" }, { name: "A_MSec" }, { name: "A_MyDocuments" }, { name: "A_Now" }, { name: "A_NowUTC" }, { name: "A_NumBatchLines" }, { name: "A_OSType" }, { name: "A_OSVersion" }, { name: "A_PriorHotkey" }, { name: "A_PriorKey" }, { name: "A_ProgramFiles" }, { name: "A_Programs" }, { name: "A_ProgramsCommon" }, { name: "A_PtrSize" }, { name: "A_RegView" }, { name: "A_ScreenDPI" }, { name: "A_ScreenHeight" }, { name: "A_ScreenWidth" }, { name: "A_ScriptDir" }, { name: "A_ScriptFullPath" }, { name: "A_ScriptHwnd" }, { name: "A_ScriptName" }, { name: "A_Sec" }, { name: "A_SendLevel" }, { name: "A_SendMode" }, { name: "A_Space" }, { name: "A_StartMenu" }, { name: "A_StartMenuCommon" }, { name: "A_Startup" }, { name: "A_StartupCommon" }, { name: "A_StoreCapsLockMode" }, { name: "A_StringCaseSense" }, { name: "A_Tab" }, { name: "A_Temp" }, { name: "A_ThisFunc" }, { name: "A_ThisHotkey" }, { name: "A_ThisLabel" }, { name: "A_ThisMenu" }, { name: "A_ThisMenuItem" }, { name: "A_ThisMenuItemPos" }, { name: "A_TickCount" }, { name: "A_TimeIdle" }, { name: "A_TimeIdleKeyboard" }, { name: "A_TimeIdleMouse" }, { name: "A_TimeIdlePhysical" }, { name: "A_TimeSincePriorHotkey" }, { name: "A_TimeSinceThisHotkey" }, { name: "A_TitleMatchMode" }, { name: "A_TitleMatchModeSpeed" }, { name: "A_UserName" }, { name: "A_WDay" }, { name: "A_WinDelay" }, { name: "A_WinDir" }, { name: "A_WorkingDir" }, { name: "A_YDay" }, { name: "A_Year" }, { name: "A_YWeek" }, { name: "A_YYYY" }, { name: "Clipboard" }, { name: "ClipboardAll" }, { name: "ComSpec" }, { name: "ErrorLevel" }, { name: "ProgramFiles" }, { name: "this" }, { name: "Abs" }, { name: "ACos" }, { name: "Array" }, { name: "Asc" }, { name: "ASin" }, { name: "ATan" }, { name: "Ceil" }, { name: "Chr" }, { name: "ComObjActive" }, { name: "ComObjArray" }, { name: "ComObjConnect" }, { name: "ComObjCreate" }, { name: "ComObject" }, { name: "ComObjError" }, { name: "ComObjFlags" }, { name: "ComObjGet" }, { name: "ComObjQuery" }, { name: "ComObjType" }, { name: "ComObjValue" }, { name: "Cos" }, { name: "DllCall" }, { name: "Exception" }, { name: "Exp" }, { name: "FileExist" }, { name: "FileOpen" }, { name: "Floor" }, { name: "Format" }, { name: "Func" }, { name: "getDataFromEndpoint" }, { name: "GetKeyName" }, { name: "GetKeySC" }, { name: "GetKeyState" }, { name: "GetKeyVK" }, { name: "Hotstring" }, { name: "Icon" }, { name: "IL_Add" }, { name: "IL_Create" }, { name: "IL_Destroy" }, { name: "InputHook" }, { name: "InStr" }, { name: "IsByRef" }, { name: "isConnectedToBackend" }, { name: "IsFunc" }, { name: "IsLabel" }, { name: "isMobileDevice" }, { name: "IsObject" }, { name: "Ln" }, { name: "LoadPicture" }, { name: "Log" }, { name: "LTrim" }, { name: "LV_Add" }, { name: "LV_Delete" }, { name: "LV_DeleteCol" }, { name: "LV_GetCount" }, { name: "LV_GetNext" }, { name: "LV_GetText" }, { name: "LV_Insert" }, { name: "LV_InsertCol" }, { name: "LV_Modify" }, { name: "LV_ModifyCol" }, { name: "LV_SetImageList" }, { name: "Max" }, { name: "MenuGetHandle" }, { name: "MenuGetName" }, { name: "Min" }, { name: "Mod" }, { name: "NumGet" }, { name: "NumPut" }, { name: "ObjAddRef" }, { name: "ObjBindMethod" }, { name: "ObjClone" }, { name: "ObjCount" }, { name: "ObjDelete" }, { name: "Object" }, { name: "ObjGetAddress" }, { name: "ObjGetBase" }, { name: "ObjGetCapacity" }, { name: "ObjHasKey" }, { name: "ObjInsert" }, { name: "ObjInsertAt" }, { name: "ObjLength" }, { name: "ObjMaxIndex" }, { name: "ObjMinIndex" }, { name: "ObjNewEnum" }, { name: "ObjPop" }, { name: "ObjPush" }, { name: "ObjRawGet" }, { name: "ObjRawSet" }, { name: "ObjRelease" }, { name: "ObjRemove" }, { name: "ObjRemoveAt" }, { name: "ObjSetBase" }, { name: "ObjSetCapacity" }, { name: "OnClipboardChange" }, { name: "OnError" }, { name: "OnExit" }, { name: "OnMessage" }, { name: "Ord" }, { name: "RegExMatch" }, { name: "RegExReplace" }, { name: "RegisterCallback" }, { name: "Round" }, { name: "RTrim" }, { name: "StoreLocally" }, { name: "SB_SetIcon" }, { name: "SB_SetParts" }, { name: "SB_SetText" }, { name: "Sin" }, { name: "Sqrt" }, { name: "StrGet" }, { name: "StrLen" }, { name: "StrLower" }, { name: "StrPut" }, { name: "StrReplace" }, { name: "StrSplit" }, { name: "SubStr" }, { name: "Tan" }, { name: "Title" }, { name: "Trim" }, { name: "TV_Add" }, { name: "TV_Delete" }, { name: "TV_Get" }, { name: "TV_GetChild" }, { name: "TV_GetCount" }, { name: "TV_GetNext" }, { name: "TV_GetParent" }, { name: "TV_GetPrev" }, { name: "TV_GetSelection" }, { name: "TV_GetText" }, { name: "TV_Modify" }, { name: "TV_SetImageList" }, { name: "VarSetCapacity" }, { name: "WinActive" }, { name: "WinExist" }, { name: "AutoTrim" }, { name: "BlockInput" }, { name: "Click" }, { name: "ClipWait" }, { name: "Control" }, { name: "ControlClick" }, { name: "ControlFocus" }, { name: "ControlGet" }, { name: "ControlGetFocus" }, { name: "ControlGetPos" }, { name: "ControlGetText" }, { name: "ControlMove" }, { name: "ControlSend" }, { name: "ControlSendRaw" }, { name: "ControlSetText" }, { name: "CoordMode" }, { name: "Critical" }, { name: "DetectHiddenText" }, { name: "DetectHiddenWindows" }, { name: "Drive" }, { name: "DriveGet" }, { name: "DriveSpaceFree" }, { name: "Edit" }, { name: "Endpoint" }, { name: "EnvAdd" }, { name: "EnvDiv" }, { name: "EnvGet" }, { name: "EnvMult" }, { name: "EnvSet" }, { name: "EnvSub" }, { name: "EnvUpdate" }, { name: "Exit" }, { name: "ExitApp" }, { name: "FileAppend" }, { name: "FileCopy" }, { name: "FileCopyDir" }, { name: "FileCreateDir" }, { name: "FileCreateShortcut" }, { name: "FileDelete" }, { name: "FileEncoding" }, { name: "FileGetAttrib" }, { name: "FileGetShortcut" }, { name: "FileGetSize" }, { name: "FileGetTime" }, { name: "FileGetVersion" }, { name: "FileInstall" }, { name: "FileMove" }, { name: "FileMoveDir" }, { name: "FileRead" }, { name: "FileReadLine" }, { name: "FileRecycle" }, { name: "FileRecycleEmpty" }, { name: "FileRemoveDir" }, { name: "FileSelectFile" }, { name: "FileSelectFolder" }, { name: "FileSetAttrib" }, { name: "FileSetTime" }, { name: "FormatTime" }, { name: "getDataFromAPI" }, { name: "getDataFromJSON" }, { name: "GetKeyState" }, { name: "getUrlParams" }, { name: "GroupActivate" }, { name: "GroupAdd" }, { name: "GroupClose" }, { name: "GroupDeactivate" }, { name: "Gui" }, { name: "GuiControl" }, { name: "GuiControlGet" }, { name: "Hotkey" }, { name: "ImageSearch" }, { name: "IniDelete" }, { name: "IniRead" }, { name: "IniWrite" }, { name: "Input" }, { name: "InputBox" }, { name: "KeyHistory" }, { name: "KeyWait" }, { name: "ListHotkeys" }, { name: "ListLines" }, { name: "ListVars" }, { name: "Menu" }, { name: "MouseClick" }, { name: "MouseClickDrag" }, { name: "MouseGetPos" }, { name: "MouseMove" }, { name: "MsgBox" }, { name: "OnExit" }, { name: "OutputDebug" }, { name: "Pause" }, { name: "PixelGetColor" }, { name: "PixelSearch" }, { name: "PostMessage" }, { name: "Process" }, { name: "Progress" }, { name: "Random" }, { name: "RegDelete" }, { name: "RegRead" }, { name: "RegWrite" }, { name: "Reload" }, { name: "reloadWithParams" }, { name: "Run" }, { name: "RunAs" }, { name: "RunWait" }, { name: "Send" }, { name: "SendEvent" }, { name: "SendInput" }, { name: "SendLevel" }, { name: "SendMessage" }, { name: "SendMode" }, { name: "SendPlay" }, { name: "SendRaw" }, { name: "SetBatchLines" }, { name: "SetCapsLockState" }, { name: "SetControlDelay" }, { name: "SetDefaultMouseSpeed" }, { name: "SetEnv" }, { name: "SetFormat" }, { name: "SetKeyDelay" }, { name: "SetMouseDelay" }, { name: "SetNumLockState" }, { name: "SetRegView" }, { name: "SetScrollLockState" }, { name: "SetStoreCapsLockMode" }, { name: "SetTimer" }, { name: "SetTitleMatchMode" }, { name: "SetWinDelay" }, { name: "SetWorkingDir" }, { name: "Shutdown" }, { name: "Sleep" }, { name: "Sort" }, { name: "SoundBeep" }, { name: "SoundGet" }, { name: "SoundGetWaveVolume" }, { name: "SoundPlay" }, { name: "SoundSet" }, { name: "SoundSetWaveVolume" }, { name: "SplashImage" }, { name: "SplashTextOff" }, { name: "SplashTextOn" }, { name: "SplitPath" }, { name: "StatusBarGetText" }, { name: "StatusBarWait" }, { name: "StringCaseSense" }, { name: "StringGetPos" }, { name: "StringLeft" }, { name: "StringLen" }, { name: "StringLower" }, { name: "StringMid" }, { name: "StringReplace" }, { name: "StringRight" }, { name: "StringSplit" }, { name: "StringTrimLeft" }, { name: "StringTrimRight" }, { name: "StringUpper" }, { name: "Suspend" }, { name: "SysGet" }, { name: "Thread" }, { name: "ToolTip" }, { name: "Transform" }, { name: "TrayTip" }, { name: "URLDownloadToFile" }, { name: "WinActivate" }, { name: "WinActivateBottom" }, { name: "WinClose" }, { name: "WinGet" }, { name: "WinGetActiveStats" }, { name: "WinGetActiveTitle" }, { name: "WinGetClass" }, { name: "WinGetPos" }, { name: "WinGetText" }, { name: "WinGetTitle" }, { name: "WinHide" }, { name: "WinKill" }, { name: "WinMaximize" }, { name: "WinMenuSelectItem" }, { name: "WinMinimize" }, { name: "WinMinimizeAll" }, { name: "WinMinimizeAllUndo" }, { name: "WinMove" }, { name: "WinRestore" }, { name: "WinSet" }, { name: "WinSetTitle" }, { name: "WinShow" }, { name: "WinWait" }, { name: "WinWaitActive" }, { name: "WinWaitClose" }, { name: "WinWaitNotActive" }];
+
+        // Create a new div element for the editor
+        var editorDiv = document.createElement("div");
+        editorDiv.id = id;
+        editorDiv.style.position = "absolute";
+        editorDiv.style.left = xPos + "px";
+        editorDiv.style.top = yPos + "px";
+        editorDiv.style.width = w + "px";
+        editorDiv.style.height = h + "px";
+        editorDiv.style.fontSize = font + "px";
+
+        // Append the editor div to the parent
+        parent.appendChild(editorDiv);
+
+        // Create a new editor instance inside the div
+        var editor = ace.edit(id);
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/" + langName);
+        // editor.setOptions({
+        //   enableBasicAutocompletion: true,
+        //   enableLiveAutocompletion: true,
+        //   behavioursEnabled: false, // Disable auto-pairing of characters
+        // });
+
+        editor.setOptions({
+          enableBasicAutocompletion: false,
+          enableSnippets: false,
+          enableLiveAutocompletion: true,
+          behavioursEnabled: false,
+        });
+
+        langTools.setCompleters([]);
+        langTools.addCompleter(Completer);
+
+        // Set initial text if provided
+        if (initialText) {
+          editor.setValue(initialText, -1); // -1 to move cursor to the beginning
+        }
+
+        // Apply CSS styles for the editor
+        var css = `
+          body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1818;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+          }
+
+          .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem;
+            padding: 1rem;
+          }
+
+          button {
+            padding: 0.7rem;
+            font-size: 1.2em;
+            cursor: pointer;
+            background-color: #bababa;
+            color: #000000;
+            border: none;
+            border-radius: 0.2rem;
+            transition: background-color 0.3s;
+          }
+
+          button:hover {
+            background-color: #27ae60;
+          }
+
+          #${id} {
+            width: ${w}px;
+            height: ${h}px;
+            font-size: 1em;
+            border-radius: 0.3rem;
+          }
+
+          #result {
+            margin-top: 1rem;
+            font-size: 1.2em;
+            color: #999c9a;
+            font-weight: bold;
+            text-align: center;
+          }
+
+          .ace-monokai .ace_marker-layer .ace_active-line {
+            background-color: #103010 !important;
+          }
+
+          .ace-monokai {
+            background-color: #121212 !important;
+            color: #f8f8f2;
+          }
+
+          .ace-monokai .ace_gutter {
+            background: #204020 !important;
+            color: #cbcdc3 !important;
+          }
+
+          .ace-monokai .ace_gutter-active-line {
+            background-color: transparent !important;
+          }
+
+          .ace-monokai .ace_entity.ace_name.ace_tag,
+          .ace-monokai .ace_keyword,
+          .ace-monokai .ace_meta.ace_tag,
+          .ace-monokai .ace_storage {
+            color: #40a0e0 !important;
+          }
+
+          .ace-monokai .ace_entity.ace_name.ace_function,
+          .ace-monokai .ace_entity.ace_other,
+          .ace-monokai .ace_entity.ace_other.ace_attribute-name,
+          .ace-monokai .ace_variable {
+            color: #ff80df !important;
+          }
+
+          .ace-monokai .ace_comment {
+            color: #40d080 !important;
+          }
+
+          .ace-monokai .ace_string {
+            color: #ffa0a0 !important;
+          }
+
+          .ace-monokai .ace_punctuation,
+          .ace-monokai .ace_punctuation.ace _tag {
+            color: #ffa0a0 !important;
+          }
+
+          *::-webkit-scrollbar {
+            width: 1em;
+          }
+
+          *::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+          }
+
+          *::-webkit-scrollbar-thumb {
+            background-color: darkgrey;
+            outline: 1px solid slategrey;
+          }
+        `;
+
+        var style = document.createElement("style");
+        style.type = "text/css";
+        if (style.styleSheet) {
+          style.styleSheet.cssText = css;
+        } else {
+          style.appendChild(document.createTextNode(css));
+        }
+        document.head.appendChild(style);
+
+        // Bind change event listener to the editor
+        editor.getSession().on("change", function () {
+          var code = editor.getValue();
+          if (typeof onChangeFunc === "function") {
+            onChangeFunc(code);
           }
         });
-      }
-
-      // Custom Mod function
-      function Mod(dividend, divisor) {
-        return dividend % divisor;
-      }
-
-      function isMobileDevice() {
-        return /Mobi|Android/i.test(navigator.userAgent);
-      }
-
-
-      function StrLower(string) {
-        return string.toLowerCase();
       }
 
       // Single async function to structure the entire script
       async function runScript() {
         // Declare and assign a variable
-        let variables = {
-          A_Index: null,
-          A_LoopField: null,
-          allowPos: null,
-          characters: null,
-          CheckIFandElsesss1: null,
-          CheckIFandElsesss2: null,
-          CheckIFandElsesss3: null,
-          CheckIFandElsesss4: null,
-          CheckIFandElsesss5: null,
-          CheckIFandElsesss6: null,
-          CheckIFandElsesss7: null,
-          CheckIFandElsesss8: null,
-          CheckIFandElsesssNum: null,
-          CheckIFandElsesssNumNum: null,
-          chr34: null,
-          current_indent: null,
-          editBoxX2: null,
-          editBoxX: null,
-          editBoxY: null,
-          editH1: null,
-          editH2: null,
-          fixVarNums: null,
-          foundAnum: null,
-          functionNames: null,
-          goForItChnageTheEqualSing: null,
-          Gui: null,
-          GuiControl: null,
-          HTpyCode: null,
-          HTpyCodeD1: null,
-          HTpyWebsiteToggle1: null,
-          HTpyWebsiteToggle2: null,
-          ifOnlyNum: null,
-          indent_nested_curly_braces: null,
-          indent_size: null,
-          input_string: null,
-          lineDone: null,
-          normalVarNo34: null,
-          numOfStr: null,
-          numStrNums2: null,
-          numStrNums: null,
-          oldA_ScreenHeight: null,
-          oldA_ScreenWidth: null,
-          onceImportTime: null,
-          out: null,
-          outSTR: null,
-          outt1: null,
-          outt2: null,
-          outt3: null,
-          outVar2: null,
-          pos: null,
-          posNum: null,
-          pyCode: null,
-          pyCodeFinal: null,
-          pyCodeOut1234565432: null,
-          RepeatSpaces: null,
-          result: null,
-          sendButtonX: null,
-          sendButtonY: null,
-          spaces: null,
-          str1: null,
-          str: null,
-          StrSplit: null,
-          toggle2X: null,
-          transpileVar: null,
-          trimmed_line: null,
-          usedLib: null,
-          var1: null,
-          var2: null,
-          varr1: null,
-          varr2: null,
-          varr3: null,
-          varVar1: null,
-          varVar2: null,
-          varVar: null,
-          weEverUseVars: null,
-          weUseRandomAtLeastOnce: null,
-          whatVarWeUse: null,
-          WidthOfBoxes: null,
-        };
+
+        
+let variables = {
+  A_Index: null,
+  A_LoopField: null,
+  AindexcharLength: null,
+  AindexcharLengthStr: null,
+  AIndexLoopCurlyFix: null,
+  allFuncsHere: null,
+  ALoopField: null,
+  ALoopFieldd2: null,
+  ALoopFieldd: null,
+  areWEinSome34sNum: null,
+  awesdrtf: null,
+  Button: null,
+  char: null,
+  characters: null,
+  CheckIFandElsesss1: null,
+  CheckIFandElsesss2: null,
+  CheckIFandElsesss3: null,
+  CheckIFandElsesss4: null,
+  CheckIFandElsesss5: null,
+  CheckIFandElsesss6: null,
+  CheckIFandElsesss7: null,
+  CheckIFandElsesss8: null,
+  CheckIFandElsesssNum: null,
+  CheckIFandElsesssNumNum: null,
+  current_indent: null,
+  DeleayOneCuzOfLoopParse: null,
+  dontSaveStr: null,
+  eavbnsalvbaslv: null,
+  editBoxX2: null,
+  editBoxX: null,
+  editBoxY1: null,
+  editBoxY2: null,
+  editBoxY: null,
+  editH1: null,
+  editH2: null,
+  eldLoopNestedBADlol: null,
+  endBracketDOntPutThere: null,
+  fileAppendCommand1varname: null,
+  fileAppendCommand2path: null,
+  fileDeleteCommand2path: null,
+  filereadCommand1varname: null,
+  filereadCommand2path: null,
+  firstChar: null,
+  firstLineVar1: null,
+  firstLineVar2: null,
+  firstLineVar3: null,
+  fixLoopLokingFor: null,
+  fixLoopLokingForfound: null,
+  fixLoopLokingForNum: null,
+  foundTheTopLoop: null,
+  func_A_TickCount_func: null,
+  func_Chr_func: null,
+  func_FileAppend_func: null,
+  func_FileDelete_func: null,
+  func_FileRead_func: null,
+  func_Floor_func: null,
+  func_GetParams_func: null,
+  func_InStr_func: null,
+  func_LoopParseFunc_func: null,
+  func_Mod_func: null,
+  func_RegExReplace_func: null,
+  func_RunCMD_func: null,
+  func_StringTrimLeft_func: null,
+  func_StringTrimRight_func: null,
+  func_StrLower_func: null,
+  func_StrReplace_func: null,
+  func_StrSplit_func: null,
+  func_SubStr_func: null,
+  func_Trim_func: null,
+  funcs_func: null,
+  functionNames: null,
+  funcToChecIfVaidNameForFunc: null,
+  GuiControl: null,
+  haveWeEverUsedAloop: null,
+  hererererehre: null,
+  hold: null,
+  holdText: null,
+  howManyCharIfVar2: null,
+  howManyCharIfVar: null,
+  HTpyCode: null,
+  HTpyCodeD1: null,
+  HTpyCodeOUT754754: null,
+  ifTheLineIsAFuncDec: null,
+  ignore: null,
+  indent_nested_curly_braces: null,
+  indent_size: null,
+  input_string: null,
+  insdeAnestedLoopBAD: null,
+  insideBracket1: null,
+  insideBracket: null,
+  inTarget: null,
+  isNumKindaVar: null,
+  istAvar: null,
+  isValid: null,
+  isVarAnumKindaVar: null,
+  itemsOut: null,
+  lastFuncFullName: null,
+  lastFuncName: null,
+  line1: null,
+  line2: null,
+  line3: null,
+  line: null,
+  lineDone: null,
+  lineYGI: null,
+  myVar: null,
+  netsedCurly1: null,
+  netsedCurly: null,
+  nothing: null,
+  numOfChars: null,
+  numOfStrings: null,
+  oldA_ScreenHeight: null,
+  oldA_ScreenWidth: null,
+  onceImportTime: null,
+  out1: null,
+  out1z: null,
+  out2: null,
+  out4758686d86dgt8r754444444: null,
+  out: null,
+  outOftranspileVariables: null,
+  outOftranspileVariablesOut: null,
+  outt1: null,
+  outt2: null,
+  outt3: null,
+  OUTvarMsgLow: null,
+  putEndPointFlask1Up: null,
+  putEndPointFlask2Down: null,
+  pyCode: null,
+  pycodeAcurlyBraceAddSomeVrasFixLP: null,
+  pycodeAcurlyBraceAddSomeVrasFixNL: null,
+  pyCodeFinal: null,
+  pycodeLoopfixa1: null,
+  pycodeLoopfixa: null,
+  pyCodeOut1234565432: null,
+  readyToEnd1: null,
+  readyToEnd: null,
+  RepeatSpaces: null,
+  result: null,
+  s: null,
+  sendButtonX: null,
+  sendButtonY: null,
+  skipLeftCuleyForFuncPLS: null,
+  spaces: null,
+  sstr: null,
+  str123455: null,
+  str123: null,
+  str2345678: null,
+  str234567: null,
+  str23IfFuncIn: null,
+  str23IfFuncInALL: null,
+  str23IfFuncInNAME: null,
+  str23IfFuncInNAMEnum: null,
+  strForCheckIfFunc: null,
+  strFormEndpoint1: null,
+  strFormEndpoint2: null,
+  strLettersStart: null,
+  strstysrstsytTRIMHELP: null,
+  theFixTextLoopLP: null,
+  theFixTextLoopNL: null,
+  theFuncWeFound: null,
+  theFuncWeFoundAllNames: null,
+  theIdNumOfThe34: null,
+  theVarsPArmFormTheFunc: null,
+  transpileLowVariables: null,
+  transpileVariables: null,
+  trimmed_line: null,
+  usedLib: null,
+  var12312: null,
+  var1: null,
+  var1avavavavva: null,
+  var1out: null,
+  var2: null,
+  var2avavavavva: null,
+  varDetect: null,
+  varOUT1avavavavva: null,
+  varOUT2avavavavva: null,
+  varr1: null,
+  varr2: null,
+  varr3: null,
+  wasAtanyIfsElseAddAIndexLoopCurlyFix: null,
+  wasHereInfuncAndgetingVar1: null,
+  wasHereVarTryUhBug: null,
+  weAreDoneHereCurly: null,
+  weEverUseVars: null,
+  weUseRandomAtLeastOnce: null,
+  whatVarWeUse: null,
+  WidthOfBoxes: null,
+  willNextLineBeCurlyBracee: null,
+};
 
 let funcs = {
-  transpileVariables: transpileVariables,
+  indent_nested_curly_braces: indent_nested_curly_braces,
+  RepeatSpaces: RepeatSpaces,
+  ifTheLineIsAFuncDec: ifTheLineIsAFuncDec,
   isVarAnumKindaVar: isVarAnumKindaVar,
   varDetect: varDetect,
-  StrSplit: StrSplit,
+  funcToChecIfVaidNameForFunc: funcToChecIfVaidNameForFunc,
+  transpileVariables: transpileVariables,
+  transpileLowVariables: transpileLowVariables,
 }
 
-        let Gui1 = {};
-        Gui1 = document.createElement("div");
+let Gui1 = {};
+Gui1 = document.createElement("div");
 
-   MakeHotKey("Ctrl+Enter", function (hotkey) {
-          HotKeyCalledCtrlEnter();
-        });
+MakeHotKey("Ctrl+Enter", function(hotkey) {
+HotKeyCalledCtrlEnter()
+});
 
-        MakeHotKey("Ctrl+V", function (hotkey) {
-          HotKeyCalledCtrlV();
-        });
+MakeHotKey("Ctrl+V", function(hotkey) {
+HotKeyCalledCtrlV()
+});
 
-        // HTpy
+// HTpy
 
-variables.func_LoopParseFunc_func = `
+variables.HTpyCode =  ""
 
-def LoopParseFunc(var, delimiter1="", delimiter2=""):
-    import re
-    if not delimiter1 and not delimiter2:
-        # If no delimiters are provided, return a list of characters
-        items = list(var)
-    else:
-        # Construct the regular expression pattern for splitting the string
-        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'
+Gui1.style.position = "absolute";
+Gui1.style.width = window.innerWidth + "px"; // Set the width
+Gui1.style.height = "" + BuildInVars("A_ScreenHeight") + "px"; // Set the height
+Gui1.style.background = "linear-gradient(90deg, " + "#121212" + " 0%, " + "#121212" + " 100%)";
+Gui1.style.backgroundColor = "linear-gradient(90deg, " + "#121212" + " 0%, " + "#121212" + " 100%)";
+Gui1.style.color = "white";
+Gui1.style.fontSize = "15px";
+Gui1.style.padding = "0px";
+Gui1.style.borderRadius = "0px";
+Gui1.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui1.style.zIndex = "100";
 
-        # Split the string using the constructed pattern
-        items = re.split(pattern, var)
+document.body.appendChild(Gui1) // Append the GUI window to the body
+Gui1.style.display = "block";
 
-    return items
+document.documentElement.setAttribute("style", "padding: 0; margin: 0;")
+document.head.setAttribute("style", "padding: 0; margin: 0;")
+document.body.setAttribute("style", "overflow-x: hidden;padding: 0; margin: 0;")
 
-`;
+if ( await isMobileDevice ( ) )
 
-variables.func_InStr_func = `
+{
 
-def InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):
-    if Haystack is None or Needle is None:
-        return False
-    StartingPos = max(StartingPos, 1)
-    if not CaseSensitive:
-        Haystack = Haystack.lower()
-        Needle = Needle.lower()
-    count = 0
-    for i in range(StartingPos - 1, len(Haystack)):
-        if Haystack[i:i + len(Needle)] == Needle:
-            count += 1
-            if count == Occurrence:
-                return True
-    return False  
+variables.WidthOfBoxes =   ( BuildInVars("A_ScreenWidth") )  - 20;
 
-`;
+variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes )  / 2;
 
-variables.func_SubStr_func = `
+variables.editH1 =  BuildInVars("A_ScreenHeight") - 10;
 
-def SubStr(str, startPos, length=None):
-    if str is None or str == "":
-        return ""
+variables.editBoxY1 =   ( BuildInVars("A_ScreenHeight") - variables.editH1 )  / 2;
 
-    if length is None or length == "":
-        length = len(str) - startPos + 1
+variables.editBoxY2 =   ( BuildInVars("A_ScreenHeight") / 2 )  + 65;
 
-    if startPos < 1:
-        startPos = len(str) + startPos
+variables.editH1 =   ( BuildInVars("A_ScreenHeight") / 2 )
 
-    return str[startPos - 1:startPos - 1 + length]
+variables.editH2 =  variables.editH1 - 70;
 
-`;
+variables.editBoxX =  10;
 
-variables.func_Trim_func = `
+variables.editBoxX2 =  10;
 
-def Trim(inputString):
-    if inputString is None:
-        return ""
+AddIDE(Gui1, variables.editBoxX, variables.editBoxY1, variables.WidthOfBoxes, variables.editH1, "Gui1editBox", 18, "autohotkey", CodeTextEditBox,    null    )
 
-    return inputString.strip()
+AddIDE(Gui1, variables.editBoxX2, variables.editBoxY2, variables.WidthOfBoxes, variables.editH2, "Gui1codeBox", 18, "python", PycodeFuncNOTexists,    null    )
 
-`;
+variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
 
-variables.func_StrReplace_func = `
-  
-def StrReplace(originalString, find, replaceWith):
-    # Use the replace method to replace occurrences of 'find' with 'replaceWith'
-    return originalString.replace(find, replaceWith)
+variables.sendButtonY =  variables.editBoxY2 - 60;
 
-`;
+Gui1ButtonID = document.createElement("button")
+Gui1ButtonID.id = "Gui1" + "ButtonID"; // Set ID for referencing
+Gui1ButtonID.textContent = "Transpile";
+Gui1ButtonID.style.fontSize = "18px"; // Set font size
+Gui1ButtonID.style.position = "absolute"; // Set position to absolute
+Gui1ButtonID.style.left = "" + variables.sendButtonX + "px"; // Set initial x position
+Gui1ButtonID.style.top = "" + variables.sendButtonY + "px"; // Set initial y position
+Gui1ButtonID.style.width = "140px"; // Set width
+Gui1ButtonID.style.height = "40px"; // Set height
+Gui1ButtonID.style.cursor = "pointer"; // Change cursor on hover
+Gui1ButtonID.style.border = "";
+Gui1ButtonID.style.background = "";
+Gui1ButtonID.style.backgroundColor = "";
+Gui1ButtonID.style.borderRadius = "";
+Gui1ButtonID.style.color = "";
+Gui1ButtonID.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui1ButtonID.onclick = function (event) {
+A_GuiControl = event.target.id.replace(/^Gui\d*/, "")
+Button(A_GuiControl)
+};
+Gui1.appendChild(Gui1ButtonID)
 
-variables.func_StringTrimLeft_func = `
+GuiControl("focus", "Gui1editBox")
 
-def StringTrimLeft(input, numChars):
-    # Convert input to a string if it's not already a string
-    if not isinstance(input, str):
-        input = str(input)  # Convert input to string
+variables.oldA_ScreenWidth =  BuildInVars("A_ScreenWidth");
 
-    # Check if the input is long enough to perform trimming
-    if len(input) >= numChars:
-        return input[numChars:]  # Trim the string from the left
-    else:
-        return input  # Return input unchanged if numChars is larger than string length
+variables.oldA_ScreenHeight =  BuildInVars("A_ScreenHeight");
 
-`;
+}
 
-variables.func_StringTrimRight_func = `
+else
 
-def StringTrimRight(input, numChars):
-    # Convert input to a string if it's not already a string
-    if not isinstance(input, str):
-        input = str(input)  # Convert input to string
+{
 
-    # Check if the input is long enough to perform trimming
-    if len(input) >= numChars:
-        return input[:-numChars]  # Trim the string from the right
-    else:
-        return input  # Return input unchanged if numChars is larger than string length
+variables.WidthOfBoxes =   ( BuildInVars("A_ScreenWidth") / 2 )  - 20;
 
-`;
+variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes )  / 2;
 
-variables.func_StrLower_func = `
+variables.editH1 =  BuildInVars("A_ScreenHeight") - 10;
 
-def StrLower(string):
-    return string.lower()
+variables.editBoxY =   ( BuildInVars("A_ScreenHeight") - variables.editH1 )  / 2;
 
-`;
+variables.editH1 =  BuildInVars("A_ScreenHeight") - 60;
 
-variables.func_RegExReplace_func = `
+variables.editH2 =  variables.editH1;
 
-def RegExReplace(inputStr, regexPattern, replacement):
-    # Create a regular expression object using the provided pattern
-    import re
-    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching
+variables.editBoxX =  10;
 
-    # Use the sub() method to perform the regex replacement
-    resultStr = regex.sub(replacement, inputStr)
+variables.editBoxX2 =  variables.WidthOfBoxes + 25;
 
-    # Return the modified string
-    return resultStr
+AddIDE(Gui1, variables.editBoxX, variables.editBoxY, variables.WidthOfBoxes, variables.editH1, "Gui1editBox", 18, "autohotkey", CodeTextEditBox,    null    )
 
-`;
+AddIDE(Gui1, variables.editBoxX2, variables.editBoxY, variables.WidthOfBoxes, variables.editH2, "Gui1codeBox", 18, "python", PycodeFuncNOTexists,    null    )
 
-variables.func_StrSplit_func = `
+variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
 
-def StrSplit(inputStr, delimiter, num):
-    # Check if the delimiter is empty
-    if delimiter == '':
-        # Return an empty string since splitting with an empty delimiter is not possible
-        return ''
+variables.sendButtonY =   ( BuildInVars("A_ScreenHeight") - 40 )  - 10;
 
-    # Split the input string based on the delimiter
-    parts = inputStr.split(delimiter)
+Gui1ButtonID = document.createElement("button")
+Gui1ButtonID.id = "Gui1" + "ButtonID"; // Set ID for referencing
+Gui1ButtonID.textContent = "Transpile";
+Gui1ButtonID.style.fontSize = "18px"; // Set font size
+Gui1ButtonID.style.position = "absolute"; // Set position to absolute
+Gui1ButtonID.style.left = "" + variables.sendButtonX + "px"; // Set initial x position
+Gui1ButtonID.style.top = "" + variables.sendButtonY + "px"; // Set initial y position
+Gui1ButtonID.style.width = "140px"; // Set width
+Gui1ButtonID.style.height = "40px"; // Set height
+Gui1ButtonID.style.cursor = "pointer"; // Change cursor on hover
+Gui1ButtonID.style.border = "";
+Gui1ButtonID.style.background = "";
+Gui1ButtonID.style.backgroundColor = "";
+Gui1ButtonID.style.borderRadius = "";
+Gui1ButtonID.style.color = "";
+Gui1ButtonID.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui1ButtonID.onclick = function (event) {
+A_GuiControl = event.target.id.replace(/^Gui\d*/, "")
+Button(A_GuiControl)
+};
+Gui1.appendChild(Gui1ButtonID)
 
-    # Return the part specified by the num parameter (1-based index)
-    if 0 < num <= len(parts):
-        return parts[num - 1]  # Return the specified part (0-based index)
-    else:
-        return ''  # Return an empty string if num is out of range
+GuiControl("focus", "Gui1editBox")
 
-`;
+variables.oldA_ScreenWidth =  BuildInVars("A_ScreenWidth");
 
+variables.oldA_ScreenHeight =  BuildInVars("A_ScreenHeight");
 
-variables.func_Chr_func = `
+SetTimer(onScreenSizeChange, 100)
 
-def Chr(number):
-    # Check if the number is None
-    if number is None:
-        # Return an empty string
-        return ""
+}
 
-    # Check if the number is within the valid Unicode range
-    if 0 <= number <= 0x10FFFF:
-        # Convert the number to a character using chr()
-        return chr(number)
-    else:
-        # Return an empty string for invalid numbers
-        return ""
+return
 
-`;
+async function onScreenSizeChange(A_GuiControl)
+{
 
-variables.func_Mod_func = `
+if ( variables.oldA_ScreenWidth !== BuildInVars("A_ScreenWidth")  ||  variables.oldA_ScreenHeight !== BuildInVars("A_ScreenHeight") )
 
-# Custom Mod function in Python
-def Mod(dividend, divisor):
-    return dividend % divisor
+{
 
-`;
+variables.WidthOfBoxes =   ( BuildInVars("A_ScreenWidth") / 2 )  - 20;
 
+variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes )  / 2;
 
-variables.func_FileRead_func = `
+variables.editH1 =  BuildInVars("A_ScreenHeight") - 100;
 
-def FileRead(path):
-    import os
-    # Check if the path is absolute
-    if not os.path.isabs(path):
-        path = os.path.join(os.getcwd(), path)
+variables.editBoxY =   ( BuildInVars("A_ScreenHeight") - variables.editH1 )  / 2;
 
-    try:
-        with open(path, 'r') as file:
-            content = file.read()
-        return content
-    except Exception as e:
-        raise RuntimeError(f"Error: Could not open the file. {e}")
+variables.editH1 =  BuildInVars("A_ScreenHeight") - 120;
 
-`;
+variables.editH2 =  variables.editH1;
 
-variables.func_FileAppend_func = `
+variables.editBoxX =  10;
 
-def FileAppend(content, path):
-    import os
-    # Check if the path is absolute
-    if not os.path.isabs(path):
-        path = os.path.join(os.getcwd(), path)
+variables.editBoxX2 =  variables.WidthOfBoxes + 25;
 
-    try:
-        with open(path, 'a') as file:
-            file.write(content)
-    except Exception as e:
-        raise RuntimeError(f"Error: Could not open the file for appending. {e}")
+GuiControl("move", "Gui1editBox", variables.editBoxX, variables.editBoxY, variables.WidthOfBoxes, variables.editH1)
 
-`;
+GuiControl("move", "Gui1codeBox", variables.editBoxX2, variables.editBoxY, variables.WidthOfBoxes, variables.editH2)
 
-variables.func_FileDelete_func = `
+eval("Gui1codeBox.readOnly = true;")
 
-def FileDelete(path):
-    import os
-    # Check if the path is absolute
-    if not os.path.isabs(path):
-        path = os.path.join(os.getcwd(), path)
+variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
 
-    try:
-        if os.path.exists(path):
-            os.remove(path)
-        else:
-            raise RuntimeError("Error: File does not exist.")
-    except Exception as e:
-        raise RuntimeError(f"Error: Failed to delete the file. {e}")
+variables.sendButtonY =   ( BuildInVars("A_ScreenHeight") - 40 )  - 10;
 
-`;
+GuiControl("move", "Gui1ButtonID", variables.sendButtonX, variables.sendButtonY, 140, 40)
 
-variables.func_GetParams_func = `
+GuiControl("focus", "Gui1editBox")
 
-def GetParams():
-    import os
-    import sys
-    # Check if any command line arguments are provided
-    if len(sys.argv) < 2:
-        return ""
+variables.oldA_ScreenWidth =  BuildInVars("A_ScreenWidth");
 
-    # Store the provided command line arguments
-    params = []
-    for arg in sys.argv[1:]:
-        if os.path.exists(arg):
-            arg = os.path.abspath(arg)
-        params.append(arg)
+variables.oldA_ScreenHeight =  BuildInVars("A_ScreenHeight");
 
-    return "\\n".join(params)
+}
 
-`;
+return
 
-variables.func_Floor_func = `
+}
 
-def Floor(num):
-    import math
-    if num is None or not isinstance(num, (int, float)):
-        return None
-    return math.floor(num)
+async function CodeTextEditBox(A_GuiControl)
+{
 
-`;
+variables.HTpyCode =  A_GuiControl;
 
-variables.func_A_TickCount_func = `
+await Button()
 
-import time
+return variables.HTpyCode
 
-start_timestamp = int(time.time() * 1000)  # Initialize with current timestamp in milliseconds
+}
 
-# Function to calculate tick count in milliseconds
-def A_TickCount():
-    return int(time.time() * 1000) - start_timestamp
+async function PycodeFuncNOTexists(A_GuiControl)
+{
 
-`;
-
-variables.funcs_func = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount"
-
-
-
-        Gui1.style.position = "absolute";
-        Gui1.style.width = window.innerWidth + "px"; // Set the width
-        Gui1.style.height = "" + BuildInVars("A_ScreenHeight") + "px"; // Set the height
-        Gui1.style.background = "linear-gradient(90deg, " + "#202020" + " 0%, " + "#202020" + " 100%)";
-        Gui1.style.backgroundColor = "linear-gradient(90deg, " + "#202020" + " 0%, " + "#202020" + " 100%)";
-        Gui1.style.color = "white";
-        Gui1.style.fontSize = "15px";
-        Gui1.style.padding = "0px";
-        Gui1.style.borderRadius = "0px";
-        Gui1.style.fontFamily = ", sans-serif"; // Specify your desired font here
-        Gui1.style.zIndex = "100";
-
-        document.body.appendChild(Gui1); // Append the GUI window to the body
-        Gui1.style.display = "block";
-
-        document.documentElement.setAttribute("style", "padding: 0; margin: 0;");
-        document.head.setAttribute("style", "padding: 0; margin: 0;");
-        document.body.setAttribute("style", "overflow-x: hidden;padding: 0; margin: 0;");
-
-      if ( await isMobileDevice ( ) )
-
-      {
-
-      variables.WidthOfBoxes =   ( BuildInVars("A_ScreenWidth") )  - 20;
-
-      variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes )  / 2;
-
-      variables.editH1 =  BuildInVars("A_ScreenHeight") - 10;
-
-      variables.editBoxY1 =   ( BuildInVars("A_ScreenHeight") - variables.editH1 )  / 2;
-
-      variables.editBoxY2 =   ( BuildInVars("A_ScreenHeight") / 2 )  + 65;
-
-      variables.editH1 =   ( BuildInVars("A_ScreenHeight") / 2 );
-
-      variables.editH2 =  variables.editH1 - 70;
-
-      variables.editBoxX =  10;
-
-      variables.editBoxX2 =  10;
-
-      Gui1editBox = document.createElement("div")
-      Gui1editBox.id = "Gui1" + "editBox"; // Set ID for referencing
-      Gui1editBox.placeholder = "put or type your HTpy code here...";
-      Gui1editBox.style.fontSize = "18px"; // Set font size
-      Gui1editBox.style.resize = "none"; // Disable resizing
-      Gui1editBox.style.position = "absolute"; // Set position to absolute
-      Gui1editBox.style.left = "" + variables.editBoxX + "px"; // Set initial x position
-      Gui1editBox.style.top = "" + variables.editBoxY1 + "px"; // Set initial y position
-      Gui1editBox.style.width = "" + variables.WidthOfBoxes + "px"; // Set width
-      Gui1editBox.style.height = "" + variables.editH1 + "px"; // Set height
-      Gui1editBox.style.border = ""
-      Gui1editBox.style.color = "#ffffff"
-      Gui1editBox.style.background = ""
-      Gui1editBox.style.backgroundColor = "#303030"
-      Gui1editBox.style.borderRadius = ""
-      Gui1editBox.style.fontFamily = ", sans-serif"; // Specify your desired font here
-
-        Gui1.appendChild(Gui1editBox);
-        var Gui1editBox = ace.edit("Gui1editBox");
-        Gui1editBox.setTheme("ace/theme/monokai");
-        Gui1editBox.session.setMode("ace/mode/autohotkey");
-
-        Gui1editBox.getSession().on("change", function () {
-          A_GuiControl = Gui1editBox.getValue();
-          CodeTextEditBox(A_GuiControl);
-        });
-	eval("Gui1editBox.setBehavioursEnabled(false);")
-
-      Gui1codeBox = document.createElement("div")
-      Gui1codeBox.id = "Gui1" + "codeBox"; // Set ID for referencing
-      Gui1codeBox.placeholder = "";
-      Gui1codeBox.style.fontSize = "18px"; // Set font size
-      Gui1codeBox.style.resize = "none"; // Disable resizing
-      Gui1codeBox.style.position = "absolute"; // Set position to absolute
-      Gui1codeBox.style.left = "" + variables.editBoxX2 + "px"; // Set initial x position
-      Gui1codeBox.style.top = "" + variables.editBoxY2 + "px"; // Set initial y position
-      Gui1codeBox.style.width = "" + variables.WidthOfBoxes + "px"; // Set width
-      Gui1codeBox.style.height = "" + variables.editH2 + "px"; // Set height
-      Gui1codeBox.style.border = ""
-      Gui1codeBox.style.color = "#ffffff"
-      Gui1codeBox.style.background = ""
-      Gui1codeBox.style.backgroundColor = "#303030"
-      Gui1codeBox.style.borderRadius = ""
-      Gui1codeBox.style.fontFamily = ", sans-serif"; // Specify your desired font here
-      Gui1.appendChild(Gui1codeBox)
-
-
-        var Gui1codeBox = ace.edit("Gui1codeBox");
-        Gui1codeBox.setTheme("ace/theme/monokai");
-        Gui1codeBox.session.setMode("ace/mode/python");
-
-      eval("Gui1codeBox.setReadOnly(true);")
-
-
-      variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
-
-      variables.sendButtonY =  variables.editBoxY2 - 60;
-
-      Gui1ButtonID = document.createElement("button")
-      Gui1ButtonID.id = "Gui1" + "ButtonID"; // Set ID for referencing
-      Gui1ButtonID.textContent = "Transpile";
-      Gui1ButtonID.style.fontSize = "18px"; // Set font size
-      Gui1ButtonID.style.position = "absolute"; // Set position to absolute
-      Gui1ButtonID.style.left = "" + variables.sendButtonX + "px"; // Set initial x position
-      Gui1ButtonID.style.top = "" + variables.sendButtonY + "px"; // Set initial y position
-      Gui1ButtonID.style.width = "140px"; // Set width
-      Gui1ButtonID.style.height = "40px"; // Set height
-      Gui1ButtonID.style.cursor = "pointer"; // Change cursor on hover
-      Gui1ButtonID.style.border = "";
-      Gui1ButtonID.style.background = "";
-      Gui1ButtonID.style.backgroundColor = "";
-      Gui1ButtonID.style.borderRadius = "";
-      Gui1ButtonID.style.color = "";
-      Gui1ButtonID.style.fontFamily = ", sans-serif"; // Specify your desired font here
-      Gui1ButtonID.onclick = function (event) {
-      A_GuiControl = event.target.id.replace(/^Gui\d*/, "")
-      Button(A_GuiControl)
-      };
-      Gui1.appendChild(Gui1ButtonID)
-
-      GuiControl("focus", "Gui1editBox")
-
-      variables.oldA_ScreenWidth =  BuildInVars("A_ScreenWidth");
-
-      variables.oldA_ScreenHeight =  BuildInVars("A_ScreenHeight");
-
-      }
-
-      else
-
-      {
-
-      variables.WidthOfBoxes =   ( BuildInVars("A_ScreenWidth") / 2 )  - 20;
-
-      variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes )  / 2;
-
-      variables.editH1 =  BuildInVars("A_ScreenHeight") - 10;
-
-      variables.editBoxY =   ( BuildInVars("A_ScreenHeight") - variables.editH1 )  / 2;
-
-      variables.editH1 =  BuildInVars("A_ScreenHeight") - 60;
-
-      variables.editH2 =  variables.editH1;
-
-      variables.editBoxX =  10;
-
-      variables.editBoxX2 =  variables.WidthOfBoxes + 25;
-
-      Gui1editBox = document.createElement("div")
-      Gui1editBox.id = "Gui1" + "editBox"; // Set ID for referencing
-      Gui1editBox.placeholder = "put or type your HTpy code here...";
-      Gui1editBox.style.fontSize = "18px"; // Set font size
-      Gui1editBox.style.resize = "none"; // Disable resizing
-      Gui1editBox.style.position = "absolute"; // Set position to absolute
-      Gui1editBox.style.left = "" + variables.editBoxX + "px"; // Set initial x position
-      Gui1editBox.style.top = "" + variables.editBoxY + "px"; // Set initial y position
-      Gui1editBox.style.width = "" + variables.WidthOfBoxes + "px"; // Set width
-      Gui1editBox.style.height = "" + variables.editH1 + "px"; // Set height
-      Gui1editBox.style.border = ""
-      Gui1editBox.style.color = "#ffffff"
-      Gui1editBox.style.background = ""
-      Gui1editBox.style.backgroundColor = "#303030"
-      Gui1editBox.style.borderRadius = ""
-      Gui1editBox.style.fontFamily = ", sans-serif"; // Specify your desired font here
-
-        Gui1.appendChild(Gui1editBox);
-        var Gui1editBox = ace.edit("Gui1editBox");
-        Gui1editBox.setTheme("ace/theme/monokai");
-        Gui1editBox.session.setMode("ace/mode/autohotkey");
-
-        Gui1editBox.getSession().on("change", function () {
-          A_GuiControl = Gui1editBox.getValue();
-          CodeTextEditBox(A_GuiControl);
-        });
-	eval("Gui1editBox.setBehavioursEnabled(false);")
-
-      Gui1codeBox = document.createElement("div")
-      Gui1codeBox.id = "Gui1" + "codeBox"; // Set ID for referencing
-      Gui1codeBox.placeholder = "";
-      Gui1codeBox.style.fontSize = "18px"; // Set font size
-      Gui1codeBox.style.resize = "none"; // Disable resizing
-      Gui1codeBox.style.position = "absolute"; // Set position to absolute
-      Gui1codeBox.style.left = "" + variables.editBoxX2 + "px"; // Set initial x position
-      Gui1codeBox.style.top = "" + variables.editBoxY + "px"; // Set initial y position
-      Gui1codeBox.style.width = "" + variables.WidthOfBoxes + "px"; // Set width
-      Gui1codeBox.style.height = "" + variables.editH2 + "px"; // Set height
-      Gui1codeBox.style.border = ""
-      Gui1codeBox.style.color = "#ffffff"
-      Gui1codeBox.style.background = ""
-      Gui1codeBox.style.backgroundColor = "#303030"
-      Gui1codeBox.style.borderRadius = ""
-      Gui1codeBox.style.fontFamily = ", sans-serif"; // Specify your desired font here
-      Gui1.appendChild(Gui1codeBox)
-
-
-        var Gui1codeBox = ace.edit("Gui1codeBox");
-        Gui1codeBox.setTheme("ace/theme/monokai");
-        Gui1codeBox.session.setMode("ace/mode/python");
-
-        eval("Gui1codeBox.setReadOnly(true);")
-
-
-      variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
-
-      variables.sendButtonY =   ( BuildInVars("A_ScreenHeight") - 40 )  - 10;
-
-      Gui1ButtonID = document.createElement("button")
-      Gui1ButtonID.id = "Gui1" + "ButtonID"; // Set ID for referencing
-      Gui1ButtonID.textContent = "Transpile";
-      Gui1ButtonID.style.fontSize = "18px"; // Set font size
-      Gui1ButtonID.style.position = "absolute"; // Set position to absolute
-      Gui1ButtonID.style.left = "" + variables.sendButtonX + "px"; // Set initial x position
-      Gui1ButtonID.style.top = "" + variables.sendButtonY + "px"; // Set initial y position
-      Gui1ButtonID.style.width = "140px"; // Set width
-      Gui1ButtonID.style.height = "40px"; // Set height
-      Gui1ButtonID.style.cursor = "pointer"; // Change cursor on hover
-      Gui1ButtonID.style.border = "";
-      Gui1ButtonID.style.background = "";
-      Gui1ButtonID.style.backgroundColor = "";
-      Gui1ButtonID.style.borderRadius = "";
-      Gui1ButtonID.style.color = "";
-      Gui1ButtonID.style.fontFamily = ", sans-serif"; // Specify your desired font here
-      Gui1ButtonID.onclick = function (event) {
-      A_GuiControl = event.target.id.replace(/^Gui\d*/, "")
-      Button(A_GuiControl)
-      };
-      Gui1.appendChild(Gui1ButtonID)
-
-      GuiControl("focus", "Gui1editBox")
-
-      variables.oldA_ScreenWidth =  BuildInVars("A_ScreenWidth");
-
-      variables.oldA_ScreenHeight =  BuildInVars("A_ScreenHeight");
-
-      SetTimer(onScreenSizeChange, 100);
-      }
-
-
-        return;
-
-        async function onScreenSizeChange(A_GuiControl) {
-          if (variables.oldA_ScreenWidth !== BuildInVars("A_ScreenWidth") || variables.oldA_ScreenHeight !== BuildInVars("A_ScreenHeight")) {
-            variables.WidthOfBoxes = BuildInVars("A_ScreenWidth") / 2 - 20;
-
-            variables.editBoxX = (BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes) / 2;
-
-            variables.editH1 = BuildInVars("A_ScreenHeight") - 80;
-
-            variables.editBoxY = (BuildInVars("A_ScreenHeight") - variables.editH1) / 2;
-
-            variables.editH1 = BuildInVars("A_ScreenHeight") - 80;
-
-            variables.editH2 = variables.editH1;
-
-            variables.editBoxX = 10;
-
-            variables.editBoxX2 = variables.WidthOfBoxes + 25;
-
-            GuiControl("move", "Gui1editBox", variables.editBoxX, 10, variables.WidthOfBoxes, variables.editH1);
-
-            GuiControl("move", "Gui1codeBox", variables.editBoxX2, 10, variables.WidthOfBoxes, variables.editH2);
-
-            eval("Gui1codeBox.readOnly = true;");
-
-            variables.sendButtonX = (BuildInVars("A_ScreenWidth") - 140) / 2;
-
-            variables.sendButtonY = BuildInVars("A_ScreenHeight") - 40 - 20;
-
-            GuiControl("move", "Gui1ButtonID", variables.sendButtonX, variables.sendButtonY, 140, 40);
-
-            GuiControl("focus", "Gui1editBox");
-
-            variables.oldA_ScreenWidth = BuildInVars("A_ScreenWidth");
-
-            variables.oldA_ScreenHeight = BuildInVars("A_ScreenHeight");
-          }
-        }
-
-          async function CodeTextEditBox(A_GuiControl) {
-          	// Remove carriage return characters (ASCII 13) from A_GuiControl
-          	let sanitizedText = A_GuiControl.replace(/\r/g, '');
-
-	          // Append sanitized text to variables.HTpyCode
-        	  variables.HTpyCode = sanitizedText;
-
-	          // Call Button function (assuming it returns a Promise)
-            await sleep(1)
-        	  await Button(variables.HTpyCode);
-      		}
-
-
+}
 
 //here;here;here;here;here;here;here;here;here;here;here;here;here;here;here;here
 
@@ -1268,6 +1103,8 @@ async function HotKeyCalledCtrlEnter()
 // console.log("HotKeyCalled CtrlEnter")
 
 await Button()
+
+return variables.HTpyCode
 
 }
 
@@ -1278,6 +1115,8 @@ async function HotKeyCalledCtrlV()
 await sleep(111)
 
 await Button()
+
+return variables.HTpyCode
 
 }
 
@@ -2010,6 +1849,46 @@ return variables.outOftranspileVariablesOut
 async function Button(A_GuiControl)
 {
 
+variables.func_LoopParseFunc_func =  "\ndef LoopParseFunc(var, delimiter1="                   +               String.fromCharCode( 34 )                   +             String.fromCharCode( 34 )                  +                  ", delimiter2="            +             String.fromCharCode( 34 )                 +             String.fromCharCode( 34 )            +             "):\n    import re\n    if not delimiter1 and not delimiter2:\n        # If no delimiters are provided, return a list of characters\n        items = list(var)\n    else:\n        # Construct the regular expression pattern for splitting the string\n        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'\n\n        # Split the string using the constructed pattern\n        items = re.split(pattern, var)\n\n    return items\n";
+
+variables.func_InStr_func =  "\ndef InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):\n    if Haystack is None or Needle is None:\n        return False\n    StartingPos = max(StartingPos, 1)\n    if not CaseSensitive:\n        Haystack = Haystack.lower()\n        Needle = Needle.lower()\n    count = 0\n    for i in range(StartingPos - 1, len(Haystack)):\n        if Haystack[i:i + len(Needle)] == Needle:\n            count += 1\n            if count == Occurrence:\n                return True\n    return False  \n";
+
+variables.func_SubStr_func =  "\ndef SubStr(str, startPos, length=None):\n    if str is None or str == "         +          String.fromCharCode( 34 )                  +              String.fromCharCode( 34 )          +          ":\n        return "         +          String.fromCharCode( 34 )                  +              String.fromCharCode( 34 )          +          "\n\n    if length is None or length == "         +          String.fromCharCode( 34 )                  +              String.fromCharCode( 34 )          +          ":\n        length = len(str) - startPos + 1\n\n    if startPos < 1:\n        startPos = len(str) + startPos\n\n    return str[startPos - 1:startPos - 1 + length]\n";
+
+variables.func_Trim_func =  "\ndef Trim(inputString):\n    if inputString is None:\n        return "         +          String.fromCharCode( 34 )                  +              String.fromCharCode( 34 )          +          "\n\n    return inputString.strip()\n";
+
+variables.func_StrReplace_func =  "  \ndef StrReplace(originalString, find, replaceWith):\n    # Use the replace method to replace occurrences of 'find' with 'replaceWith'\n    return originalString.replace(find, replaceWith)\n";
+
+variables.func_StringTrimLeft_func =  "\ndef StringTrimLeft(input, numChars):\n    # Convert input to a string if it's not already a string\n    if not isinstance(input, str):\n        input = str(input)  # Convert input to string\n\n    # Check if the input is long enough to perform trimming\n    if len(input) >= numChars:\n        return input[numChars:]  # Trim the string from the left\n    else:\n        return input  # Return input unchanged if numChars is larger than string length\n";
+
+variables.func_StringTrimRight_func =  "\ndef StringTrimRight(input, numChars):\n    # Convert input to a string if it's not already a string\n    if not isinstance(input, str):\n        input = str(input)  # Convert input to string\n\n    # Check if the input is long enough to perform trimming\n    if len(input) >= numChars:\n        return input[:-numChars]  # Trim the string from the right\n    else:\n        return input  # Return input unchanged if numChars is larger than string length\n";
+
+variables.func_StrLower_func =  "\ndef StrLower(string):\n    return string.lower()\n";
+
+variables.func_RegExReplace_func =  "\ndef RegExReplace(inputStr, regexPattern, replacement):\n    # Create a regular expression object using the provided pattern\n    import re\n    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching\n\n    # Use the sub() method to perform the regex replacement\n    resultStr = regex.sub(replacement, inputStr)\n\n    # Return the modified string\n    return resultStr\n";
+
+variables.func_StrSplit_func =  "\ndef StrSplit(inputStr, delimiter, num):\n    # Check if the delimiter is empty\n    if delimiter == '':\n        # Return an empty string since splitting with an empty delimiter is not possible\n        return ''\n\n    # Split the input string based on the delimiter\n    parts = inputStr.split(delimiter)\n\n    # Return the part specified by the num parameter (1-based index)\n    if 0 < num <= len(parts):\n        return parts[num - 1]  # Return the specified part (0-based index)\n    else:\n        return ''  # Return an empty string if num is out of range\n";
+
+variables.func_Chr_func =  "\ndef Chr(number):\n    # Check if the number is None\n    if number is None:\n        # Return an empty string\n        return "         +          String.fromCharCode( 34 )                  +              String.fromCharCode( 34 )          +          "\n\n    # Check if the number is within the valid Unicode range\n    if 0 <= number <= 0x10FFFF:\n        # Convert the number to a character using chr()\n        return chr(number)\n    else:\n        # Return an empty string for invalid numbers\n        return "         +          String.fromCharCode( 34 )                  +              String.fromCharCode( 34 )          +          "\n";
+
+variables.func_Mod_func =  "\n# Custom Mod function in Python\ndef Mod(dividend, divisor):\n    return dividend % divisor\n";
+
+variables.func_FileRead_func =  String.fromCharCode( 10 )  + String.fromCharCode( 105 )  + String.fromCharCode( 109 )  + String.fromCharCode( 112 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 10 )  + String.fromCharCode( 100 )  + String.fromCharCode( 101 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 70 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 82 )  + String.fromCharCode( 101 )  + String.fromCharCode( 97 )  + String.fromCharCode( 100 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 35 )  + String.fromCharCode( 32 )  + String.fromCharCode( 69 )  + String.fromCharCode( 110 )  + String.fromCharCode( 115 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 32 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 32 )  + String.fromCharCode( 97 )  + String.fromCharCode( 98 )  + String.fromCharCode( 115 )  + String.fromCharCode( 111 )  + String.fromCharCode( 108 )  + String.fromCharCode( 117 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 105 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 110 )  + String.fromCharCode( 111 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 97 )  + String.fromCharCode( 98 )  + String.fromCharCode( 115 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 32 )  + String.fromCharCode( 61 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 106 )  + String.fromCharCode( 111 )  + String.fromCharCode( 105 )  + String.fromCharCode( 110 )  + String.fromCharCode( 40 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 103 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 99 )  + String.fromCharCode( 119 )  + String.fromCharCode( 100 )  + String.fromCharCode( 40 )  + String.fromCharCode( 41 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 116 )  + String.fromCharCode( 114 )  + String.fromCharCode( 121 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 119 )  + String.fromCharCode( 105 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 112 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 39 )  + String.fromCharCode( 114 )  + String.fromCharCode( 39 )  + String.fromCharCode( 41 )  + String.fromCharCode( 32 )  + String.fromCharCode( 97 )  + String.fromCharCode( 115 )  + String.fromCharCode( 32 )  + String.fromCharCode( 102 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 99 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 61 )  + String.fromCharCode( 32 )  + String.fromCharCode( 102 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 46 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 97 )  + String.fromCharCode( 100 )  + String.fromCharCode( 40 )  + String.fromCharCode( 41 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 110 )  + String.fromCharCode( 32 )  + String.fromCharCode( 99 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 116 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 101 )  + String.fromCharCode( 120 )  + String.fromCharCode( 99 )  + String.fromCharCode( 101 )  + String.fromCharCode( 112 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 70 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 78 )  + String.fromCharCode( 111 )  + String.fromCharCode( 116 )  + String.fromCharCode( 70 )  + String.fromCharCode( 111 )  + String.fromCharCode( 117 )  + String.fromCharCode( 110 )  + String.fromCharCode( 100 )  + String.fromCharCode( 69 )  + String.fromCharCode( 114 )  + String.fromCharCode( 114 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 110 )  + String.fromCharCode( 32 )  + String.fromCharCode( 39 )  + String.fromCharCode( 39 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 101 )  + String.fromCharCode( 120 )  + String.fromCharCode( 99 )  + String.fromCharCode( 101 )  + String.fromCharCode( 112 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 69 )  + String.fromCharCode( 120 )  + String.fromCharCode( 99 )  + String.fromCharCode( 101 )  + String.fromCharCode( 112 )  + String.fromCharCode( 116 )  + String.fromCharCode( 105 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 110 )  + String.fromCharCode( 32 )  + String.fromCharCode( 78 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 101 )  + String.fromCharCode( 10 )
+
+variables.func_FileAppend_func =  String.fromCharCode( 10 )  + String.fromCharCode( 105 )  + String.fromCharCode( 109 )  + String.fromCharCode( 112 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 10 )  + String.fromCharCode( 100 )  + String.fromCharCode( 101 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 70 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 65 )  + String.fromCharCode( 112 )  + String.fromCharCode( 112 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 100 )  + String.fromCharCode( 40 )  + String.fromCharCode( 99 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 116 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 35 )  + String.fromCharCode( 32 )  + String.fromCharCode( 69 )  + String.fromCharCode( 110 )  + String.fromCharCode( 115 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 32 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 32 )  + String.fromCharCode( 97 )  + String.fromCharCode( 98 )  + String.fromCharCode( 115 )  + String.fromCharCode( 111 )  + String.fromCharCode( 108 )  + String.fromCharCode( 117 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 105 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 110 )  + String.fromCharCode( 111 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 97 )  + String.fromCharCode( 98 )  + String.fromCharCode( 115 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 32 )  + String.fromCharCode( 61 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 106 )  + String.fromCharCode( 111 )  + String.fromCharCode( 105 )  + String.fromCharCode( 110 )  + String.fromCharCode( 40 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 103 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 99 )  + String.fromCharCode( 119 )  + String.fromCharCode( 100 )  + String.fromCharCode( 40 )  + String.fromCharCode( 41 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 35 )  + String.fromCharCode( 32 )  + String.fromCharCode( 69 )  + String.fromCharCode( 110 )  + String.fromCharCode( 115 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 100 )  + String.fromCharCode( 105 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 99 )  + String.fromCharCode( 116 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 121 )  + String.fromCharCode( 32 )  + String.fromCharCode( 101 )  + String.fromCharCode( 120 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 116 )  + String.fromCharCode( 115 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 109 )  + String.fromCharCode( 97 )  + String.fromCharCode( 107 )  + String.fromCharCode( 101 )  + String.fromCharCode( 100 )  + String.fromCharCode( 105 )  + String.fromCharCode( 114 )  + String.fromCharCode( 115 )  + String.fromCharCode( 40 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 100 )  + String.fromCharCode( 105 )  + String.fromCharCode( 114 )  + String.fromCharCode( 110 )  + String.fromCharCode( 97 )  + String.fromCharCode( 109 )  + String.fromCharCode( 101 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 101 )  + String.fromCharCode( 120 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 116 )  + String.fromCharCode( 95 )  + String.fromCharCode( 111 )  + String.fromCharCode( 107 )  + String.fromCharCode( 61 )  + String.fromCharCode( 84 )  + String.fromCharCode( 114 )  + String.fromCharCode( 117 )  + String.fromCharCode( 101 )  + String.fromCharCode( 41 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 116 )  + String.fromCharCode( 114 )  + String.fromCharCode( 121 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 119 )  + String.fromCharCode( 105 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 112 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 39 )  + String.fromCharCode( 97 )  + String.fromCharCode( 39 )  + String.fromCharCode( 41 )  + String.fromCharCode( 32 )  + String.fromCharCode( 97 )  + String.fromCharCode( 115 )  + String.fromCharCode( 32 )  + String.fromCharCode( 102 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 102 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 46 )  + String.fromCharCode( 119 )  + String.fromCharCode( 114 )  + String.fromCharCode( 105 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 40 )  + String.fromCharCode( 99 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 110 )  + String.fromCharCode( 116 )  + String.fromCharCode( 41 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 101 )  + String.fromCharCode( 120 )  + String.fromCharCode( 99 )  + String.fromCharCode( 101 )  + String.fromCharCode( 112 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 69 )  + String.fromCharCode( 120 )  + String.fromCharCode( 99 )  + String.fromCharCode( 101 )  + String.fromCharCode( 112 )  + String.fromCharCode( 116 )  + String.fromCharCode( 105 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 115 )  + String.fromCharCode( 115 )  + String.fromCharCode( 10 )
+
+variables.func_FileDelete_func =  String.fromCharCode( 10 )  + String.fromCharCode( 105 )  + String.fromCharCode( 109 )  + String.fromCharCode( 112 )  + String.fromCharCode( 111 )  + String.fromCharCode( 114 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 10 )  + String.fromCharCode( 100 )  + String.fromCharCode( 101 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 70 )  + String.fromCharCode( 105 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 68 )  + String.fromCharCode( 101 )  + String.fromCharCode( 108 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 35 )  + String.fromCharCode( 32 )  + String.fromCharCode( 69 )  + String.fromCharCode( 110 )  + String.fromCharCode( 115 )  + String.fromCharCode( 117 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 101 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 32 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 32 )  + String.fromCharCode( 97 )  + String.fromCharCode( 98 )  + String.fromCharCode( 115 )  + String.fromCharCode( 111 )  + String.fromCharCode( 108 )  + String.fromCharCode( 117 )  + String.fromCharCode( 116 )  + String.fromCharCode( 101 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 105 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 110 )  + String.fromCharCode( 111 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 97 )  + String.fromCharCode( 98 )  + String.fromCharCode( 115 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 32 )  + String.fromCharCode( 61 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 106 )  + String.fromCharCode( 111 )  + String.fromCharCode( 105 )  + String.fromCharCode( 110 )  + String.fromCharCode( 40 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 103 )  + String.fromCharCode( 101 )  + String.fromCharCode( 116 )  + String.fromCharCode( 99 )  + String.fromCharCode( 119 )  + String.fromCharCode( 100 )  + String.fromCharCode( 40 )  + String.fromCharCode( 41 )  + String.fromCharCode( 44 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 116 )  + String.fromCharCode( 114 )  + String.fromCharCode( 121 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 105 )  + String.fromCharCode( 102 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 46 )  + String.fromCharCode( 101 )  + String.fromCharCode( 120 )  + String.fromCharCode( 105 )  + String.fromCharCode( 115 )  + String.fromCharCode( 116 )  + String.fromCharCode( 115 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 111 )  + String.fromCharCode( 115 )  + String.fromCharCode( 46 )  + String.fromCharCode( 114 )  + String.fromCharCode( 101 )  + String.fromCharCode( 109 )  + String.fromCharCode( 111 )  + String.fromCharCode( 118 )  + String.fromCharCode( 101 )  + String.fromCharCode( 40 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 116 )  + String.fromCharCode( 104 )  + String.fromCharCode( 41 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 101 )  + String.fromCharCode( 120 )  + String.fromCharCode( 99 )  + String.fromCharCode( 101 )  + String.fromCharCode( 112 )  + String.fromCharCode( 116 )  + String.fromCharCode( 32 )  + String.fromCharCode( 69 )  + String.fromCharCode( 120 )  + String.fromCharCode( 99 )  + String.fromCharCode( 101 )  + String.fromCharCode( 112 )  + String.fromCharCode( 116 )  + String.fromCharCode( 105 )  + String.fromCharCode( 111 )  + String.fromCharCode( 110 )  + String.fromCharCode( 58 )  + String.fromCharCode( 10 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 112 )  + String.fromCharCode( 97 )  + String.fromCharCode( 115 )  + String.fromCharCode( 115 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 32 )  + String.fromCharCode( 10 )  + String.fromCharCode( 10 )
+
+variables.func_GetParams_func =  "\ndef GetParams():\n    import os\n    import sys\n    # Check if any command line arguments are provided\n    if len(sys.argv) < 2:\n        return "         +          String.fromCharCode( 34 )                  +              String.fromCharCode( 34 )          +          "\n\n    # Store the provided command line arguments\n    params = []\n    for arg in sys.argv[1:]:\n        if os.path.exists(arg):\n            arg = os.path.abspath(arg)\n        params.append(arg)\n\n    return "         +          String.fromCharCode( 34 )                  +              String.fromCharCode( 92 )                  +              String.fromCharCode( 92 )          +          "n"         +          String.fromCharCode( 34 )          +          ".join(params)\n";
+
+variables.func_Floor_func =  "\ndef Floor(num):\n    import math\n    if num is None or not isinstance(num, (int, float)):\n        return None\n    return math.floor(num)\n";
+
+variables.func_A_TickCount_func =  "\nimport time\n\nstart_timestamp = int(time.time() * 1000)  # Initialize with current timestamp in milliseconds\n\n# Function to calculate tick count in milliseconds\ndef A_TickCount():\n    return int(time.time() * 1000) - start_timestamp\n";
+
+variables.func_RunCMD_func =  "import subprocess\n\ndef RunCMD(command):\n    "       +     String.fromCharCode( 34 )       +     String.fromCharCode( 34 )               +     String.fromCharCode( 34 )        +     "\n    Run a specified command in Termux and return the output.\n\n    Args:\n        command (str): The command to run in Termux.\n\n    Returns:\n        tuple: A tuple containing the standard output and standard error of the command.\n    "       +     String.fromCharCode( 34 )       +     String.fromCharCode( 34 )            +     String.fromCharCode( 34 )        +     "\n    try:\n        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)\n        return (result.stdout, result.stderr)\n    except subprocess.CalledProcessError as e:\n        print(f"       +     String.fromCharCode( 34 )        +     "Error: {e}"       +     String.fromCharCode( 34 )        +     ")\n        return (e.stdout, e.stderr)\n    except Exception as e:\n        print(f"       +     String.fromCharCode( 34 )        +     "An unexpected error occurred: {e}"       +     String.fromCharCode( 34 )        +     ")\n        return ("       +     String.fromCharCode( 34 )             +     String.fromCharCode( 34 )        +     ", "       +     String.fromCharCode( 34 )            +     String.fromCharCode( 34 )        +     ")\n";
+
+variables.funcs_func =  "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD";
+
 variables.pyCode =  ""
 
 variables.out =  ""
@@ -2188,7 +2067,7 @@ variables.CheckIFandElsesss8 =  "else if!(";
 
 variables.CheckIFandElsesssNum =  0;
 
-variables.functionNames =  "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams";
+variables.functionNames =  "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|RunCMD";
 
 variables.awesdrtf =  "|A" + String.fromCharCode( 95 )  + "LoopField|A" + String.fromCharCode( 95 )  + "Index";
 
@@ -3288,7 +3167,7 @@ variables.skipLeftCuleyForFuncPLS =  0;
 
 }  // end of the parsing loop
 
-console.log("" + variables.haveWeEverUsedAloop + " ")
+//OutputDebug, %haveWeEverUsedAloop%
 
 if ( variables.haveWeEverUsedAloop == 1 )
 
@@ -4016,7 +3895,7 @@ variables.pyCode =  StrReplace( variables.pyCode, "ihuiuuhuuhtheidFor--asas-theu
 
 }
 
-eval("Gui1codeBox.session.setValue(variables.pyCode)")
+GuiControl("textide", "Gui1codeBox", variables.pyCode)
 
 }
 
