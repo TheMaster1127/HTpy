@@ -261,10 +261,21 @@ else
 
 if (InStr(A_LoopField, "%"))
 {
+if ((SubStr(Trim(A_LoopField), 1, 1) = "%") && (SubStr(Trim(A_LoopField), 0) = "%"))
+{
+StringTrimRight, var1, A_LoopField, 1
+StringTrimLeft, var1, var1, 1
+
+out1 := "variables['" . var1 . "']"
+outOftranspileVariables .= out1 . Chr(32)
+}
+else
+{
 var1 := StrSplit(A_LoopField, "%", 1)
 var2 := StrSplit(A_LoopField, "%", 2)
 out1 := "variables[f" . Chr(39) . var1 . "{variables[" . Chr(34) . var2 . Chr(34) . "]}" . Chr(39) . "]"
 outOftranspileVariables .= out1 . Chr(32)
+}
 }
 else
 {
@@ -400,8 +411,8 @@ return outOftranspileVariablesOut
 ; the compiler
 compiler(HTpyCode)
 {
-
-
+nothing := ""
+HTpyCode := StrReplace(HTpyCode, Chr(13), nothing)
 pyCode := ""
 out := ""
 HTpyCodeD1 := ""
@@ -517,7 +528,7 @@ CheckIFandElsesss7 := "else if !("
 CheckIFandElsesss8 := "else if!("
 CheckIFandElsesssNum := 0
 
-functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD"
+functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD|SortLikeAHK"
 
 
 awesdrtf := "|A" . Chr(95) . "LoopField|A" . Chr(95) . "Index"
@@ -624,6 +635,42 @@ out := "print(" . OUTvarMsgLow . ")"
 lineDone := 1
 pyCode .= out . "`n"
 }
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = "sort, ")
+{
+StringTrimLeft, str1, A_LoopField, 6
+
+str1 := Trim(str1)
+weHaveAcommaFixSortCommand := 0
+if (SubStr(str1, 0) = Chr(44))
+{
+;MsgBox, comma YES
+StringTrimRight, str1, str1, 1
+weHaveAcommaFixSortCommand := 1
+}
+else
+{
+;MsgBox, comma NO
+gg := 0
+}
+
+s := StrSplit(str1, ",", 1)
+out1 := Trim(s)
+
+s := StrSplit(str1, ",", 2)
+out2 := Trim(s)
+
+if (weHaveAcommaFixSortCommand = 1)
+{
+out2 := out2 . Chr(44)
+}
+
+
+var1 := "variables['" . out1 . "'] = SortLikeAHK(variables['" . out1 . "'], " . Chr(34) . out2 . Chr(34) . ")"
+lineDone := 1
+pyCode .= var1 . "`n"
+
+
+}
 else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("Random, "))
 {
 varr1 := StrSplit(A_LoopField, ",", 2)
@@ -697,7 +744,7 @@ filereadCommand2path := StrSplit(filereadCommand, ", ", 2)
 
 filereadCommand2path := StrReplace(filereadCommand2path, "\\", "\\\\")
 
-filereadCommand2path := Trim(transpileVariables(filereadCommand2path, functionNames))
+filereadCommand2path := Trim(transpileLowVariables(filereadCommand2path))
 filereadCommand1varname := Trim(transpileVariables(filereadCommand1varname, functionNames))
 pyCode .= filereadCommand1varname . " = FileRead(" . filereadCommand2path . ")`n"
 lineDone := 1
@@ -710,8 +757,8 @@ fileAppendCommand2path := StrSplit(fileAppendCommand, ", ", 2)
 
 fileAppendCommand2path := StrReplace(fileAppendCommand2path, "\\", "\\\\")
 
-fileAppendCommand1varname := Trim(transpileVariables(fileAppendCommand1varname, functionNames))
-fileAppendCommand2path := Trim(transpileVariables(fileAppendCommand2path, functionNames))
+fileAppendCommand1varname := Trim(transpileLowVariables(fileAppendCommand1varname))
+fileAppendCommand2path := Trim(transpileLowVariables(fileAppendCommand2path))
 
 pyCode .= "FileAppend(" . fileAppendCommand1varname . ", " . fileAppendCommand2path . ")`n"
 lineDone := 1
@@ -723,7 +770,7 @@ StringTrimLeft, fileDeleteCommand, A_LoopField, 12
 fileDeleteCommand2path := StrSplit(fileDeleteCommand, ", ", 1)
 
 fileDeleteCommand2path := StrReplace(fileDeleteCommand2path, "\\", "\\\\")
-fileDeleteCommand2path := Trim(transpileVariables(fileDeleteCommand2path, functionNames))
+fileDeleteCommand2path := Trim(transpileLowVariables(fileDeleteCommand2path))
 
 
 pyCode .= "FileDelete(" . fileDeleteCommand2path . ")`n"
@@ -1805,9 +1852,10 @@ func_HTpy_func := "`ndef HTpy():`n    import sys`n    import os`n    if len(sys.
 
 
 
-func_FileRead_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(82) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(114) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(114) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(78) . Chr(111) . Chr(116) . Chr(70) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(69) . Chr(114) . Chr(114) . Chr(111) . Chr(114) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(39) . Chr(39) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(10)
 
-func_FileAppend_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(65) . Chr(112) . Chr(112) . Chr(101) . Chr(110) . Chr(100) . Chr(40) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(100) . Chr(105) . Chr(114) . Chr(101) . Chr(99) . Chr(116) . Chr(111) . Chr(114) . Chr(121) . Chr(32) . Chr(101) . Chr(120) . Chr(105) . Chr(115) . Chr(116) . Chr(115) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(109) . Chr(97) . Chr(107) . Chr(101) . Chr(100) . Chr(105) . Chr(114) . Chr(115) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(100) . Chr(105) . Chr(114) . Chr(110) . Chr(97) . Chr(109) . Chr(101) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(44) . Chr(32) . Chr(101) . Chr(120) . Chr(105) . Chr(115) . Chr(116) . Chr(95) . Chr(111) . Chr(107) . Chr(61) . Chr(84) . Chr(114) . Chr(117) . Chr(101) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(97) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(119) . Chr(114) . Chr(105) . Chr(116) . Chr(101) . Chr(40) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(115) . Chr(115) . Chr(10)
+func_FileRead_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(82) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(32) . Chr(97) . Chr(110) . Chr(121) . Chr(32) . Chr(101) . Chr(120) . Chr(116) . Chr(114) . Chr(97) . Chr(32) . Chr(100) . Chr(111) . Chr(117) . Chr(98) . Chr(108) . Chr(101) . Chr(32) . Chr(113) . Chr(117) . Chr(111) . Chr(116) . Chr(101) . Chr(115) . Chr(32) . Chr(97) . Chr(114) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(112) . Chr(40) . Chr(39) . Chr(34) . Chr(39) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(114) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(110) . Chr(99) . Chr(111) . Chr(100) . Chr(105) . Chr(110) . Chr(103) . Chr(61) . Chr(39) . Chr(117) . Chr(116) . Chr(102) . Chr(45) . Chr(56) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(114) . Chr(114) . Chr(111) . Chr(114) . Chr(115) . Chr(61) . Chr(39) . Chr(105) . Chr(103) . Chr(110) . Chr(111) . Chr(114) . Chr(101) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(114) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(78) . Chr(111) . Chr(116) . Chr(70) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(69) . Chr(114) . Chr(114) . Chr(111) . Chr(114) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(39) . Chr(39) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(10)
+
+func_FileAppend_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(65) . Chr(112) . Chr(112) . Chr(101) . Chr(110) . Chr(100) . Chr(40) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(32) . Chr(97) . Chr(110) . Chr(121) . Chr(32) . Chr(101) . Chr(120) . Chr(116) . Chr(114) . Chr(97) . Chr(32) . Chr(100) . Chr(111) . Chr(117) . Chr(98) . Chr(108) . Chr(101) . Chr(32) . Chr(113) . Chr(117) . Chr(111) . Chr(116) . Chr(101) . Chr(115) . Chr(32) . Chr(97) . Chr(114) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(112) . Chr(40) . Chr(39) . Chr(34) . Chr(39) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(97) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(110) . Chr(99) . Chr(111) . Chr(100) . Chr(105) . Chr(110) . Chr(103) . Chr(61) . Chr(39) . Chr(117) . Chr(116) . Chr(102) . Chr(45) . Chr(56) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(39) . Chr(97) . Chr(39) . Chr(32) . Chr(109) . Chr(111) . Chr(100) . Chr(101) . Chr(32) . Chr(102) . Chr(111) . Chr(114) . Chr(32) . Chr(97) . Chr(112) . Chr(112) . Chr(101) . Chr(110) . Chr(100) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(119) . Chr(114) . Chr(105) . Chr(116) . Chr(101) . Chr(40) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(84) . Chr(114) . Chr(117) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(70) . Chr(97) . Chr(108) . Chr(115) . Chr(101) . Chr(10)
 
 
 func_FileDelete_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(68) . Chr(101) . Chr(108) . Chr(101) . Chr(116) . Chr(101) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(101) . Chr(120) . Chr(105) . Chr(115) . Chr(116) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(114) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(115) . Chr(115) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(10) . Chr(10)
@@ -1826,7 +1874,12 @@ func_A_TickCount_func := "`nimport time`n`nstart_timestamp = int(time.time() * 1
 func_RunCMD_func := "import subprocess`n`ndef RunCMD(command):`n    " . Chr(34) . "" . Chr(34) . "" . Chr(34) . "`n    Run a specified command in Termux and return the output.`n`n    Args:`n        command (str): The command to run in Termux.`n`n    Returns:`n        tuple: A tuple containing the standard output and standard error of the command.`n    " . Chr(34) . "" . Chr(34) . "" . Chr(34) . "`n    try:`n        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)`n        return (result.stdout, result.stderr)`n    except subprocess.CalledProcessError as e:`n        print(f" . Chr(34) . "Error: {e}" . Chr(34) . ")`n        return (e.stdout, e.stderr)`n    except Exception as e:`n        print(f" . Chr(34) . "An unexpected error occurred: {e}" . Chr(34) . ")`n        return (" . Chr(34) . "" . Chr(34) . ", " . Chr(34) . "" . Chr(34) . ")`n"
 
 
-funcs_func :=       "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD"
+
+func_SortLikeAHK_func := "`nimport random`ndef SortLikeAHK(var_name, options):`n    # Determine delimiter based on options`n    delimiter = '" . Chr(92) . "n'`n    if 'D' in options:`n        delimiter = options[options.index('D') + 1]`n    `n    # Split the input variable by delimiter`n    items = var_name.split(delimiter)`n    `n    # Remove empty items and strip whitespace`n    items = [item.strip() for item in items if item.strip()]`n    `n    # Apply sorting based on options`n    if 'N' in options:`n        # Numeric sort`n        items.sort(key=lambda x: int(x))`n    elif 'Random' in options:`n        # Random sort`n        random.shuffle(items)`n    else:`n        # Default alphabetical sort`n        items.sort(key=lambda x: x.lower() if 'C' not in options else x)`n    `n    # Reverse if 'R' option is present`n    if 'R' in options:`n        items.reverse()`n    `n    # Remove duplicates if 'U' option is present`n    if 'U' in options:`n        seen = set()`n        unique_items = []`n        for item in items:`n            lower_item = item.lower() if 'C' not in options else item`n            if lower_item not in seen:`n                seen.add(lower_item)`n                unique_items.append(item)`n        items = unique_items`n    `n    # Join the sorted items back into a string`n    sorted_var = delimiter.join(items)`n    `n    return sorted_var`n"
+
+
+
+funcs_func :=       "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD|SortLikeAHK"
 
 allFuncsHere := ""
 Loop, Parse, funcs_func, "|"
