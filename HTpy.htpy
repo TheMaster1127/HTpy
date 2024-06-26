@@ -1224,7 +1224,7 @@ varOUT2avavavavva := transpileVariables(var2avavavavva, functionNames)
 
 out := varOUT1avavavavva . whatVarWeUse . varOUT2avavavavva
 
-
+lineDone := 1
 pyCode .= out . "`n"
 
 }
@@ -1234,6 +1234,24 @@ StringTrimLeft, str123, A_LoopField, 1
 
 str123 := "#" . str123
 out := str123
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 0) = Chr(41)) && (lineDone = 0)
+{
+str123 := A_LoopField
+FuncNameWhatIsIt := StrSplit(str123, "(", 1)
+
+Loop, Parse, FuncNameWhatIsIt
+{
+StringTrimLeft, str123, str123, 1
+}
+
+outVarTransiled := transpileVariables(str123, functionNames)
+
+
+
+out := FuncNameWhatIsIt . outVarTransiled
 lineDone := 1
 pyCode .= out . "`n"
 }

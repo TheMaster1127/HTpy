@@ -853,11 +853,24 @@ def compiler(HTpyCode):
             variables['varOUT1avavavavva'] = transpileVariables(variables['var1avavavavva'] , variables['functionNames'])
             variables['varOUT2avavavavva'] = transpileVariables(variables['var2avavavavva'] , variables['functionNames'])
             variables['out'] = variables['varOUT1avavavavva']  +  variables['whatVarWeUse']  +  variables['varOUT2avavavavva']
+            variables['lineDone'] = 1
             variables['pyCode'] += variables['out']  +  "\n"
         elif (SubStr(Trim(StrLower(variables['A_LoopField23'])) , 1 , 1)== Chr(59)) and(variables['lineDone'] == 0):
             variables['str123'] = StringTrimLeft(variables['A_LoopField23'], 1)
             variables['str123'] = "#"  +  variables['str123']
             variables['out'] = variables['str123']
+            variables['lineDone'] = 1
+            variables['pyCode'] += variables['out']  +  "\n"
+        elif (SubStr(Trim(StrLower(variables['A_LoopField23'])) , 0)== Chr(41)) and(variables['lineDone'] == 0):
+            variables['str123'] = variables['A_LoopField23']
+            variables['FuncNameWhatIsIt'] = StrSplit(variables['str123'] , "(" , 1)
+            items = LoopParseFunc(variables['FuncNameWhatIsIt'])
+            for A_Index27, A_LoopField27 in enumerate(items, start=1):
+                variables['A_Index27'] = A_Index27
+                variables['A_LoopField27'] = A_LoopField27
+                variables['str123'] = StringTrimLeft(variables['str123'], 1)
+            variables['outVarTransiled'] = transpileVariables(variables['str123'] , variables['functionNames'])
+            variables['out'] = variables['FuncNameWhatIsIt']  +  variables['outVarTransiled']
             variables['lineDone'] = 1
             variables['pyCode'] += variables['out']  +  "\n"
         else:
@@ -883,11 +896,11 @@ def compiler(HTpyCode):
         #OutputDebug, |%pycodeLoopfixa%|
         variables['AIndexLoopCurlyFix'] = 1
         items = LoopParseFunc(variables['pycodeLoopfixa'], "\n", "\r")
-        for A_Index27, A_LoopField27 in enumerate(items, start=1):
-            variables['A_Index27'] = A_Index27
-            variables['A_LoopField27'] = A_LoopField27
-            variables['str123'] = variables['A_LoopField27']
-            variables['fixLoopLokingFor'] = variables['A_LoopField27']
+        for A_Index28, A_LoopField28 in enumerate(items, start=1):
+            variables['A_Index28'] = A_Index28
+            variables['A_LoopField28'] = A_LoopField28
+            variables['str123'] = variables['A_LoopField28']
+            variables['fixLoopLokingFor'] = variables['A_LoopField28']
             variables['fixLoopLokingForfound'] = 1
             variables['out1'] = StrSplit(variables['str123'] , "|" , 1)
             variables['out2'] = StrSplit(variables['str123'] , "|" , 3)
@@ -909,105 +922,22 @@ def compiler(HTpyCode):
                 variables['foundTheTopLoop'] = 0
                 variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] = ""
                 items = LoopParseFunc(variables['pyCode'], "\n", "\r")
-                for A_Index28, A_LoopField28 in enumerate(items, start=1):
-                    variables['A_Index28'] = A_Index28
-                    variables['A_LoopField28'] = A_LoopField28
+                for A_Index29, A_LoopField29 in enumerate(items, start=1):
+                    variables['A_Index29'] = A_Index29
+                    variables['A_LoopField29'] = A_LoopField29
                     #MsgBox, dsfgsdefgesrdg1
-                    #MsgBox, |%A_LoopField28%|`n|%fixLoopLokingFor%|
-                    if (InStr(variables['A_LoopField28'] , variables['fixLoopLokingFor'])) and(variables['insdeAnestedLoopBAD']  != 1):
+                    #MsgBox, |%A_LoopField29%|`n|%fixLoopLokingFor%|
+                    if (InStr(variables['A_LoopField29'] , variables['fixLoopLokingFor'])) and(variables['insdeAnestedLoopBAD']  != 1):
                         variables['fixLoopLokingForNum'] = 1
                         #MsgBox, do we came here 1
-                    if (InStr(variables['A_LoopField28'] , "for ")) and(variables['weAreDoneHereCurly']  != 1)and(variables['insdeAnestedLoopBAD']  != 1)and(variables['fixLoopLokingForNum'] == 1):
-                        variables['s'] = StrSplit(variables['A_LoopField28'] , "A"  +  Chr(95) +  "Index" , 2)
+                    if (InStr(variables['A_LoopField29'] , "for ")) and(variables['weAreDoneHereCurly']  != 1)and(variables['insdeAnestedLoopBAD']  != 1)and(variables['fixLoopLokingForNum'] == 1):
+                        variables['s'] = StrSplit(variables['A_LoopField29'] , "A"  +  Chr(95) +  "Index" , 2)
                         variables['out1z'] = variables['s']
                         variables['s'] = StrSplit(variables['out1z'] , " " , 1)
                         variables['out1z'] = Trim(variables['s'])
                         #MsgBox, % out1z
                         #MsgBox, do we came here 2
                         variables['fixLoopLokingForNum'] = 0
-                        variables['foundTheTopLoop'] += 1
-                        variables['inTarget'] = 1
-                        #MsgBox, % A_LoopField28
-                        variables['dontSaveStr'] = 1
-                        variables['ALoopField'] = variables['A_LoopField28']
-                        variables['DeleayOneCuzOfLoopParse'] = 1
-                        variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['ALoopField']  +  "\n"
-                    if (variables['inTarget'] == 1)and(InStr(variables['A_LoopField28'] , Chr(123)))and(variables['insdeAnestedLoopBAD']  != 1):
-                        variables['insideBracket'] = 1
-                    if (variables['insideBracket'] == 1)and(InStr(variables['A_LoopField28'] , Chr(123)))and(variables['insdeAnestedLoopBAD']  != 1):
-                        variables['netsedCurly'] += 1
-                    if (variables['insideBracket'] == 1)and(InStr(variables['A_LoopField28'] , Chr(125)))and(variables['insdeAnestedLoopBAD']  != 1):
-                        variables['netsedCurly'] -= 1
-                        variables['readyToEnd'] = 1
-                    if (InStr(variables['A_LoopField28'] , "for ")) and(variables['insdeAnestedLoopBAD']  != 1)and(variables['foundTheTopLoop'] >= 2):
-                        variables['insdeAnestedLoopBAD'] = 1
-                        variables['insideBracket1'] = 0
-                        variables['netsedCurly1'] = 0
-                    if (variables['inTarget'] == 1):
-                        variables['foundTheTopLoop'] += 1
-                    if (variables['insdeAnestedLoopBAD'] == 1):
-                        if (InStr(variables['A_LoopField28'] , Chr(123))):
-                            variables['insideBracket1'] = 1
-                        if (variables['insideBracket1'] == 1)and(InStr(variables['A_LoopField28'] , Chr(123))):
-                            variables['netsedCurly1'] += 1
-                        if (variables['insideBracket1'] == 1)and(InStr(variables['A_LoopField28'] , Chr(125))):
-                            variables['netsedCurly1'] -= 1
-                            variables['readyToEnd1'] = 1
-                        if (InStr(variables['A_LoopField28'] , Chr(125)))and(variables['readyToEnd1'] == 1)and(variables['netsedCurly1'] == 0)and(variables['insideBracket'] == 1):
-                            #MsgBox, % A_LoopField28
-                            variables['eldLoopNestedBADlol'] = 1
-                        variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['A_LoopField28']  +  "\n"
-                    if (variables['inTarget'] == 1)and(variables['dontSaveStr']  != 1)and(variables['fixLoopLokingForNum']  != 1)and(variables['insdeAnestedLoopBAD']  != 1):
-                        variables['ALoopField'] = variables['A_LoopField28']
-                        # Replace "A_Index" with or without a following digit with "A_Index" + out1z
-                        variables['ALoopField'] = RegExReplace(variables['ALoopField'] , "A"  +  Chr(95) +  "Index(?:\\d+)?" , "A"  +  Chr(95) +  "Index"  +  variables['out1z'])
-                        variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['ALoopField']  +  "\n"
-                    if (variables['inTarget'] == 1)and(InStr(variables['A_LoopField28'] , Chr(125)))and(variables['readyToEnd'] == 1)and(variables['netsedCurly'] == 0)and(variables['weAreDoneHereCurly'] == 0)and(variables['dontSaveStr']  != 1)and(variables['insdeAnestedLoopBAD']  != 1):
-                        #MsgBox, % A_LoopField28
-                        variables['weAreDoneHereCurly'] = 1
-                        variables['inTarget'] = 0
-                        variables['endBracketDOntPutThere'] = 1
-                    variables['dontSaveStr'] = 0
-                    if (variables['inTarget']  != 1)and(variables['endBracketDOntPutThere']  != 1)and(variables['insdeAnestedLoopBAD']  != 1):
-                        variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['A_LoopField28']  +  "\n"
-                    variables['endBracketDOntPutThere'] = 0
-                    if (variables['eldLoopNestedBADlol'] == 1):
-                        variables['insdeAnestedLoopBAD'] = 0
-                variables['strstysrstsytTRIMHELP'] = variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}']
-                variables['strstysrstsytTRIMHELP'] = StringTrimRight(variables['strstysrstsytTRIMHELP'], 1)
-                #MsgBox, % out4758686d86d86d86578991a%AIndexLoopCurlyFix%
-                variables['pyCode'] = variables['strstysrstsytTRIMHELP']
-                #MsgBox, % jsCode
-                variables['wasAtanyIfsElseAddAIndexLoopCurlyFix'] = 1
-            else:
-                variables['inTarget'] = 0
-                variables['insideBracket'] = 0
-                variables['netsedCurly'] = 0
-                variables['eldLoopNestedBADlol'] = 0
-                variables['readyToEnd'] = 0
-                variables['endBracketDOntPutThere'] = 0
-                variables['dontSaveStr'] = 0
-                variables['weAreDoneHereCurly'] = 0
-                variables['DeleayOneCuzOfLoopParse'] = 0
-                variables['fixLoopLokingForNum'] = 0
-                variables['insdeAnestedLoopBAD'] = 0
-                variables['foundTheTopLoop'] = 0
-                variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] = ""
-                items = LoopParseFunc(variables['pyCode'], "\n", "\r")
-                for A_Index29, A_LoopField29 in enumerate(items, start=1):
-                    variables['A_Index29'] = A_Index29
-                    variables['A_LoopField29'] = A_LoopField29
-                    if (InStr(variables['A_LoopField29'] , variables['fixLoopLokingFor'])) and(variables['insdeAnestedLoopBAD']  != 1):
-                        variables['fixLoopLokingForNum'] = 1
-                        #MsgBox, do we came here 3
-                    if (InStr(variables['A_LoopField29'] , "for ")) and(variables['weAreDoneHereCurly']  != 1)and(variables['insdeAnestedLoopBAD']  != 1)and(variables['fixLoopLokingForNum'] == 1):
-                        variables['s'] = StrSplit(variables['A_LoopField29'] , "A"  +  Chr(95) +  "LoopField" , 2)
-                        variables['out1z'] = variables['s']
-                        variables['s'] = StrSplit(variables['out1z'] , " " , 1)
-                        variables['out1z'] = Trim(variables['s'])
-                        #MsgBox, % out1z
-                        variables['fixLoopLokingForNum'] = 0
-                        #MsgBox, do we came here 4
                         variables['foundTheTopLoop'] += 1
                         variables['inTarget'] = 1
                         #MsgBox, % A_LoopField29
@@ -1044,8 +974,6 @@ def compiler(HTpyCode):
                         variables['ALoopField'] = variables['A_LoopField29']
                         # Replace "A_Index" with or without a following digit with "A_Index" + out1z
                         variables['ALoopField'] = RegExReplace(variables['ALoopField'] , "A"  +  Chr(95) +  "Index(?:\\d+)?" , "A"  +  Chr(95) +  "Index"  +  variables['out1z'])
-                        # Replace "A_Index" with or without a following digit with "A_Index" + out1z
-                        variables['ALoopField'] = RegExReplace(variables['ALoopField'] , "A"  +  Chr(95) +  "LoopField(?:\\d+)?" , "A"  +  Chr(95) +  "LoopField"  +  variables['out1z'])
                         variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['ALoopField']  +  "\n"
                     if (variables['inTarget'] == 1)and(InStr(variables['A_LoopField29'] , Chr(125)))and(variables['readyToEnd'] == 1)and(variables['netsedCurly'] == 0)and(variables['weAreDoneHereCurly'] == 0)and(variables['dontSaveStr']  != 1)and(variables['insdeAnestedLoopBAD']  != 1):
                         #MsgBox, % A_LoopField29
@@ -1064,41 +992,126 @@ def compiler(HTpyCode):
                 variables['pyCode'] = variables['strstysrstsytTRIMHELP']
                 #MsgBox, % jsCode
                 variables['wasAtanyIfsElseAddAIndexLoopCurlyFix'] = 1
+            else:
+                variables['inTarget'] = 0
+                variables['insideBracket'] = 0
+                variables['netsedCurly'] = 0
+                variables['eldLoopNestedBADlol'] = 0
+                variables['readyToEnd'] = 0
+                variables['endBracketDOntPutThere'] = 0
+                variables['dontSaveStr'] = 0
+                variables['weAreDoneHereCurly'] = 0
+                variables['DeleayOneCuzOfLoopParse'] = 0
+                variables['fixLoopLokingForNum'] = 0
+                variables['insdeAnestedLoopBAD'] = 0
+                variables['foundTheTopLoop'] = 0
+                variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] = ""
+                items = LoopParseFunc(variables['pyCode'], "\n", "\r")
+                for A_Index30, A_LoopField30 in enumerate(items, start=1):
+                    variables['A_Index30'] = A_Index30
+                    variables['A_LoopField30'] = A_LoopField30
+                    if (InStr(variables['A_LoopField30'] , variables['fixLoopLokingFor'])) and(variables['insdeAnestedLoopBAD']  != 1):
+                        variables['fixLoopLokingForNum'] = 1
+                        #MsgBox, do we came here 3
+                    if (InStr(variables['A_LoopField30'] , "for ")) and(variables['weAreDoneHereCurly']  != 1)and(variables['insdeAnestedLoopBAD']  != 1)and(variables['fixLoopLokingForNum'] == 1):
+                        variables['s'] = StrSplit(variables['A_LoopField30'] , "A"  +  Chr(95) +  "LoopField" , 2)
+                        variables['out1z'] = variables['s']
+                        variables['s'] = StrSplit(variables['out1z'] , " " , 1)
+                        variables['out1z'] = Trim(variables['s'])
+                        #MsgBox, % out1z
+                        variables['fixLoopLokingForNum'] = 0
+                        #MsgBox, do we came here 4
+                        variables['foundTheTopLoop'] += 1
+                        variables['inTarget'] = 1
+                        #MsgBox, % A_LoopField30
+                        variables['dontSaveStr'] = 1
+                        variables['ALoopField'] = variables['A_LoopField30']
+                        variables['DeleayOneCuzOfLoopParse'] = 1
+                        variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['ALoopField']  +  "\n"
+                    if (variables['inTarget'] == 1)and(InStr(variables['A_LoopField30'] , Chr(123)))and(variables['insdeAnestedLoopBAD']  != 1):
+                        variables['insideBracket'] = 1
+                    if (variables['insideBracket'] == 1)and(InStr(variables['A_LoopField30'] , Chr(123)))and(variables['insdeAnestedLoopBAD']  != 1):
+                        variables['netsedCurly'] += 1
+                    if (variables['insideBracket'] == 1)and(InStr(variables['A_LoopField30'] , Chr(125)))and(variables['insdeAnestedLoopBAD']  != 1):
+                        variables['netsedCurly'] -= 1
+                        variables['readyToEnd'] = 1
+                    if (InStr(variables['A_LoopField30'] , "for ")) and(variables['insdeAnestedLoopBAD']  != 1)and(variables['foundTheTopLoop'] >= 2):
+                        variables['insdeAnestedLoopBAD'] = 1
+                        variables['insideBracket1'] = 0
+                        variables['netsedCurly1'] = 0
+                    if (variables['inTarget'] == 1):
+                        variables['foundTheTopLoop'] += 1
+                    if (variables['insdeAnestedLoopBAD'] == 1):
+                        if (InStr(variables['A_LoopField30'] , Chr(123))):
+                            variables['insideBracket1'] = 1
+                        if (variables['insideBracket1'] == 1)and(InStr(variables['A_LoopField30'] , Chr(123))):
+                            variables['netsedCurly1'] += 1
+                        if (variables['insideBracket1'] == 1)and(InStr(variables['A_LoopField30'] , Chr(125))):
+                            variables['netsedCurly1'] -= 1
+                            variables['readyToEnd1'] = 1
+                        if (InStr(variables['A_LoopField30'] , Chr(125)))and(variables['readyToEnd1'] == 1)and(variables['netsedCurly1'] == 0)and(variables['insideBracket'] == 1):
+                            #MsgBox, % A_LoopField30
+                            variables['eldLoopNestedBADlol'] = 1
+                        variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['A_LoopField30']  +  "\n"
+                    if (variables['inTarget'] == 1)and(variables['dontSaveStr']  != 1)and(variables['fixLoopLokingForNum']  != 1)and(variables['insdeAnestedLoopBAD']  != 1):
+                        variables['ALoopField'] = variables['A_LoopField30']
+                        # Replace "A_Index" with or without a following digit with "A_Index" + out1z
+                        variables['ALoopField'] = RegExReplace(variables['ALoopField'] , "A"  +  Chr(95) +  "Index(?:\\d+)?" , "A"  +  Chr(95) +  "Index"  +  variables['out1z'])
+                        # Replace "A_Index" with or without a following digit with "A_Index" + out1z
+                        variables['ALoopField'] = RegExReplace(variables['ALoopField'] , "A"  +  Chr(95) +  "LoopField(?:\\d+)?" , "A"  +  Chr(95) +  "LoopField"  +  variables['out1z'])
+                        variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['ALoopField']  +  "\n"
+                    if (variables['inTarget'] == 1)and(InStr(variables['A_LoopField30'] , Chr(125)))and(variables['readyToEnd'] == 1)and(variables['netsedCurly'] == 0)and(variables['weAreDoneHereCurly'] == 0)and(variables['dontSaveStr']  != 1)and(variables['insdeAnestedLoopBAD']  != 1):
+                        #MsgBox, % A_LoopField30
+                        variables['weAreDoneHereCurly'] = 1
+                        variables['inTarget'] = 0
+                        variables['endBracketDOntPutThere'] = 1
+                    variables['dontSaveStr'] = 0
+                    if (variables['inTarget']  != 1)and(variables['endBracketDOntPutThere']  != 1)and(variables['insdeAnestedLoopBAD']  != 1):
+                        variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}'] += variables['A_LoopField30']  +  "\n"
+                    variables['endBracketDOntPutThere'] = 0
+                    if (variables['eldLoopNestedBADlol'] == 1):
+                        variables['insdeAnestedLoopBAD'] = 0
+                variables['strstysrstsytTRIMHELP'] = variables[f'out4758686d86d86d86578991a{variables["AIndexLoopCurlyFix"]}']
+                variables['strstysrstsytTRIMHELP'] = StringTrimRight(variables['strstysrstsytTRIMHELP'], 1)
+                #MsgBox, % out4758686d86d86d86578991a%AIndexLoopCurlyFix%
+                variables['pyCode'] = variables['strstysrstsytTRIMHELP']
+                #MsgBox, % jsCode
+                variables['wasAtanyIfsElseAddAIndexLoopCurlyFix'] = 1
             if (variables['wasAtanyIfsElseAddAIndexLoopCurlyFix'] == 1):
                 variables['AIndexLoopCurlyFix'] += 1
                 variables['wasAtanyIfsElseAddAIndexLoopCurlyFix'] = 0
         variables['out4758686d86dgt8r754444444'] = ""
         variables['hold'] = 0
         items = LoopParseFunc(variables['pyCode'], "\n", "\r")
-        for A_Index30, A_LoopField30 in enumerate(items, start=1):
-            variables['A_Index30'] = A_Index30
-            variables['A_LoopField30'] = A_LoopField30
+        for A_Index31, A_LoopField31 in enumerate(items, start=1):
+            variables['A_Index31'] = A_Index31
+            variables['A_LoopField31'] = A_LoopField31
             variables['ignore'] = 0
-            if (InStr(variables['A_LoopField30'] , "for ")):
-                if (variables['hold'] == 1)and(variables['holdText'] == variables['A_LoopField30']):
+            if (InStr(variables['A_LoopField31'] , "for ")):
+                if (variables['hold'] == 1)and(variables['holdText'] == variables['A_LoopField31']):
                     variables['ignore'] = 1
                 else:
-                    variables['holdText'] = variables['A_LoopField30']
+                    variables['holdText'] = variables['A_LoopField31']
                     variables['hold'] = 1
             if ( not (variables['ignore'])):
-                variables['out4758686d86dgt8r754444444'] += variables['A_LoopField30']  +  "\n"
+                variables['out4758686d86dgt8r754444444'] += variables['A_LoopField31']  +  "\n"
         variables['out4758686d86dgt8r754444444'] = StringTrimRight(variables['out4758686d86dgt8r754444444'], 1)
         variables['pyCode'] = variables['out4758686d86dgt8r754444444']
     variables['pyCode'] = indent_nested_curly_braces(variables['pyCode'])
     variables['pyCodeOut1234565432'] = ""
     items = LoopParseFunc(variables['pyCode'], "\n", "\r")
-    for A_Index31, A_LoopField31 in enumerate(items, start=1):
-        variables['A_Index31'] = A_Index31
-        variables['A_LoopField31'] = A_LoopField31
-        if (Trim(variables['A_LoopField31']) != Chr(123)) and(Trim(variables['A_LoopField31']) != Chr(125)):
-            variables['out'] = variables['A_LoopField31']
+    for A_Index32, A_LoopField32 in enumerate(items, start=1):
+        variables['A_Index32'] = A_Index32
+        variables['A_LoopField32'] = A_LoopField32
+        if (Trim(variables['A_LoopField32']) != Chr(123)) and(Trim(variables['A_LoopField32']) != Chr(125)):
+            variables['out'] = variables['A_LoopField32']
             variables['out'] = StringTrimLeft(variables['out'], 1)
             if (InStr(variables['out'] , "variables['A"  +  Chr(95) +  "Index")) or(InStr(variables['out'] , "variables['A"  +  Chr(95) +  "LoopField")):
                 variables['out'] = StrReplace(variables['out'] , Chr(39) +  Chr(34) +  Chr(93) +  Chr(125) +  Chr(39) +  Chr(93), Chr(34) +  Chr(93) +  Chr(125) +  Chr(39) +  Chr(93))
                 variables['out'] = StrReplace(variables['out'] , Chr(39) +  Chr(39) +  Chr(93), Chr(39) +  Chr(93))
             if ( not (InStr(variables['out'] , "|itsaersdtgtgfergsdgfsegdfsedAA|"))):
-                if (SubStr(Trim(StrLower(variables['A_LoopField31'])) , 1 , 1) != Chr(59)):
-                    if (SubStr(Trim(StrLower(variables['A_LoopField31'])) , 1 , 1)== Chr(124)):
+                if (SubStr(Trim(StrLower(variables['A_LoopField32'])) , 1 , 1) != Chr(59)):
+                    if (SubStr(Trim(StrLower(variables['A_LoopField32'])) , 1 , 1)== Chr(124)):
                         variables['nothing'] = ""
                         variables['out'] = StrReplace(variables['out'] , "|" , variables['nothing'])
                         variables['pyCodeOut1234565432'] += Chr(32) +  Chr(32) +  Chr(32) +  Chr(32) +  variables['out']  +  "\n"
@@ -1130,11 +1143,11 @@ def compiler(HTpyCode):
     variables['funcs_func'] = "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD|SortLikeAHK"
     variables['allFuncsHere'] = ""
     items = LoopParseFunc(variables['funcs_func'], "|")
-    for A_Index32, A_LoopField32 in enumerate(items, start=1):
-        variables['A_Index32'] = A_Index32
-        variables['A_LoopField32'] = A_LoopField32
-        if (InStr(variables['pyCodeFinal'] , variables['A_LoopField32']  +  Chr(40))):
-            variables['hererererehre'] = variables['A_LoopField32']  +  "_func"
+    for A_Index33, A_LoopField33 in enumerate(items, start=1):
+        variables['A_Index33'] = A_Index33
+        variables['A_LoopField33'] = A_LoopField33
+        if (InStr(variables['pyCodeFinal'] , variables['A_LoopField33']  +  Chr(40))):
+            variables['hererererehre'] = variables['A_LoopField33']  +  "_func"
             variables['allFuncsHere'] += variables[f'func_{variables["hererererehre"]}']
     variables['pyCodeFinal'] = variables['allFuncsHere']  +  "\n"  +  variables['pyCodeFinal']  +  "\n"
     if (variables['usedLib'] == ""):
@@ -1148,9 +1161,9 @@ def compiler(HTpyCode):
     variables['pyCode'] = StrReplace(variables['pyCode'] , "\n\n" , "\n")
     if (variables['putEndPointFlask1Up']  != ""):
         variables['pyCode'] = variables['putEndPointFlask1Up']  +  "\n"  +  variables['pyCode']  +  "\n"  +  variables['putEndPointFlask2Down']  +  "\n"
-    for A_Index33 in range(1, variables['theIdNumOfThe34'] + 1):
-        variables['A_Index33'] = A_Index33
-        variables['pyCode'] = StrReplace(variables['pyCode'] , "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-"  +  Chr(65) +  Chr(65) +  str(variables['A_Index33']) +  Chr(65) +  Chr(65), variables[f'theIdNumOfThe34theVar{variables["A_Index33"]}'])
+    for A_Index34 in range(1, variables['theIdNumOfThe34'] + 1):
+        variables['A_Index34'] = A_Index34
+        variables['pyCode'] = StrReplace(variables['pyCode'] , "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-"  +  Chr(65) +  Chr(65) +  str(variables['A_Index34']) +  Chr(65) +  Chr(65), variables[f'theIdNumOfThe34theVar{variables["A_Index34"]}'])
     return variables['pyCode']
 HTpy()
 #;;;;;;;;;;;;;;;;;;;;;;;

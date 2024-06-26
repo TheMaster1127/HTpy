@@ -1,119 +1,118 @@
-; HTpy
-HTpyCode := ""
+
 Gui, Font, s18
 Gui, Show, +websiteMode w%A_ScreenWidth% h%A_ScreenHeight%
-
-if (isMobileDevice())
+if (A_ScreenWidth > A_ScreenHeight)
 {
-WidthOfBoxes := (A_ScreenWidth) - 20
-editBoxX := (A_ScreenWidth - WidthOfBoxes) / 2
-editH1 := A_ScreenHeight - 10
-editBoxY1 := (A_ScreenHeight - editH1) / 2
-editBoxY2 := (A_ScreenHeight / 2) + 65
+Loop
+{
+scale := (100000 - 1920) / A_Index
 
+boardW := 1920 / scale
+boardH := 900 / scale
 
-editH1 := (A_ScreenHeight / 2)
-editH2 := editH1 - 70
+if (boardW >= A_ScreenWidth - 20)
+{
+break
+}
 
-editBoxX := 10
-editBoxX2 := 10
-Gui, Add, IDE, x%editBoxX% y%editBoxY1% w%WidthOfBoxes% h%editH1% gCodeTextEditBox veditBox lautohotkey
-Gui, Add, IDE, x%editBoxX2% y%editBoxY2% w%WidthOfBoxes% h%editH2% vcodeBox gPycodeFuncNOTexists lpython
+if (boardH >= A_ScreenHeight - 20)
+{
+break
+}
+}
 
-
-
-sendButtonX := (A_ScreenWidth - 140) / 2
-sendButtonY := editBoxY2 - 60
-Gui, Add, Button, x%sendButtonX% y%sendButtonY% w140 h40 gButton vButtonID, Transpile
-
-GuiControl, Focus, editBox
-
-oldA_ScreenWidth := A_ScreenWidth
-oldA_ScreenHeight := A_ScreenHeight
 }
 else
 {
-
-WidthOfBoxes := (A_ScreenWidth / 2) - 20
-editBoxX := (A_ScreenWidth - WidthOfBoxes) / 2
-editH1 := A_ScreenHeight - 10
-editBoxY := (A_ScreenHeight - editH1) / 2
-
-editH1 := A_ScreenHeight - 60
-editH2 := editH1
-
-editBoxX := 10
-editBoxX2 := WidthOfBoxes + 25
-Gui, Add, IDE, x%editBoxX% y%editBoxY% w%WidthOfBoxes% h%editH1% gCodeTextEditBox veditBox lautohotkey
-Gui, Add, IDE, x%editBoxX2% y%editBoxY% w%WidthOfBoxes% h%editH2% vcodeBox gPycodeFuncNOTexists lpython
-
-
-sendButtonX := (A_ScreenWidth - 140) / 2
-sendButtonY := (A_ScreenHeight - 40) - 10
-Gui, Add, Button, x%sendButtonX% y%sendButtonY% w140 h40 gButton vButtonID, Transpile
-
-GuiControl, Focus, editBox
-
-oldA_ScreenWidth := A_ScreenWidth
-oldA_ScreenHeight := A_ScreenHeight
-SetTimer, onScreenSizeChange, 100
-}
-gosub, Button
-return HTpyCode
-return
-
-onScreenSizeChange:
-if (oldA_ScreenWidth != A_ScreenWidth) or (oldA_ScreenHeight != A_ScreenHeight)
+Loop
 {
+scale := (100000 - 790) / A_Index
 
-WidthOfBoxes := (A_ScreenWidth / 2) - 20
+boardW := 350 / scale
+boardH := 790 / scale
 
-editBoxX := (A_ScreenWidth - WidthOfBoxes) / 2
-editH1 := A_ScreenHeight - 100
-editBoxY := (A_ScreenHeight - editH1) / 2
+if (boardW >= A_ScreenWidth - 20)
+{
+break
+}
 
-editH1 := A_ScreenHeight - 120
-editH2 := editH1
+if (boardH >= A_ScreenHeight - 20)
+{
+break
+}
+}
 
-editBoxX := 10
-editBoxX2 := WidthOfBoxes + 25
-GuiControl, Move, editBox, x%editBoxX% y%editBoxY% w%WidthOfBoxes% h%editH1%
-GuiControl, Move, codeBox, x%editBoxX2% y%editBoxY% w%WidthOfBoxes% h%editH2%
-eval("Gui1codeBox.readOnly = true;")
+}
+IDEtext := ""
+pyCode := "You need to run some HTpy code first"
 
-sendButtonX := (A_ScreenWidth - 140) / 2
-sendButtonY := (A_ScreenHeight - 40) - 10
-GuiControl, Move, ButtonID, x%sendButtonX% y%sendButtonY% w140 h40
+exclude := 0
+Gui 2: Color, c070707
+Gui 2: Show, h%boardH% W%boardW%
+if (A_ScreenWidth < A_ScreenHeight)
+{
+; its like a phone maybe
 
-GuiControl, Focus, editBox
-oldA_ScreenWidth := A_ScreenWidth
-oldA_ScreenHeight := A_ScreenHeight
+IDEw := boardW - 20
+IDEh := ((boardH - (10 + 55 - 10)) / 2)
+initDisplayText := "MsgBox, hello world"
+IDEtext := initDisplayText
+Gui 2: Add, IDE, x10 y10 w%IDEw% h%IDEh% vIDE1 s13 gIDEtext lautohotkey, %initDisplayText%
+
+EditY := IDEh + 10 + 10
+EditW := boardW - 20
+EditH := ((boardH - (10 + 55 + 30 + 10)) / 2)
+Gui 2: Add, Edit, x10 y%EditY% w%EditW% h%EditH% cffffff bg000000 vEdit1, You will see your output here...
+eval("Gui2Edit1.disabled = true;")
+
+ButtonY := EditY + EditH + 10
+Gui 2: Add, Button, x10 y%ButtonY% w140 h40 gRun, Run
+Gui 2: Add, Button, x160 y%ButtonY% w200 h40 gSeePyCode, See the python output
+
+}
+else
+{
+; its like a computer maybe
+
+IDEw := (boardW - 20) / 2
+IDEh := boardH - (10 + 55)
+initDisplayText := "MsgBox, hello world"
+IDEtext := initDisplayText
+Gui 2: Add, IDE, x10 y10 w%IDEw% h%IDEh% vIDE1 s18 gIDEtext lautohotkey, %initDisplayText%
+
+EditX := IDEw + 20
+EditY := 10
+EditW := (boardW - 40) / 2
+EditH := boardH - (10 + 55)
+Gui 2: Add, Edit, x%EditX% y%EditY% w%EditW% h%EditH% cffffff bg000000 vEdit1, You will see your output here...
+eval("Gui2Edit1.disabled = true;")
+
+ButtonY := EditY + EditH + 10
+Gui 2: Add, Button, x10 y%ButtonY% w140 h40 gRun, Run
+Gui 2: Add, Button, x160 y%ButtonY% w200 h40 gSeePyCode, See the python output
 }
 return
+
+IDEtext:
+IDEtext := A_GuiControl
 Return
 
-CodeTextEditBox:
-HTpyCode := A_GuiControl
+Run:
+nothing := ""
+HTpy := IDEtext
+HTpy := StrReplace(HTpy, Chr(13), nothing)
 
-gosub, Button
-return HTpyCode
+pyCode := compiler(HTpy)
+outCode := runPyCode(pyCode)
+GuiControl 2: Text, Edit1, %outCode%
 Return
 
-PycodeFuncNOTexists:
-
-Return
-
-
-;here;here;here;here;here;here;here;here;here;here;here;here;here;here;here;here
-
-^Enter::
-gosub, Button
-return HTpyCode
-Return
-
-^V::
-gosub, Button
-return HTpyCode
+SeePyCode:
+if (pyCode = "")
+{
+pyCode := "You need to run some HTpy code first"
+}
+GuiControl 2: Text, Edit1, %pyCode%
 Return
 
 
@@ -568,7 +567,8 @@ return outOftranspileVariablesOut
 
 
 ; the compiler
-Button:
+compiler(HTpyCode)
+{
 
 
 func_LoopParseFunc_func := "`ndef LoopParseFunc(var, delimiter1="                   .               Chr(34)                  .             Chr(34)                 .                  ", delimiter2="            .             Chr(34)                .             Chr(34)           .             "):`n    import re`n    if not delimiter1 and not delimiter2:`n        # If no delimiters are provided, return a list of characters`n        items = list(var)`n    else:`n        # Construct the regular expression pattern for splitting the string`n        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'`n`n        # Split the string using the constructed pattern`n        items = re.split(pattern, var)`n`n    return items`n"
@@ -1454,6 +1454,33 @@ out := str123
 lineDone := 1
 pyCode .= out . "`n"
 }
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 1) = Chr(59)) && (lineDone = 0)
+{
+StringTrimLeft, str123, A_LoopField, 1
+
+str123 := "#" . str123
+out := str123
+lineDone := 1
+pyCode .= out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 0) = Chr(41)) && (lineDone = 0)
+{
+str123 := A_LoopField
+FuncNameWhatIsIt := StrSplit(str123, "(", 1)
+
+Loop, Parse, FuncNameWhatIsIt
+{
+StringTrimLeft, str123, str123, 1
+}
+
+outVarTransiled := transpileVariables(str123, functionNames)
+
+
+
+out := FuncNameWhatIsIt . outVarTransiled
+lineDone := 1
+pyCode .= out . "`n"
+}
 else
 {
 ; this is THE else
@@ -2076,10 +2103,9 @@ pyCode := StrReplace(pyCode, "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-" . Chr(
 }
 
 
+return pyCode
 
-GuiControl, textide, codeBox, %pyCode%
-
-Return
+}
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -30,9 +30,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     
+        <script src="https://cdn.jsdelivr.net/npm/brython@3.10.5/brython.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/brython@3.10.5/brython_stdlib.js"></script>
 
   </head>
-  <body>
+  <body onload="brython()">
+        <script type="text/python">
+            import io
+            import sys
+            from browser import document, window
+
+            def runPythonCode(code):
+                try:
+                    # Redirect stdout to capture output
+                    sys.stdout = io.StringIO()
+                    exec(code)
+                    # Get the captured output
+                    output = sys.stdout.getvalue()
+                    # Reset stdout
+                    sys.stdout = sys.__stdout__
+                    return output
+                except Exception as e:
+                    return f"Error: {str(e)}"
+
+            # Expose the runPythonCode function to the browser's window object
+            window.runPythonCode = runPythonCode
+        </script>
+
     <script>
 
       // JavaScript equivalent code with variables
@@ -159,67 +183,10 @@
         }
       }
 
-      function MakeHotKey(hotkey, callback) {
-        document.addEventListener("keydown", function (event) {
-          const keys = hotkey.split("+").map((key) => key.trim().toLowerCase());
-          const modifiers = {
-            ctrl: event.ctrlKey,
-            shift: event.shiftKey,
-            alt: event.altKey,
-          };
-
-          let hotkeyPressed = true;
-          keys.forEach((key) => {
-            if (key === "ctrl" || key === "shift" || key === "alt") {
-              if (!modifiers[key]) {
-                hotkeyPressed = false;
-              }
-            } else if (key === "backspace") {
-              if (event.key !== "Backspace") {
-                hotkeyPressed = false;
-              }
-            } else if (key.startsWith("arrow")) {
-              const arrowDirection = key.replace("arrow", "");
-              if (arrowDirection === "up" && event.key !== "ArrowUp") {
-                hotkeyPressed = false;
-              } else if (arrowDirection === "down" && event.key !== "ArrowDown") {
-                hotkeyPressed = false;
-              } else if (arrowDirection === "left" && event.key !== "ArrowLeft") {
-                hotkeyPressed = false;
-              } else if (arrowDirection === "right" && event.key !== "ArrowRight") {
-                hotkeyPressed = false;
-              }
-            } else if (key === "enter") {
-              if (event.key !== "Enter") {
-                hotkeyPressed = false;
-              }
-            } else if (!event.key.match(/^[0-9a-zA-Z]$/) && event.key !== key) {
-              hotkeyPressed = false;
-            } else if (event.key.toLowerCase() !== key && event.key.match(/^[a-zA-Z]$/)) {
-              hotkeyPressed = false;
-            }
-          });
-
-          if (hotkeyPressed) {
-            if (modifiers["shift"]) {
-              callback(hotkey.toUpperCase());
-            } else {
-              callback(hotkey.toLowerCase());
-            }
-          }
-        });
-      }
-
       // Flooring
       function Floor(num) {
         if (num === null || isNaN(num)) return null;
         return Math.floor(num);
-      }
-
-      // Base-10 logarithm
-      function Log(num) {
-        if (num === null || isNaN(num)) return null;
-        return Math.log10(num);
       }
 
       function Chr(number) {
@@ -300,6 +267,18 @@
         return inputString.replace(/^\s+|\s+$/g, ""); // Removes leading and trailing whitespace
       }
 
+      async function ParseInt(num) {
+        if (num === null) {
+          return null;
+        }
+
+        num = num.trim();
+        num++;
+        num--;
+
+        return num;
+      }
+
       function StrReplace(originalString, find, replaceWith) {
         // Check if originalString is a string
         if (typeof originalString !== "string") {
@@ -337,44 +316,6 @@ function StringTrimRight(input, numChars) {
     return input; // Return original input if trimming is not possible
   }
 }
-
-      function isMobileDevice() {
-        return /Mobi|Android/i.test(navigator.userAgent);
-      }
-
-      // Object to store timer intervals for different functions
-      const timerIntervals = {};
-
-      async function SetTimer(func, timeOrOnOff) {
-        if (typeof func !== "function" || typeof timeOrOnOff === "undefined") {
-          console.error("Invalid arguments. Please provide a valid function and time/On/Off state.");
-          return;
-        }
-
-        if (typeof timeOrOnOff === "number") {
-          // If a number is provided, set the timer to that time in milliseconds and start it.
-          func.interval = timeOrOnOff; // Store the interval within the function
-          func(); // Call the function initially
-          func.intervalId = setInterval(func, timeOrOnOff);
-          timerIntervals[func] = func.intervalId; // Store the interval ID
-        } else if (timeOrOnOff === "On") {
-          // If 'On' is provided, start the timer if it's not already running.
-          if (!func.intervalId && func.interval) {
-            func(); // Call the function initially
-            func.intervalId = setInterval(func, func.interval); // Start with the stored interval
-            timerIntervals[func] = func.intervalId; // Store the interval ID
-          } else {
-            console.error("Timer is not set. Please provide a valid interval.");
-          }
-        } else if (timeOrOnOff === "Off") {
-          // If 'Off' is provided, clear the timer if it's running.
-          clearInterval(func.intervalId);
-          func.intervalId = null;
-          delete timerIntervals[func]; // Remove the interval ID from storage
-        } else {
-          console.error("Invalid time/On/Off state. Please provide a valid time in milliseconds or 'On'/'Off'.");
-        }
-      }
 
       function GuiControl(action, id, param1, param2, param3, param4) {
         const element = document.getElementById(id);
@@ -496,8 +437,15 @@ function StrSplit(inputStr, delimiter, num) {
       }
 
 function SortLikeAHK(varName, options = "") {
-    // Split the input variable by newline or comma depending on options
-    let items = options.includes('D') ? varName.split(',') : varName.split(/\r?\n/);
+    let delimiter = '\n'; // Default delimiter
+    let delimiterIndex = options.indexOf('D');
+
+    if (delimiterIndex !== -1) {
+        let delimiterChar = options[delimiterIndex + 1];
+        delimiter = delimiterChar === '' ? ',' : delimiterChar;
+    }
+
+    let items = varName.split(new RegExp(delimiter === ',' ? ',' : '\\' + delimiter));
 
     // Remove empty items and trim whitespace
     items = items.filter(item => item.trim() !== '');
@@ -542,7 +490,7 @@ function SortLikeAHK(varName, options = "") {
     }
 
     // Join the sorted items back into a string
-    const sortedVar = options.includes('D') ? items.join(',') : items.join('\n');
+    const sortedVar = items.join(delimiter === ',' ? ',' : '\n');
 
     return sortedVar;
 }
@@ -752,6 +700,19 @@ function SortLikeAHK(varName, options = "") {
         });
       }
 
+        async function runPyCode(code) {
+            return new Promise((resolve, reject) => {
+                const checkReady = () => {
+                    if (window.runPythonCode) {
+                        resolve(window.runPythonCode(code));
+                    } else {
+                        setTimeout(checkReady, 100);
+                    }
+                };
+                checkReady();
+            });
+        }
+
       // Single async function to structure the entire script
       async function runScript() {
         // Declare and assign a variable
@@ -769,7 +730,9 @@ let variables = {
   ALoopFieldd: null,
   areWEinSome34sNum: null,
   awesdrtf: null,
-  Button: null,
+  boardH: null,
+  boardW: null,
+  ButtonY: null,
   char: null,
   characters: null,
   CheckIFandElsesss1: null,
@@ -782,19 +745,18 @@ let variables = {
   CheckIFandElsesss8: null,
   CheckIFandElsesssNum: null,
   CheckIFandElsesssNumNum: null,
+  compiler: null,
   current_indent: null,
   DeleayOneCuzOfLoopParse: null,
   dontSaveStr: null,
   eavbnsalvbaslv: null,
-  editBoxX2: null,
-  editBoxX: null,
-  editBoxY1: null,
-  editBoxY2: null,
-  editBoxY: null,
-  editH1: null,
-  editH2: null,
+  EditH: null,
+  EditW: null,
+  EditX: null,
+  EditY: null,
   eldLoopNestedBADlol: null,
   endBracketDOntPutThere: null,
+  exclude: null,
   fileAppendCommand1varname: null,
   fileAppendCommand2path: null,
   fileDeleteCommand2path: null,
@@ -828,24 +790,29 @@ let variables = {
   func_StrSplit_func: null,
   func_SubStr_func: null,
   func_Trim_func: null,
+  FuncNameWhatIsIt: null,
   funcs_func: null,
   functionNames: null,
   funcToChecIfVaidNameForFunc: null,
   gg: null,
-  GuiControl: null,
   haveWeEverUsedAloop: null,
   hererererehre: null,
   hold: null,
   holdText: null,
   howManyCharIfVar2: null,
   howManyCharIfVar: null,
+  HTpy: null,
   HTpyCode: null,
   HTpyCodeD1: null,
   HTpyCodeOUT754754: null,
+  IDEh: null,
+  IDEtext: null,
+  IDEw: null,
   ifTheLineIsAFuncDec: null,
   ignore: null,
   indent_nested_curly_braces: null,
   indent_size: null,
+  initDisplayText: null,
   input_string: null,
   insdeAnestedLoopBAD: null,
   insideBracket1: null,
@@ -870,20 +837,20 @@ let variables = {
   nothing: null,
   numOfChars: null,
   numOfStrings: null,
-  oldA_ScreenHeight: null,
-  oldA_ScreenWidth: null,
   onceImportTime: null,
   out1: null,
   out1z: null,
   out2: null,
   out4758686d86dgt8r754444444: null,
   out: null,
+  outCode: null,
   outOftranspileVariables: null,
   outOftranspileVariablesOut: null,
   outt1: null,
   outt2: null,
   outt3: null,
   OUTvarMsgLow: null,
+  outVarTransiled: null,
   putEndPointFlask1Up: null,
   putEndPointFlask2Down: null,
   pyCode: null,
@@ -898,8 +865,7 @@ let variables = {
   RepeatSpaces: null,
   result: null,
   s: null,
-  sendButtonX: null,
-  sendButtonY: null,
+  scale: null,
   skipLeftCuleyForFuncPLS: null,
   spaces: null,
   sstr: null,
@@ -947,7 +913,6 @@ let variables = {
   weHaveAcommaFixSortCommand: null,
   weUseRandomAtLeastOnce: null,
   whatVarWeUse: null,
-  WidthOfBoxes: null,
   willNextLineBeCurlyBracee: null,
 };
 
@@ -960,22 +925,14 @@ let funcs = {
   funcToChecIfVaidNameForFunc: funcToChecIfVaidNameForFunc,
   transpileVariables: transpileVariables,
   transpileLowVariables: transpileLowVariables,
+  compiler: compiler,
 }
 
 let Gui1 = {};
 Gui1 = document.createElement("div");
 
-MakeHotKey("Ctrl+Enter", function(hotkey) {
-HotKeyCalledCtrlEnter()
-});
-
-MakeHotKey("Ctrl+V", function(hotkey) {
-HotKeyCalledCtrlV()
-});
-
-// HTpy
-
-variables.HTpyCode =  ""
+let Gui2 = {};
+Gui2 = document.createElement("div");
 
 Gui1.style.position = "absolute";
 Gui1.style.width = window.innerWidth + "px"; // Set the width
@@ -996,63 +953,37 @@ document.documentElement.setAttribute("style", "padding: 0; margin: 0;")
 document.head.setAttribute("style", "padding: 0; margin: 0;")
 document.body.setAttribute("style", "overflow-x: hidden;padding: 0; margin: 0;")
 
-if ( await isMobileDevice ( ) )
+if ( BuildInVars("A_ScreenWidth") > BuildInVars("A_ScreenHeight") )
 
 {
 
-variables.WidthOfBoxes =   ( BuildInVars("A_ScreenWidth") )  - 20;
+for (/* Normal Loop */ variables.A_Index1 = 1; ; variables.A_Index1++)
 
-variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes )  / 2;
+{
 
-variables.editH1 =  BuildInVars("A_ScreenHeight") - 10;
+variables.scale =   ( 100000 - 1920 )  / variables.A_Index1;
 
-variables.editBoxY1 =   ( BuildInVars("A_ScreenHeight") - variables.editH1 )  / 2;
+variables.boardW =  1920 / variables.scale;
 
-variables.editBoxY2 =   ( BuildInVars("A_ScreenHeight") / 2 )  + 65;
+variables.boardH =  900 / variables.scale;
 
-variables.editH1 =   ( BuildInVars("A_ScreenHeight") / 2 )
+if ( variables.boardW >= BuildInVars("A_ScreenWidth") - 20 )
 
-variables.editH2 =  variables.editH1 - 70;
+{
 
-variables.editBoxX =  10;
+break
 
-variables.editBoxX2 =  10;
+}
 
-AddIDE(Gui1, variables.editBoxX, variables.editBoxY1, variables.WidthOfBoxes, variables.editH1, "Gui1editBox", 18, "autohotkey", CodeTextEditBox,    null    )
+if ( variables.boardH >= BuildInVars("A_ScreenHeight") - 20 )
 
-AddIDE(Gui1, variables.editBoxX2, variables.editBoxY2, variables.WidthOfBoxes, variables.editH2, "Gui1codeBox", 18, "python", PycodeFuncNOTexists,    null    )
+{
 
-variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
+break
 
-variables.sendButtonY =  variables.editBoxY2 - 60;
+}
 
-Gui1ButtonID = document.createElement("button")
-Gui1ButtonID.id = "Gui1" + "ButtonID"; // Set ID for referencing
-Gui1ButtonID.textContent = "Transpile";
-Gui1ButtonID.style.fontSize = "18px"; // Set font size
-Gui1ButtonID.style.position = "absolute"; // Set position to absolute
-Gui1ButtonID.style.left = "" + variables.sendButtonX + "px"; // Set initial x position
-Gui1ButtonID.style.top = "" + variables.sendButtonY + "px"; // Set initial y position
-Gui1ButtonID.style.width = "140px"; // Set width
-Gui1ButtonID.style.height = "40px"; // Set height
-Gui1ButtonID.style.cursor = "pointer"; // Change cursor on hover
-Gui1ButtonID.style.border = "";
-Gui1ButtonID.style.background = "";
-Gui1ButtonID.style.backgroundColor = "";
-Gui1ButtonID.style.borderRadius = "";
-Gui1ButtonID.style.color = "";
-Gui1ButtonID.style.fontFamily = ", sans-serif"; // Specify your desired font here
-Gui1ButtonID.onclick = function (event) {
-A_GuiControl = event.target.id.replace(/^Gui\d*/, "")
-Button(A_GuiControl)
-};
-Gui1.appendChild(Gui1ButtonID)
-
-GuiControl("focus", "Gui1editBox")
-
-variables.oldA_ScreenWidth =  BuildInVars("A_ScreenWidth");
-
-variables.oldA_ScreenHeight =  BuildInVars("A_ScreenHeight");
+}
 
 }
 
@@ -1060,150 +991,282 @@ else
 
 {
 
-variables.WidthOfBoxes =   ( BuildInVars("A_ScreenWidth") / 2 )  - 20;
+for (/* Normal Loop */ variables.A_Index2 = 1; ; variables.A_Index2++)
 
-variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes )  / 2;
+{
 
-variables.editH1 =  BuildInVars("A_ScreenHeight") - 10;
+variables.scale =   ( 100000 - 790 )  / variables.A_Index2;
 
-variables.editBoxY =   ( BuildInVars("A_ScreenHeight") - variables.editH1 )  / 2;
+variables.boardW =  350 / variables.scale;
 
-variables.editH1 =  BuildInVars("A_ScreenHeight") - 60;
+variables.boardH =  790 / variables.scale;
 
-variables.editH2 =  variables.editH1;
+if ( variables.boardW >= BuildInVars("A_ScreenWidth") - 20 )
 
-variables.editBoxX =  10;
+{
 
-variables.editBoxX2 =  variables.WidthOfBoxes + 25;
+break
 
-AddIDE(Gui1, variables.editBoxX, variables.editBoxY, variables.WidthOfBoxes, variables.editH1, "Gui1editBox", 18, "autohotkey", CodeTextEditBox,    null    )
+}
 
-AddIDE(Gui1, variables.editBoxX2, variables.editBoxY, variables.WidthOfBoxes, variables.editH2, "Gui1codeBox", 18, "python", PycodeFuncNOTexists,    null    )
+if ( variables.boardH >= BuildInVars("A_ScreenHeight") - 20 )
 
-variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
+{
 
-variables.sendButtonY =   ( BuildInVars("A_ScreenHeight") - 40 )  - 10;
+break
 
-Gui1ButtonID = document.createElement("button")
-Gui1ButtonID.id = "Gui1" + "ButtonID"; // Set ID for referencing
-Gui1ButtonID.textContent = "Transpile";
-Gui1ButtonID.style.fontSize = "18px"; // Set font size
-Gui1ButtonID.style.position = "absolute"; // Set position to absolute
-Gui1ButtonID.style.left = "" + variables.sendButtonX + "px"; // Set initial x position
-Gui1ButtonID.style.top = "" + variables.sendButtonY + "px"; // Set initial y position
-Gui1ButtonID.style.width = "140px"; // Set width
-Gui1ButtonID.style.height = "40px"; // Set height
-Gui1ButtonID.style.cursor = "pointer"; // Change cursor on hover
-Gui1ButtonID.style.border = "";
-Gui1ButtonID.style.background = "";
-Gui1ButtonID.style.backgroundColor = "";
-Gui1ButtonID.style.borderRadius = "";
-Gui1ButtonID.style.color = "";
-Gui1ButtonID.style.fontFamily = ", sans-serif"; // Specify your desired font here
-Gui1ButtonID.onclick = function (event) {
-A_GuiControl = event.target.id.replace(/^Gui\d*/, "")
-Button(A_GuiControl)
+}
+
+}
+
+}
+
+variables.IDEtext =  ""
+
+variables.pyCode =  "You need to run some HTpy code first";
+
+variables.exclude =  0;
+
+Gui2.style.position = "absolute";
+Gui2.style.width = "" + variables.boardW + "px"; // Set the width
+Gui2.style.height = "" + variables.boardH + "px"; // Set the height
+Gui2.style.background = "" + "#070707" + "";
+Gui2.style.backgroundColor = "" + "#070707" + "";
+Gui2.style.color = "white";
+Gui2.style.fontSize = "15px";
+Gui2.style.borderRadius = "0px";
+Gui2.style.padding = "0px";
+Gui2.style.border = "2px solid white";
+Gui2.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui2.style.zIndex = "200";
+
+// Calculate center position
+Gui2.style.left = (window.innerWidth - parseInt(Gui2.style.width)) / 2 + "px";
+Gui2.style.top = (window.innerHeight - parseInt(Gui2.style.height)) / 2 + "px";
+
+document.body.appendChild(Gui2) // Append the GUI window to the body
+Gui2.style.display = "block";
+
+if ( BuildInVars("A_ScreenWidth") < BuildInVars("A_ScreenHeight") )
+
+{
+
+// its like a phone maybe
+
+variables.IDEw =  variables.boardW - 20;
+
+variables.IDEh =   (  ( variables.boardH -  ( 10 + 55 - 10 )  )  / 2 )
+
+variables.initDisplayText =  "MsgBox, hello world";
+
+variables.IDEtext =  variables.initDisplayText;
+
+AddIDE(Gui2, 10, 10, variables.IDEw, variables.IDEh, "Gui2IDE1", 13, "autohotkey", IDEtext,    variables.initDisplayText    )
+
+variables.EditY =  variables.IDEh + 10 + 10;
+
+variables.EditW =  variables.boardW - 20;
+
+variables.EditH =   (  ( variables.boardH -  ( 10 + 55 + 30 + 10 )  )  / 2 )
+
+Gui2Edit1 = document.createElement("textarea")
+Gui2Edit1.id = "Gui2" + "Edit1"; // Set ID for referencing
+Gui2Edit1.placeholder = "You will see your output here...";
+Gui2Edit1.style.fontSize = "18px"; // Set font size
+Gui2Edit1.style.resize = "none"; // Disable resizing
+Gui2Edit1.style.position = "absolute"; // Set position to absolute
+Gui2Edit1.style.left = "10px"; // Set initial x position
+Gui2Edit1.style.top = "" + variables.EditY + "px"; // Set initial y position
+Gui2Edit1.style.width = "" + variables.EditW + "px"; // Set width
+Gui2Edit1.style.height = "" + variables.EditH + "px"; // Set height
+Gui2Edit1.style.border = ""
+Gui2Edit1.style.color = "#ffffff"
+Gui2Edit1.style.background = ""
+Gui2Edit1.style.backgroundColor = "#000000"
+Gui2Edit1.style.borderRadius = ""
+Gui2Edit1.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui2.appendChild(Gui2Edit1)
+
+eval("Gui2Edit1.disabled = true;")
+
+variables.ButtonY =  variables.EditY + variables.EditH + 10;
+
+Gui2Button1 = document.createElement("button")
+Gui2Button1.id = "Gui2" + "Button" + "1"; // Set ID for referencing
+Gui2Button1.textContent = "Run";
+Gui2Button1.style.fontSize = "18px"; // Set font size
+Gui2Button1.style.position = "absolute"; // Set position to absolute
+Gui2Button1.style.left = "10px"; // Set initial x position
+Gui2Button1.style.top = "" + variables.ButtonY + "px"; // Set initial y position
+Gui2Button1.style.width = "140px"; // Set width
+Gui2Button1.style.height = "40px"; // Set height
+Gui2Button1.style.cursor = "pointer"; // Change cursor on hover
+Gui2Button1.style.border = "";
+Gui2Button1.style.background = "";
+Gui2Button1.style.backgroundColor = "";
+Gui2Button1.style.borderRadius = "";
+Gui2Button1.style.color = "";
+Gui2Button1.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui2Button1.onclick = function (event) {
+A_GuiControl = event.target.textContent
+Run(A_GuiControl)
 };
-Gui1.appendChild(Gui1ButtonID)
+Gui2.appendChild(Gui2Button1)
 
-GuiControl("focus", "Gui1editBox")
-
-variables.oldA_ScreenWidth =  BuildInVars("A_ScreenWidth");
-
-variables.oldA_ScreenHeight =  BuildInVars("A_ScreenHeight");
-
-SetTimer(onScreenSizeChange, 100)
+Gui2Button2 = document.createElement("button")
+Gui2Button2.id = "Gui2" + "Button" + "2"; // Set ID for referencing
+Gui2Button2.textContent = "See the python output";
+Gui2Button2.style.fontSize = "18px"; // Set font size
+Gui2Button2.style.position = "absolute"; // Set position to absolute
+Gui2Button2.style.left = "160px"; // Set initial x position
+Gui2Button2.style.top = "" + variables.ButtonY + "px"; // Set initial y position
+Gui2Button2.style.width = "200px"; // Set width
+Gui2Button2.style.height = "40px"; // Set height
+Gui2Button2.style.cursor = "pointer"; // Change cursor on hover
+Gui2Button2.style.border = "";
+Gui2Button2.style.background = "";
+Gui2Button2.style.backgroundColor = "";
+Gui2Button2.style.borderRadius = "";
+Gui2Button2.style.color = "";
+Gui2Button2.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui2Button2.onclick = function (event) {
+A_GuiControl = event.target.textContent
+SeePyCode(A_GuiControl)
+};
+Gui2.appendChild(Gui2Button2)
 
 }
 
-await Button()
+else
 
-return variables.HTpyCode
+{
+
+// its like a computer maybe
+
+variables.IDEw =   ( variables.boardW - 20 )  / 2;
+
+variables.IDEh =  variables.boardH -  ( 10 + 55 )
+
+variables.initDisplayText =  "MsgBox, hello world";
+
+variables.IDEtext =  variables.initDisplayText;
+
+AddIDE(Gui2, 10, 10, variables.IDEw, variables.IDEh, "Gui2IDE1", 18, "autohotkey", IDEtext,    variables.initDisplayText    )
+
+variables.EditX =  variables.IDEw + 20;
+
+variables.EditY =  10;
+
+variables.EditW =   ( variables.boardW - 40 )  / 2;
+
+variables.EditH =  variables.boardH -  ( 10 + 55 )
+
+Gui2Edit1 = document.createElement("textarea")
+Gui2Edit1.id = "Gui2" + "Edit1"; // Set ID for referencing
+Gui2Edit1.placeholder = "You will see your output here...";
+Gui2Edit1.style.fontSize = "18px"; // Set font size
+Gui2Edit1.style.resize = "none"; // Disable resizing
+Gui2Edit1.style.position = "absolute"; // Set position to absolute
+Gui2Edit1.style.left = "" + variables.EditX + "px"; // Set initial x position
+Gui2Edit1.style.top = "" + variables.EditY + "px"; // Set initial y position
+Gui2Edit1.style.width = "" + variables.EditW + "px"; // Set width
+Gui2Edit1.style.height = "" + variables.EditH + "px"; // Set height
+Gui2Edit1.style.border = ""
+Gui2Edit1.style.color = "#ffffff"
+Gui2Edit1.style.background = ""
+Gui2Edit1.style.backgroundColor = "#000000"
+Gui2Edit1.style.borderRadius = ""
+Gui2Edit1.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui2.appendChild(Gui2Edit1)
+
+eval("Gui2Edit1.disabled = true;")
+
+variables.ButtonY =  variables.EditY + variables.EditH + 10;
+
+Gui2Button3 = document.createElement("button")
+Gui2Button3.id = "Gui2" + "Button" + "3"; // Set ID for referencing
+Gui2Button3.textContent = "Run";
+Gui2Button3.style.fontSize = "18px"; // Set font size
+Gui2Button3.style.position = "absolute"; // Set position to absolute
+Gui2Button3.style.left = "10px"; // Set initial x position
+Gui2Button3.style.top = "" + variables.ButtonY + "px"; // Set initial y position
+Gui2Button3.style.width = "140px"; // Set width
+Gui2Button3.style.height = "40px"; // Set height
+Gui2Button3.style.cursor = "pointer"; // Change cursor on hover
+Gui2Button3.style.border = "";
+Gui2Button3.style.background = "";
+Gui2Button3.style.backgroundColor = "";
+Gui2Button3.style.borderRadius = "";
+Gui2Button3.style.color = "";
+Gui2Button3.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui2Button3.onclick = function (event) {
+A_GuiControl = event.target.textContent
+Run(A_GuiControl)
+};
+Gui2.appendChild(Gui2Button3)
+
+Gui2Button4 = document.createElement("button")
+Gui2Button4.id = "Gui2" + "Button" + "4"; // Set ID for referencing
+Gui2Button4.textContent = "See the python output";
+Gui2Button4.style.fontSize = "18px"; // Set font size
+Gui2Button4.style.position = "absolute"; // Set position to absolute
+Gui2Button4.style.left = "160px"; // Set initial x position
+Gui2Button4.style.top = "" + variables.ButtonY + "px"; // Set initial y position
+Gui2Button4.style.width = "200px"; // Set width
+Gui2Button4.style.height = "40px"; // Set height
+Gui2Button4.style.cursor = "pointer"; // Change cursor on hover
+Gui2Button4.style.border = "";
+Gui2Button4.style.background = "";
+Gui2Button4.style.backgroundColor = "";
+Gui2Button4.style.borderRadius = "";
+Gui2Button4.style.color = "";
+Gui2Button4.style.fontFamily = ", sans-serif"; // Specify your desired font here
+Gui2Button4.onclick = function (event) {
+A_GuiControl = event.target.textContent
+SeePyCode(A_GuiControl)
+};
+Gui2.appendChild(Gui2Button4)
+
+}
 
 return
 
-async function onScreenSizeChange(A_GuiControl)
+async function IDEtext(A_GuiControl)
 {
 
-if ( variables.oldA_ScreenWidth !== BuildInVars("A_ScreenWidth")  ||  variables.oldA_ScreenHeight !== BuildInVars("A_ScreenHeight") )
-
-{
-
-variables.WidthOfBoxes =   ( BuildInVars("A_ScreenWidth") / 2 )  - 20;
-
-variables.editBoxX =   ( BuildInVars("A_ScreenWidth") - variables.WidthOfBoxes )  / 2;
-
-variables.editH1 =  BuildInVars("A_ScreenHeight") - 100;
-
-variables.editBoxY =   ( BuildInVars("A_ScreenHeight") - variables.editH1 )  / 2;
-
-variables.editH1 =  BuildInVars("A_ScreenHeight") - 120;
-
-variables.editH2 =  variables.editH1;
-
-variables.editBoxX =  10;
-
-variables.editBoxX2 =  variables.WidthOfBoxes + 25;
-
-GuiControl("move", "Gui1editBox", variables.editBoxX, variables.editBoxY, variables.WidthOfBoxes, variables.editH1)
-
-GuiControl("move", "Gui1codeBox", variables.editBoxX2, variables.editBoxY, variables.WidthOfBoxes, variables.editH2)
-
-eval("Gui1codeBox.readOnly = true;")
-
-variables.sendButtonX =   ( BuildInVars("A_ScreenWidth") - 140 )  / 2;
-
-variables.sendButtonY =   ( BuildInVars("A_ScreenHeight") - 40 )  - 10;
-
-GuiControl("move", "Gui1ButtonID", variables.sendButtonX, variables.sendButtonY, 140, 40)
-
-GuiControl("focus", "Gui1editBox")
-
-variables.oldA_ScreenWidth =  BuildInVars("A_ScreenWidth");
-
-variables.oldA_ScreenHeight =  BuildInVars("A_ScreenHeight");
+variables.IDEtext =  A_GuiControl;
 
 }
 
-return
+async function Run(A_GuiControl)
+{
+
+variables.nothing =  ""
+
+variables.HTpy =  variables.IDEtext;
+
+variables.HTpy =  StrReplace( variables.HTpy, String.fromCharCode( 13 ) , variables.nothing )
+
+variables.pyCode =  await compiler ( variables.HTpy )
+
+variables.outCode =  await runPyCode ( variables.pyCode )
+
+GuiControl("text", "Gui2Edit1", variables.outCode)
 
 }
 
-async function CodeTextEditBox(A_GuiControl)
+async function SeePyCode(A_GuiControl)
 {
 
-variables.HTpyCode =  A_GuiControl;
+if ( variables.pyCode == "" )
 
-await Button()
+{
 
-return variables.HTpyCode
+variables.pyCode =  "You need to run some HTpy code first";
 
 }
 
-async function PycodeFuncNOTexists(A_GuiControl)
-{
-
-}
-
-//here;here;here;here;here;here;here;here;here;here;here;here;here;here;here;here
-
-async function HotKeyCalledCtrlEnter()
-{
-// console.log("HotKeyCalled CtrlEnter")
-
-await Button()
-
-return variables.HTpyCode
-
-}
-
-async function HotKeyCalledCtrlV()
-{
-// console.log("HotKeyCalled CtrlV")
-
-await Button()
-
-return variables.HTpyCode
+GuiControl("text", "Gui2Edit1", variables.pyCode)
 
 }
 
@@ -1222,13 +1285,13 @@ variables.result =  ""
 
 variables.input_string =  variables.input_string;
 
-variables.characters1 = variables.input_string.split(/[\n\r]/)
-variables.charLength1 = variables.characters1.length
+variables.characters3 = variables.input_string.split(/[\n\r]/)
+variables.charLength3 = variables.characters3.length
 
-for (/* Loop parse */ variables.A_Index1 = 1; variables.A_Index1 <= variables.charLength1; variables.A_Index1++) {
-variables.A_LoopField1 = variables.characters1[variables.A_Index1 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index3 = 1; variables.A_Index3 <= variables.charLength3; variables.A_Index3++) {
+variables.A_LoopField3 = variables.characters3[variables.A_Index3 - 1]; // Using array notation to access characters
 
-variables.trimmed_line =  Trim( variables.A_LoopField1 )
+variables.trimmed_line =  Trim( variables.A_LoopField3 )
 
 if ( variables.trimmed_line == String.fromCharCode( 123 ) )
 
@@ -1273,7 +1336,7 @@ variables.count = count
 
 variables.spaces =  ""
 
-for (/* Normal Loop */ variables.A_Index2 = 1; variables.A_Index2 <= variables.count; variables.A_Index2++)
+for (/* Normal Loop */ variables.A_Index4 = 1; variables.A_Index4 <= variables.count; variables.A_Index4++)
 
 {
 
@@ -1292,25 +1355,25 @@ variables.strgjvkh = strgjvkh
 
 variables.theFuncWeFound = theFuncWeFound
 
-variables.characters3 = variables.theFuncWeFound.split(/[\n\r]/)
-variables.charLength3 = variables.characters3.length
+variables.characters5 = variables.theFuncWeFound.split(/[\n\r]/)
+variables.charLength5 = variables.characters5.length
 
-for (/* Loop parse */ variables.A_Index3 = 1; variables.A_Index3 <= variables.charLength3; variables.A_Index3++) {
-variables.A_LoopField3 = variables.characters3[variables.A_Index3 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index5 = 1; variables.A_Index5 <= variables.charLength5; variables.A_Index5++) {
+variables.A_LoopField5 = variables.characters5[variables.A_Index5 - 1]; // Using array notation to access characters
 
 variables.numOfChars =  0;
 
-variables.characters4 = variables.A_LoopField3.split("")
-variables.charLength4 = variables.characters4.length
+variables.characters6 = variables.A_LoopField5.split("")
+variables.charLength6 = variables.characters6.length
 
-for (/* Loop parse */ variables.A_Index4 = 1; variables.A_Index4 <= variables.charLength4; variables.A_Index4++) {
-variables.A_LoopField4 = variables.characters4[variables.A_Index4 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index6 = 1; variables.A_Index6 <= variables.charLength6; variables.A_Index6++) {
+variables.A_LoopField6 = variables.characters6[variables.A_Index6 - 1]; // Using array notation to access characters
 
 variables.numOfChars++
 
 }
 
-variables.ALoopFieldd =  await StrSplit ( variables.A_LoopField3, String.fromCharCode( 40 ) , 1 )
+variables.ALoopFieldd =  await StrSplit ( variables.A_LoopField5, String.fromCharCode( 40 ) , 1 )
 
 variables.ALoopFieldd2 =  await StrSplit ( variables.strgjvkh, String.fromCharCode( 40 ) , 1 )
 
@@ -1335,7 +1398,7 @@ variables.strrrrr = strrrrr
 
 variables.strLettersStart =  48;
 
-for (/* Normal Loop */ variables.A_Index5 = 1; variables.A_Index5 <= 10; variables.A_Index5++)
+for (/* Normal Loop */ variables.A_Index7 = 1; variables.A_Index7 <= 10; variables.A_Index7++)
 
 {
 
@@ -1370,7 +1433,7 @@ variables.strrrrr = strrrrr
 
 variables.strLettersStart =  97;
 
-for (/* Normal Loop */ variables.A_Index6 = 1; variables.A_Index6 <= 26; variables.A_Index6++)
+for (/* Normal Loop */ variables.A_Index8 = 1; variables.A_Index8 <= 26; variables.A_Index8++)
 
 {
 
@@ -1388,7 +1451,7 @@ variables.strLettersStart++
 
 variables.strLettersStart =  65;
 
-for (/* Normal Loop */ variables.A_Index7 = 1; variables.A_Index7 <= 26; variables.A_Index7++)
+for (/* Normal Loop */ variables.A_Index9 = 1; variables.A_Index9 <= 26; variables.A_Index9++)
 
 {
 
@@ -1406,7 +1469,7 @@ variables.strLettersStart++
 
 variables.strLettersStart =  48;
 
-for (/* Normal Loop */ variables.A_Index8 = 1; variables.A_Index8 <= 10; variables.A_Index8++)
+for (/* Normal Loop */ variables.A_Index10 = 1; variables.A_Index10 <= 10; variables.A_Index10++)
 
 {
 
@@ -1479,15 +1542,15 @@ variables.isValid =  true;
 
 // Loop through each character in the string using Loop, Parse
 
-variables.characters9 = variables.strrrrr.split("")
-variables.charLength9 = variables.characters9.length
+variables.characters11 = variables.strrrrr.split("")
+variables.charLength11 = variables.characters11.length
 
-for (/* Loop parse */ variables.A_Index9 = 1; variables.A_Index9 <= variables.charLength9; variables.A_Index9++) {
-variables.A_LoopField9 = variables.characters9[variables.A_Index9 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index11 = 1; variables.A_Index11 <= variables.charLength11; variables.A_Index11++) {
+variables.A_LoopField11 = variables.characters11[variables.A_Index11 - 1]; // Using array notation to access characters
 
 // Check the current parsed item (character)
 
-variables.char =  variables.A_LoopField9;
+variables.char =  variables.A_LoopField11;
 
 // Check if the character is a valid letter, digit, or underscore
 
@@ -1542,21 +1605,21 @@ variables.outOftranspileVariablesOut =  StrReplace( variables.outOftranspileVari
 
 variables.wasHereVarTryUhBug =  1;
 
-variables.characters10 = variables.outOftranspileVariablesOut.split(/[" "]/)
-variables.charLength10 = variables.characters10.length
+variables.characters12 = variables.outOftranspileVariablesOut.split(/[" "]/)
+variables.charLength12 = variables.characters12.length
 
-for (/* Loop parse */ variables.A_Index10 = 1; variables.A_Index10 <= variables.charLength10; variables.A_Index10++) {
-variables.A_LoopField10 = variables.characters10[variables.A_Index10 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index12 = 1; variables.A_Index12 <= variables.charLength12; variables.A_Index12++) {
+variables.A_LoopField12 = variables.characters12[variables.A_Index12 - 1]; // Using array notation to access characters
 
 variables.howManyCharIfVar =  0;
 
-variables.characters11 = variables.A_LoopField10.split("")
-variables.charLength11 = variables.characters11.length
+variables.characters13 = variables.A_LoopField12.split("")
+variables.charLength13 = variables.characters13.length
 
-for (/* Loop parse */ variables.A_Index11 = 1; variables.A_Index11 <= variables.charLength11; variables.A_Index11++) {
-variables.A_LoopField11 = variables.characters11[variables.A_Index11 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index13 = 1; variables.A_Index13 <= variables.charLength13; variables.A_Index13++) {
+variables.A_LoopField13 = variables.characters13[variables.A_Index13 - 1]; // Using array notation to access characters
 
-if ( await varDetect ( variables.A_LoopField11 ) )
+if ( await varDetect ( variables.A_LoopField13 ) )
 
 {
 
@@ -1568,11 +1631,11 @@ variables.howManyCharIfVar++
 
 variables.howManyCharIfVar2 =  0;
 
-variables.characters12 = variables.A_LoopField10.split("")
-variables.charLength12 = variables.characters12.length
+variables.characters14 = variables.A_LoopField12.split("")
+variables.charLength14 = variables.characters14.length
 
-for (/* Loop parse */ variables.A_Index12 = 1; variables.A_Index12 <= variables.charLength12; variables.A_Index12++) {
-variables.A_LoopField12 = variables.characters12[variables.A_Index12 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index14 = 1; variables.A_Index14 <= variables.charLength14; variables.A_Index14++) {
+variables.A_LoopField14 = variables.characters14[variables.A_Index14 - 1]; // Using array notation to access characters
 
 variables.howManyCharIfVar2++
 
@@ -1594,13 +1657,13 @@ if ( variables.istAvar == 1 )
 
 variables.howManyCharIfVar =  0;
 
-variables.characters13 = variables.A_LoopField10.split("")
-variables.charLength13 = variables.characters13.length
+variables.characters15 = variables.A_LoopField12.split("")
+variables.charLength15 = variables.characters15.length
 
-for (/* Loop parse */ variables.A_Index13 = 1; variables.A_Index13 <= variables.charLength13; variables.A_Index13++) {
-variables.A_LoopField13 = variables.characters13[variables.A_Index13 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index15 = 1; variables.A_Index15 <= variables.charLength15; variables.A_Index15++) {
+variables.A_LoopField15 = variables.characters15[variables.A_Index15 - 1]; // Using array notation to access characters
 
-if ( await isVarAnumKindaVar ( variables.A_LoopField13 ) )
+if ( await isVarAnumKindaVar ( variables.A_LoopField15 ) )
 
 {
 
@@ -1612,11 +1675,11 @@ variables.howManyCharIfVar++
 
 variables.howManyCharIfVar2 =  0;
 
-variables.characters14 = variables.A_LoopField10.split("")
-variables.charLength14 = variables.characters14.length
+variables.characters16 = variables.A_LoopField12.split("")
+variables.charLength16 = variables.characters16.length
 
-for (/* Loop parse */ variables.A_Index14 = 1; variables.A_Index14 <= variables.charLength14; variables.A_Index14++) {
-variables.A_LoopField14 = variables.characters14[variables.A_Index14 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index16 = 1; variables.A_Index16 <= variables.charLength16; variables.A_Index16++) {
+variables.A_LoopField16 = variables.characters16[variables.A_Index16 - 1]; // Using array notation to access characters
 
 variables.howManyCharIfVar2++
 
@@ -1636,7 +1699,7 @@ if ( variables.isNumKindaVar == 1 )
 
 {
 
-variables.outOftranspileVariables +=  variables.A_LoopField10 + String.fromCharCode( 32 )
+variables.outOftranspileVariables +=  variables.A_LoopField12 + String.fromCharCode( 32 )
 
 }
 
@@ -1644,15 +1707,15 @@ else
 
 {
 
-if ( await InStr ( variables.A_LoopField10, "%" ) )
+if ( await InStr ( variables.A_LoopField12, "%" ) )
 
 {
 
-if ( ( SubStr( Trim( variables.A_LoopField10 ) , 1, 1 ) == "%"  &&  SubStr( Trim( variables.A_LoopField10 ) , 0 ) == "%" ) )
+if ( ( SubStr( Trim( variables.A_LoopField12 ) , 1, 1 ) == "%"  &&  SubStr( Trim( variables.A_LoopField12 ) , 0 ) == "%" ) )
 
 {
 
-variables.var1 = StringTrimRight(variables.A_LoopField10, 1)
+variables.var1 = StringTrimRight(variables.A_LoopField12, 1)
 
 variables.var1 = StringTrimLeft(variables.var1, 1)
 
@@ -1666,9 +1729,9 @@ else
 
 {
 
-variables.var1 =  await StrSplit ( variables.A_LoopField10, "%", 1 )
+variables.var1 =  await StrSplit ( variables.A_LoopField12, "%", 1 )
 
-variables.var2 =  await StrSplit ( variables.A_LoopField10, "%", 2 )
+variables.var2 =  await StrSplit ( variables.A_LoopField12, "%", 2 )
 
 variables.out1 =  "variables[f" + String.fromCharCode( 39 )  + variables.var1 + "{variables[" + String.fromCharCode( 34 )  + variables.var2 + String.fromCharCode( 34 )  + "]}" + String.fromCharCode( 39 )  + "]";
 
@@ -1682,7 +1745,7 @@ else
 
 {
 
-variables.out1 =  "variables[" + String.fromCharCode( 39 )  + variables.A_LoopField10 + String.fromCharCode( 39 )  + "]";
+variables.out1 =  "variables[" + String.fromCharCode( 39 )  + variables.A_LoopField12 + String.fromCharCode( 39 )  + "]";
 
 variables.outOftranspileVariables +=  variables.out1 + String.fromCharCode( 32 )
 
@@ -1696,7 +1759,7 @@ else
 
 {
 
-variables.outOftranspileVariables +=  variables.A_LoopField10 + String.fromCharCode( 32 )
+variables.outOftranspileVariables +=  variables.A_LoopField12 + String.fromCharCode( 32 )
 
 }
 
@@ -1714,21 +1777,21 @@ variables.outOftranspileVariables =  variables.outOftranspileVariablesOut;
 
 //OutputDebug, |%outOftranspileVariables%|
 
-variables.characters15 = variables.functionNames.split(/["|"]/)
-variables.charLength15 = variables.characters15.length
+variables.characters17 = variables.functionNames.split(/["|"]/)
+variables.charLength17 = variables.characters17.length
 
-for (/* Loop parse */ variables.A_Index15 = 1; variables.A_Index15 <= variables.charLength15; variables.A_Index15++) {
-variables.A_LoopField15 = variables.characters15[variables.A_Index15 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index17 = 1; variables.A_Index17 <= variables.charLength17; variables.A_Index17++) {
+variables.A_LoopField17 = variables.characters17[variables.A_Index17 - 1]; // Using array notation to access characters
 
-variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['" + variables.A_LoopField15 + "']", variables.A_LoopField15 )
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "variables['" + variables.A_LoopField17 + "']", variables.A_LoopField17 )
 
 }
 
-for (/* Normal Loop */ variables.A_Index16 = 1; variables.A_Index16 <= variables.numOfStrings; variables.A_Index16++)
+for (/* Normal Loop */ variables.A_Index18 = 1; variables.A_Index18 <= variables.numOfStrings; variables.A_Index18++)
 
 {
 
-variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.A_Index16, String.fromCharCode( 34 )  + variables["theString" + variables.A_Index16] + String.fromCharCode( 34 )  )
+variables.outOftranspileVariables =  StrReplace( variables.outOftranspileVariables, "freeeeepaestine-sav-etehmtyeah-freee-n" + variables.A_Index18, String.fromCharCode( 34 )  + variables["theString" + variables.A_Index18] + String.fromCharCode( 34 )  )
 
 }
 
@@ -1833,17 +1896,17 @@ if ( await InStr ( variables.sstr, String.fromCharCode( 37 ) ) )
 
 {
 
-variables.characters17 = variables.sstr.split(/["%"]/)
-variables.charLength17 = variables.characters17.length
+variables.characters19 = variables.sstr.split(/["%"]/)
+variables.charLength19 = variables.characters19.length
 
-for (/* Loop parse */ variables.A_Index17 = 1; variables.A_Index17 <= variables.charLength17; variables.A_Index17++) {
-variables.A_LoopField17 = variables.characters17[variables.A_Index17 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index19 = 1; variables.A_Index19 <= variables.charLength19; variables.A_Index19++) {
+variables.A_LoopField19 = variables.characters19[variables.A_Index19 - 1]; // Using array notation to access characters
 
-if ( Mod( variables.A_Index17, 2 ) )
+if ( Mod( variables.A_Index19, 2 ) )
 
 {
 
-variables.outOftranspileVariablesOut +=  variables.A_LoopField17;
+variables.outOftranspileVariablesOut +=  variables.A_LoopField19;
 
 }
 
@@ -1851,7 +1914,7 @@ else
 
 {
 
-variables.outOftranspileVariablesOut +=  String.fromCharCode( 34 )  + " + variables['" + variables.A_LoopField17 + String.fromCharCode( 39 )  + String.fromCharCode( 93 )  + " + " + String.fromCharCode( 34 )
+variables.outOftranspileVariablesOut +=  String.fromCharCode( 34 )  + " + variables['" + variables.A_LoopField19 + String.fromCharCode( 39 )  + String.fromCharCode( 93 )  + " + " + String.fromCharCode( 34 )
 
 }
 
@@ -1953,8 +2016,10 @@ return variables.outOftranspileVariablesOut
 
 // the compiler
 
-async function Button(A_GuiControl)
+async function compiler(HTpyCode)
 {
+
+variables.HTpyCode = HTpyCode
 
 variables.func_LoopParseFunc_func =  "\ndef LoopParseFunc(var, delimiter1="                   +               String.fromCharCode( 34 )                   +             String.fromCharCode( 34 )                  +                  ", delimiter2="            +             String.fromCharCode( 34 )                 +             String.fromCharCode( 34 )            +             "):\n    import re\n    if not delimiter1 and not delimiter2:\n        # If no delimiters are provided, return a list of characters\n        items = list(var)\n    else:\n        # Construct the regular expression pattern for splitting the string\n        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'\n\n        # Split the string using the constructed pattern\n        items = re.split(pattern, var)\n\n    return items\n";
 
@@ -2012,17 +2077,17 @@ variables.skipLeftCuleyForFuncPLS =  0;
 
 variables.eavbnsalvbaslv =  0;
 
-variables.characters18 = variables.HTpyCode.split(/[\n\r]/)
-variables.charLength18 = variables.characters18.length
+variables.characters20 = variables.HTpyCode.split(/[\n\r]/)
+variables.charLength20 = variables.characters20.length
 
-for (/* Loop parse */ variables.A_Index18 = 1; variables.A_Index18 <= variables.charLength18; variables.A_Index18++) {
-variables.A_LoopField18 = variables.characters18[variables.A_Index18 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index20 = 1; variables.A_Index20 <= variables.charLength20; variables.A_Index20++) {
+variables.A_LoopField20 = variables.characters20[variables.A_Index20 - 1]; // Using array notation to access characters
 
-if ( variables.A_Index18 == 1 )
+if ( variables.A_Index20 == 1 )
 
 {
 
-variables.HTpyCodeD1 +=  Trim( variables.A_LoopField18 )  + "\n";
+variables.HTpyCodeD1 +=  Trim( variables.A_LoopField20 )  + "\n";
 
 }
 
@@ -2030,7 +2095,7 @@ else
 
 {
 
-if ( Trim( variables.A_LoopField18 ) == String.fromCharCode( 123 )  &&  variables.eavbnsalvbaslv == 1 )
+if ( Trim( variables.A_LoopField20 ) == String.fromCharCode( 123 )  &&  variables.eavbnsalvbaslv == 1 )
 
 {
 
@@ -2044,13 +2109,13 @@ else
 
 {
 
-variables.HTpyCodeD1 +=  Trim( variables.A_LoopField18 )  + "\n";
+variables.HTpyCodeD1 +=  Trim( variables.A_LoopField20 )  + "\n";
 
 }
 
 variables.eavbnsalvbaslv =  0;
 
-if ( Trim( variables.A_LoopField18 ) == "" )
+if ( Trim( variables.A_LoopField20 ) == "" )
 
 {
 
@@ -2070,23 +2135,23 @@ variables.areWEinSome34sNum =  0;
 
 variables.theIdNumOfThe34 =  0;
 
-variables.characters19 = variables.HTpyCode.split("")
-variables.charLength19 = variables.characters19.length
+variables.characters21 = variables.HTpyCode.split("")
+variables.charLength21 = variables.characters21.length
 
-for (/* Loop parse */ variables.A_Index19 = 1; variables.A_Index19 <= variables.charLength19; variables.A_Index19++) {
-variables.A_LoopField19 = variables.characters19[variables.A_Index19 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index21 = 1; variables.A_Index21 <= variables.charLength21; variables.A_Index21++) {
+variables.A_LoopField21 = variables.characters21[variables.A_Index21 - 1]; // Using array notation to access characters
 
-variables["theIdNumOfThe34theVar" + variables.A_Index19] =  String.fromCharCode( 34 )
+variables["theIdNumOfThe34theVar" + variables.A_Index21] =  String.fromCharCode( 34 )
 
 }
 
-variables.characters20 = variables.HTpyCode.split("")
-variables.charLength20 = variables.characters20.length
+variables.characters22 = variables.HTpyCode.split("")
+variables.charLength22 = variables.characters22.length
 
-for (/* Loop parse */ variables.A_Index20 = 1; variables.A_Index20 <= variables.charLength20; variables.A_Index20++) {
-variables.A_LoopField20 = variables.characters20[variables.A_Index20 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index22 = 1; variables.A_Index22 <= variables.charLength22; variables.A_Index22++) {
+variables.A_LoopField22 = variables.characters22[variables.A_Index22 - 1]; // Using array notation to access characters
 
-if ( variables.A_LoopField20 == String.fromCharCode( 34 ) )
+if ( variables.A_LoopField22 == String.fromCharCode( 34 ) )
 
 {
 
@@ -2098,11 +2163,11 @@ if ( variables.areWEinSome34sNum == 1 )
 
 {
 
-if ( variables.A_LoopField20 !== String.fromCharCode( 34 ) )
+if ( variables.A_LoopField22 !== String.fromCharCode( 34 ) )
 
 {
 
-if ( variables.A_LoopField20 == String.fromCharCode( 96 ) )
+if ( variables.A_LoopField22 == String.fromCharCode( 96 ) )
 
 {
 
@@ -2114,7 +2179,7 @@ else
 
 {
 
-variables["theIdNumOfThe34theVar" + variables.theIdNumOfThe34] +=  variables.A_LoopField20;
+variables["theIdNumOfThe34theVar" + variables.theIdNumOfThe34] +=  variables.A_LoopField22;
 
 }
 
@@ -2136,11 +2201,11 @@ if ( variables.areWEinSome34sNum == 2  ||  variables.areWEinSome34sNum == 0 )
 
 {
 
-if ( variables.A_LoopField20 !== String.fromCharCode( 34 ) )
+if ( variables.A_LoopField22 !== String.fromCharCode( 34 ) )
 
 {
 
-variables.HTpyCodeOUT754754 +=  variables.A_LoopField20;
+variables.HTpyCodeOUT754754 +=  variables.A_LoopField22;
 
 }
 
@@ -2152,11 +2217,11 @@ variables.areWEinSome34sNum =  0;
 
 variables.HTpyCode =  variables.HTpyCodeOUT754754;
 
-for (/* Normal Loop */ variables.A_Index21 = 1; variables.A_Index21 <= variables.theIdNumOfThe34; variables.A_Index21++)
+for (/* Normal Loop */ variables.A_Index23 = 1; variables.A_Index23 <= variables.theIdNumOfThe34; variables.A_Index23++)
 
 {
 
-variables["theIdNumOfThe34theVar" + variables.A_Index21] +=  String.fromCharCode( 34 )
+variables["theIdNumOfThe34theVar" + variables.A_Index23] +=  String.fromCharCode( 34 )
 
 }
 
@@ -2194,11 +2259,11 @@ variables.haveWeEverUsedAloop =  0;
 
 //OutputDebug, %HTpyCode%
 
-variables.characters22 = variables.HTpyCode.split(/[\n\r]/)
-variables.charLength22 = variables.characters22.length
+variables.characters24 = variables.HTpyCode.split(/[\n\r]/)
+variables.charLength24 = variables.characters24.length
 
-for (/* Loop parse */ variables.A_Index22 = 1; variables.A_Index22 <= variables.charLength22; variables.A_Index22++) {
-variables.A_LoopField22 = variables.characters22[variables.A_Index22 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index24 = 1; variables.A_Index24 <= variables.charLength24; variables.A_Index24++) {
+variables.A_LoopField24 = variables.characters24[variables.A_Index24 - 1]; // Using array notation to access characters
 
 if ( variables.willNextLineBeCurlyBracee == 1 )
 
@@ -2206,7 +2271,7 @@ if ( variables.willNextLineBeCurlyBracee == 1 )
 
 // 123 is {
 
-if ( variables.A_LoopField22 == String.fromCharCode( 123 ) )
+if ( variables.A_LoopField24 == String.fromCharCode( 123 ) )
 
 {
 
@@ -2224,7 +2289,7 @@ variables.theFuncWeFoundAllNames +=  variables.lastFuncName + String.fromCharCod
 
 }
 
-if ( SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 4 ) == variables.CheckIFandElsesss1  ||  SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 3 ) == variables.CheckIFandElsesss2  ||  SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 5 ) == variables.CheckIFandElsesss3  ||  SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 4 ) == variables.CheckIFandElsesss4  ||  SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 9 ) == variables.CheckIFandElsesss5  ||  SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 8 ) == variables.CheckIFandElsesss6  ||  SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 10 ) == variables.CheckIFandElsesss7  ||  SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 9 ) == variables.CheckIFandElsesss8  ||  SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 5 ) == "loop," )
+if ( SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 4 ) == variables.CheckIFandElsesss1  ||  SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 3 ) == variables.CheckIFandElsesss2  ||  SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 5 ) == variables.CheckIFandElsesss3  ||  SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 4 ) == variables.CheckIFandElsesss4  ||  SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 9 ) == variables.CheckIFandElsesss5  ||  SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 8 ) == variables.CheckIFandElsesss6  ||  SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 10 ) == variables.CheckIFandElsesss7  ||  SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 9 ) == variables.CheckIFandElsesss8  ||  SubStr( await StrLower ( variables.A_LoopField24 ) , 1, 5 ) == "loop," )
 
 {
 
@@ -2232,7 +2297,7 @@ if ( SubStr( await StrLower ( variables.A_LoopField22 ) , 1, 4 ) == variables.Ch
 
 variables.willNextLineBeCurlyBracee =  0;
 
-//OutputDebug, %A_LoopField22%
+//OutputDebug, %A_LoopField24%
 
 }
 
@@ -2240,13 +2305,13 @@ else
 
 {
 
-//OutputDebug, ||%A_LoopField22%||
+//OutputDebug, ||%A_LoopField24%||
 
-variables.strForCheckIfFunc =  await StrSplit ( variables.A_LoopField22, String.fromCharCode( 40 ) , 1 )
+variables.strForCheckIfFunc =  await StrSplit ( variables.A_LoopField24, String.fromCharCode( 40 ) , 1 )
 
 //OutputDebug, |%strForCheckIfFunc%|
 
-if ( await funcToChecIfVaidNameForFunc ( Trim( variables.strForCheckIfFunc ) )  &&  variables.strForCheckIfFunc !== ""  &&  await InStr ( variables.A_LoopField22, String.fromCharCode( 40 ) ) )
+if ( await funcToChecIfVaidNameForFunc ( Trim( variables.strForCheckIfFunc ) )  &&  variables.strForCheckIfFunc !== ""  &&  await InStr ( variables.A_LoopField24, String.fromCharCode( 40 ) ) )
 
 {
 
@@ -2254,7 +2319,7 @@ variables.willNextLineBeCurlyBracee =  1;
 
 variables.lastFuncName =  variables.strForCheckIfFunc;
 
-variables.lastFuncFullName =  variables.A_LoopField22;
+variables.lastFuncFullName =  variables.A_LoopField24;
 
 //OutputDebug, %lastFuncFullName%
 
@@ -2302,19 +2367,19 @@ variables.pycodeAcurlyBraceAddSomeVrasFixLP =  0;
 
 variables.pycodeLoopfixa =  ""
 
-variables.characters23 = variables.HTpyCode.split(/[\n\r]/)
-variables.charLength23 = variables.characters23.length
+variables.characters25 = variables.HTpyCode.split(/[\n\r]/)
+variables.charLength25 = variables.characters25.length
 
-for (/* Loop parse */ variables.A_Index23 = 1; variables.A_Index23 <= variables.charLength23; variables.A_Index23++) {
-variables.A_LoopField23 = variables.characters23[variables.A_Index23 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index25 = 1; variables.A_Index25 <= variables.charLength25; variables.A_Index25++) {
+variables.A_LoopField25 = variables.characters25[variables.A_Index25 - 1]; // Using array notation to access characters
 
 variables.lineDone =  0;
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 10 ) == await StrLower ( "msgbox, % " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 10 ) == await StrLower ( "msgbox, % " ) )
 
 {
 
-variables.var1 = StringTrimLeft(variables.A_LoopField23, 10)
+variables.var1 = StringTrimLeft(variables.A_LoopField25, 10)
 
 variables.var2 =  Trim( await transpileVariables ( variables.var1, variables.functionNames )  )
 
@@ -2326,11 +2391,11 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 8 ) == await StrLower ( "msgbox, " )  &&  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 10 ) !== await StrLower ( "msgbox, % " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 8 ) == await StrLower ( "msgbox, " )  &&  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 10 ) !== await StrLower ( "msgbox, % " ) )
 
 {
 
-variables.var1 = StringTrimLeft(variables.A_LoopField23, 8)
+variables.var1 = StringTrimLeft(variables.A_LoopField25, 8)
 
 variables.OUTvarMsgLow =  await transpileLowVariables ( variables.var1 )
 
@@ -2342,11 +2407,11 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 6 ) == "sort, " )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 6 ) == "sort, " )
 
 {
 
-variables.str1 = StringTrimLeft(variables.A_LoopField23, 6)
+variables.str1 = StringTrimLeft(variables.A_LoopField25, 6)
 
 variables.str1 =  Trim( variables.str1 )
 
@@ -2398,15 +2463,15 @@ variables.pyCode +=  variables.var1 + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 8 ) == await StrLower ( "Random, " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 8 ) == await StrLower ( "Random, " ) )
 
 {
 
-variables.varr1 =  await StrSplit ( variables.A_LoopField23, ",", 2 )
+variables.varr1 =  await StrSplit ( variables.A_LoopField25, ",", 2 )
 
-variables.varr2 =  await StrSplit ( variables.A_LoopField23, ",", 3 )
+variables.varr2 =  await StrSplit ( variables.A_LoopField25, ",", 3 )
 
-variables.varr3 =  await StrSplit ( variables.A_LoopField23, ",", 4 )
+variables.varr3 =  await StrSplit ( variables.A_LoopField25, ",", 4 )
 
 variables.outt1 =  Trim( await transpileVariables ( variables.varr1, variables.functionNames )  )
 
@@ -2432,15 +2497,15 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 17 ) == await StrLower ( "StringTrimRight, " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 17 ) == await StrLower ( "StringTrimRight, " ) )
 
 {
 
-variables.varr1 =  await StrSplit ( variables.A_LoopField23, ",", 2 )
+variables.varr1 =  await StrSplit ( variables.A_LoopField25, ",", 2 )
 
-variables.varr2 =  await StrSplit ( variables.A_LoopField23, ",", 3 )
+variables.varr2 =  await StrSplit ( variables.A_LoopField25, ",", 3 )
 
-variables.varr3 =  await StrSplit ( variables.A_LoopField23, ",", 4 )
+variables.varr3 =  await StrSplit ( variables.A_LoopField25, ",", 4 )
 
 variables.outt1 =  Trim( await transpileVariables ( variables.varr1, variables.functionNames )  )
 
@@ -2456,15 +2521,15 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 16 ) == await StrLower ( "StringTrimLeft, " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 16 ) == await StrLower ( "StringTrimLeft, " ) )
 
 {
 
-variables.varr1 =  await StrSplit ( variables.A_LoopField23, ",", 2 )
+variables.varr1 =  await StrSplit ( variables.A_LoopField25, ",", 2 )
 
-variables.varr2 =  await StrSplit ( variables.A_LoopField23, ",", 3 )
+variables.varr2 =  await StrSplit ( variables.A_LoopField25, ",", 3 )
 
-variables.varr3 =  await StrSplit ( variables.A_LoopField23, ",", 4 )
+variables.varr3 =  await StrSplit ( variables.A_LoopField25, ",", 4 )
 
 variables.outt1 =  Trim( await transpileVariables ( variables.varr1, variables.functionNames )  )
 
@@ -2480,11 +2545,11 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 7 ) == await StrLower ( "sleep, " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 7 ) == await StrLower ( "sleep, " ) )
 
 {
 
-variables.var1 = StringTrimLeft(variables.A_LoopField23, 7)
+variables.var1 = StringTrimLeft(variables.A_LoopField25, 7)
 
 variables.var1 =  Trim( await transpileVariables ( variables.var1, variables.functionNames )  )
 
@@ -2506,11 +2571,11 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 10 ) == "fileread, " )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 10 ) == "fileread, " )
 
 {
 
-variables.filereadCommand = StringTrimLeft(variables.A_LoopField23, 10)
+variables.filereadCommand = StringTrimLeft(variables.A_LoopField25, 10)
 
 variables.filereadCommand1varname =  await StrSplit ( variables.filereadCommand, ", ", 1 )
 
@@ -2528,11 +2593,11 @@ variables.lineDone =  1;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 12 ) == "fileappend, " )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 12 ) == "fileappend, " )
 
 {
 
-variables.fileAppendCommand = StringTrimLeft(variables.A_LoopField23, 12)
+variables.fileAppendCommand = StringTrimLeft(variables.A_LoopField25, 12)
 
 variables.fileAppendCommand1varname =  await StrSplit ( variables.fileAppendCommand, ", ", 1 )
 
@@ -2550,11 +2615,11 @@ variables.lineDone =  1;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 12 ) == "filedelete, " )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 12 ) == "filedelete, " )
 
 {
 
-variables.fileDeleteCommand = StringTrimLeft(variables.A_LoopField23, 12)
+variables.fileDeleteCommand = StringTrimLeft(variables.A_LoopField25, 12)
 
 variables.fileDeleteCommand2path =  await StrSplit ( variables.fileDeleteCommand, ", ", 1 )
 
@@ -2568,13 +2633,13 @@ variables.lineDone =  1;
 
 }
 
-if ( await ifTheLineIsAFuncDec ( Trim( variables.A_LoopField23 ) , variables.theFuncWeFound ) )
+if ( await ifTheLineIsAFuncDec ( Trim( variables.A_LoopField25 ) , variables.theFuncWeFound ) )
 
 {
 
-//OutputDebug, %A_LoopField23%
+//OutputDebug, %A_LoopField25%
 
-variables.str23IfFuncIn =  variables.A_LoopField23;
+variables.str23IfFuncIn =  variables.A_LoopField25;
 
 variables.str23IfFuncInNAME =  await StrSplit ( variables.str23IfFuncIn, String.fromCharCode( 40 ) , 1 )
 
@@ -2594,15 +2659,15 @@ if ( variables.str23IfFuncInALL !== "" )
 
 {
 
-variables.characters24 = variables.str23IfFuncInALL.split(/[\,]/)
-variables.charLength24 = variables.characters24.length
+variables.characters26 = variables.str23IfFuncInALL.split(/[\,]/)
+variables.charLength26 = variables.characters26.length
 
-for (/* Loop parse */ variables.A_Index24 = 1; variables.A_Index24 <= variables.charLength24; variables.A_Index24++) {
-variables.A_LoopField24 = variables.characters24[variables.A_Index24 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index26 = 1; variables.A_Index26 <= variables.charLength26; variables.A_Index26++) {
+variables.A_LoopField26 = variables.characters26[variables.A_Index26 - 1]; // Using array notation to access characters
 
 variables.wasHereInfuncAndgetingVar1 =  1;
 
-variables.var1 =  Trim( variables.A_LoopField24 )
+variables.var1 =  Trim( variables.A_LoopField26 )
 
 variables.theVarsPArmFormTheFunc +=  "variables['" + variables.var1 + "'] = " + variables.var1 + "\n";
 
@@ -2630,11 +2695,11 @@ variables.str234567 =  "def " + variables.str23IfFuncInNAME + String.fromCharCod
 
 }
 
-for (/* Normal Loop */ variables.A_Index25 = 1; variables.A_Index25 <= variables.str23IfFuncInNAMEnum; variables.A_Index25++)
+for (/* Normal Loop */ variables.A_Index27 = 1; variables.A_Index27 <= variables.str23IfFuncInNAMEnum; variables.A_Index27++)
 
 {
 
-if ( variables["str23IfFuncInNAME" + variables.A_Index25] == variables.str23IfFuncInNAME )
+if ( variables["str23IfFuncInNAME" + variables.A_Index27] == variables.str23IfFuncInNAME )
 
 {
 
@@ -2644,15 +2709,15 @@ if ( variables.str23IfFuncInALL !== "" )
 
 {
 
-variables.characters26 = variables.str23IfFuncInALL.split(/[\,]/)
-variables.charLength26 = variables.characters26.length
+variables.characters28 = variables.str23IfFuncInALL.split(/[\,]/)
+variables.charLength28 = variables.characters28.length
 
-for (/* Loop parse */ variables.A_Index26 = 1; variables.A_Index26 <= variables.charLength26; variables.A_Index26++) {
-variables.A_LoopField26 = variables.characters26[variables.A_Index26 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index28 = 1; variables.A_Index28 <= variables.charLength28; variables.A_Index28++) {
+variables.A_LoopField28 = variables.characters28[variables.A_Index28 - 1]; // Using array notation to access characters
 
 variables.wasHereInfuncAndgetingVar1 =  1;
 
-variables.var1 =  Trim( variables.A_LoopField26 )
+variables.var1 =  Trim( variables.A_LoopField28 )
 
 variables.var12312 +=  await transpileVariables ( variables.var1, variables.functionNames )  + ", ";
 
@@ -2708,11 +2773,11 @@ variables.pyCode +=  variables.str234567 + "\n";
 
 }
 
-if ( SubStr( Trim( variables.A_LoopField23 ) , 1, 7 ) == "return " )
+if ( SubStr( Trim( variables.A_LoopField25 ) , 1, 7 ) == "return " )
 
 {
 
-variables.strFormReturn = StringTrimLeft(variables.A_LoopField23, 7)
+variables.strFormReturn = StringTrimLeft(variables.A_LoopField25, 7)
 
 variables.var12312 =  await transpileVariables ( variables.strFormReturn, variables.functionNames )
 
@@ -2724,11 +2789,11 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 10 ) == "endpoint, " )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 10 ) == "endpoint, " )
 
 {
 
-variables.strFormEndpoint = StringTrimLeft(variables.A_LoopField23, 10)
+variables.strFormEndpoint = StringTrimLeft(variables.A_LoopField25, 10)
 
 variables.strFormEndpoint1 =  Trim( await StrSplit ( variables.strFormEndpoint, ",", 1 )  )
 
@@ -2752,7 +2817,7 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( await StrLower ( variables.A_LoopField23 ) == "loop" )
+if ( await StrLower ( variables.A_LoopField25 ) == "loop" )
 
 {
 
@@ -2784,11 +2849,11 @@ variables.pyCode +=  variables.pycodeLoopfixa1 + "\n" + variables.var1 + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 6 ) == "loop, "  &&  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 8 ) !== "loop, % "  &&  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 7 ) !== "loop % "  &&  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 11 ) !== await StrLower ( "Loop, Parse" ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 6 ) == "loop, "  &&  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 8 ) !== "loop, % "  &&  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 7 ) !== "loop % "  &&  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 11 ) !== await StrLower ( "Loop, Parse" ) )
 
 {
 
-variables.str123 =  variables.A_LoopField23;
+variables.str123 =  variables.A_LoopField25;
 
 //MsgBox, % str123
 
@@ -2832,11 +2897,11 @@ variables.pyCode +=  variables.pycodeLoopfixa1 + "\n" + variables.var1 + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 8 ) == "loop, % " )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 8 ) == "loop, % " )
 
 {
 
-variables.str123 =  variables.A_LoopField23;
+variables.str123 =  variables.A_LoopField25;
 
 //MsgBox, % str123
 
@@ -2880,11 +2945,11 @@ variables.pyCode +=  variables.pycodeLoopfixa1 + "\n" + variables.var1 + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 13 ) == await StrLower ( "Loop, Parse, " ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 13 ) == await StrLower ( "Loop, Parse, " ) )
 
 {
 
-variables.var1 =  variables.A_LoopField23;
+variables.var1 =  variables.A_LoopField25;
 
 variables.lineDone =  1;
 
@@ -2996,11 +3061,11 @@ variables.pyCode +=  variables.pycodeLoopfixa1 + "\n" + variables.var1out + "\n"
 
 }
 
-if ( SubStr( variables.A_LoopField23, -1 ) == "++" )
+if ( SubStr( variables.A_LoopField25, -1 ) == "++" )
 
 {
 
-variables.str123 =  Trim( variables.A_LoopField23 )
+variables.str123 =  Trim( variables.A_LoopField25 )
 
 variables.str123 = StringTrimRight(variables.str123, 2)
 
@@ -3014,11 +3079,11 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( variables.A_LoopField23, -1 ) == "--" )
+if ( SubStr( variables.A_LoopField25, -1 ) == "--" )
 
 {
 
-variables.str123 =  Trim( variables.A_LoopField23 )
+variables.str123 =  Trim( variables.A_LoopField25 )
 
 variables.str123 = StringTrimRight(variables.str123, 2)
 
@@ -3032,11 +3097,11 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 )  ||  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
 
 {
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss1 ) )
 
 {
 
@@ -3046,7 +3111,7 @@ variables.CheckIFandElsesssNumNum =  1;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 3 ) == await StrLower ( variables.CheckIFandElsesss2 ) )
 
 {
 
@@ -3056,7 +3121,7 @@ variables.CheckIFandElsesssNumNum =  2;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 5 ) == await StrLower ( variables.CheckIFandElsesss3 ) )
 
 {
 
@@ -3066,7 +3131,7 @@ variables.CheckIFandElsesssNumNum =  3;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 4 ) == await StrLower ( variables.CheckIFandElsesss4 ) )
 
 {
 
@@ -3076,7 +3141,7 @@ variables.CheckIFandElsesssNumNum =  4;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss5 ) )
 
 {
 
@@ -3086,7 +3151,7 @@ variables.CheckIFandElsesssNumNum =  5;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 8 ) == await StrLower ( variables.CheckIFandElsesss6 ) )
 
 {
 
@@ -3096,7 +3161,7 @@ variables.CheckIFandElsesssNumNum =  6;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 10 ) == await StrLower ( variables.CheckIFandElsesss7 ) )
 
 {
 
@@ -3106,7 +3171,7 @@ variables.CheckIFandElsesssNumNum =  7;
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 9 ) == await StrLower ( variables.CheckIFandElsesss8 ) )
 
 {
 
@@ -3116,7 +3181,7 @@ variables.CheckIFandElsesssNumNum =  8;
 
 }
 
-variables.str123 = StringTrimLeft(variables.A_LoopField23, variables.CheckIFandElsesssNum)
+variables.str123 = StringTrimLeft(variables.A_LoopField25, variables.CheckIFandElsesssNum)
 
 variables.str123 =  variables["CheckIFandElsesss" + variables.CheckIFandElsesssNumNum] + String.fromCharCode( 32 )  + await transpileVariables ( variables.str123, variables.functionNames )
 
@@ -3154,7 +3219,7 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( await StrLower ( variables.A_LoopField23 ) == await StrLower ( "else" ) )
+if ( await StrLower ( variables.A_LoopField25 ) == await StrLower ( "else" ) )
 
 {
 
@@ -3166,17 +3231,17 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( await InStr ( variables.A_LoopField23, " := " )  ||  await InStr ( variables.A_LoopField23, " .= " )  ||  await InStr ( variables.A_LoopField23, " += " )  ||  await InStr ( variables.A_LoopField23, " -= " )  ||  await InStr ( variables.A_LoopField23, " *= " )  &&  variables.lineDone == 0 )
+if ( await InStr ( variables.A_LoopField25, " := " )  ||  await InStr ( variables.A_LoopField25, " .= " )  ||  await InStr ( variables.A_LoopField25, " += " )  ||  await InStr ( variables.A_LoopField25, " -= " )  ||  await InStr ( variables.A_LoopField25, " *= " )  &&  variables.lineDone == 0 )
 
 {
 
 variables.lineDone =  1;
 
-variables.str123 =  variables.A_LoopField23;
+variables.str123 =  variables.A_LoopField25;
 
 variables.whatVarWeUse =  ""
 
-if ( await InStr ( variables.A_LoopField23, " := " ) )
+if ( await InStr ( variables.A_LoopField25, " := " ) )
 
 {
 
@@ -3184,7 +3249,7 @@ variables.whatVarWeUse =  " = ";
 
 }
 
-if ( await InStr ( variables.A_LoopField23, " .= " ) )
+if ( await InStr ( variables.A_LoopField25, " .= " ) )
 
 {
 
@@ -3192,7 +3257,7 @@ variables.whatVarWeUse =  " += ";
 
 }
 
-if ( await InStr ( variables.A_LoopField23, " += " ) )
+if ( await InStr ( variables.A_LoopField25, " += " ) )
 
 {
 
@@ -3200,7 +3265,7 @@ variables.whatVarWeUse =  " += ";
 
 }
 
-if ( await InStr ( variables.A_LoopField23, " -= " ) )
+if ( await InStr ( variables.A_LoopField25, " -= " ) )
 
 {
 
@@ -3208,7 +3273,7 @@ variables.whatVarWeUse =  " -= ";
 
 }
 
-if ( await InStr ( variables.A_LoopField23, " *= " ) )
+if ( await InStr ( variables.A_LoopField25, " *= " ) )
 
 {
 
@@ -3242,15 +3307,59 @@ variables.pyCode +=  variables.out + "\n";
 
 }
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 1 ) == String.fromCharCode( 59 )  &&  variables.lineDone == 0 )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 1 ) == String.fromCharCode( 59 )  &&  variables.lineDone == 0 )
 
 {
 
-variables.str123 = StringTrimLeft(variables.A_LoopField23, 1)
+variables.str123 = StringTrimLeft(variables.A_LoopField25, 1)
 
 variables.str123 =  "#" + variables.str123;
 
 variables.out =  variables.str123;
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 1 ) == String.fromCharCode( 59 )  &&  variables.lineDone == 0 )
+
+{
+
+variables.str123 = StringTrimLeft(variables.A_LoopField25, 1)
+
+variables.str123 =  "#" + variables.str123;
+
+variables.out =  variables.str123;
+
+variables.lineDone =  1;
+
+variables.pyCode +=  variables.out + "\n";
+
+}
+
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 0 ) == String.fromCharCode( 41 )  &&  variables.lineDone == 0 )
+
+{
+
+variables.str123 =  variables.A_LoopField25;
+
+variables.FuncNameWhatIsIt =  await StrSplit ( variables.str123, "(", 1 )
+
+variables.characters29 = variables.FuncNameWhatIsIt.split("")
+variables.charLength29 = variables.characters29.length
+
+for (/* Loop parse */ variables.A_Index29 = 1; variables.A_Index29 <= variables.charLength29; variables.A_Index29++) {
+variables.A_LoopField29 = variables.characters29[variables.A_Index29 - 1]; // Using array notation to access characters
+
+variables.str123 = StringTrimLeft(variables.str123, 1)
+
+}
+
+variables.outVarTransiled =  await transpileVariables ( variables.str123, variables.functionNames )
+
+variables.out =  variables.FuncNameWhatIsIt + variables.outVarTransiled;
 
 variables.lineDone =  1;
 
@@ -3272,7 +3381,7 @@ if ( variables.skipLeftCuleyForFuncPLS !== 1 )
 
 {
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 1 ) == String.fromCharCode( 125 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 1 ) == String.fromCharCode( 125 ) )
 
 {
 
@@ -3284,13 +3393,13 @@ else
 
 {
 
-if ( variables.pycodeAcurlyBraceAddSomeVrasFixLP == 1  &&  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 1 ) == String.fromCharCode( 123 ) )
+if ( variables.pycodeAcurlyBraceAddSomeVrasFixLP == 1  &&  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 1 ) == String.fromCharCode( 123 ) )
 
 {
 
 variables.pycodeAcurlyBraceAddSomeVrasFixLP =  0;
 
-variables.pyCode +=  variables.A_LoopField23 + "\n" + variables.theFixTextLoopLP + "\n";
+variables.pyCode +=  variables.A_LoopField25 + "\n" + variables.theFixTextLoopLP + "\n";
 
 }
 
@@ -3298,13 +3407,13 @@ else
 
 {
 
-if ( variables.pycodeAcurlyBraceAddSomeVrasFixNL == 1  &&  SubStr( Trim( await StrLower ( variables.A_LoopField23 ) ) , 1, 1 ) == String.fromCharCode( 123 ) )
+if ( variables.pycodeAcurlyBraceAddSomeVrasFixNL == 1  &&  SubStr( Trim( await StrLower ( variables.A_LoopField25 ) ) , 1, 1 ) == String.fromCharCode( 123 ) )
 
 {
 
 variables.pycodeAcurlyBraceAddSomeVrasFixNL =  0;
 
-variables.pyCode +=  variables.A_LoopField23 + "\n" + variables.theFixTextLoopNL + "\n";
+variables.pyCode +=  variables.A_LoopField25 + "\n" + variables.theFixTextLoopNL + "\n";
 
 }
 
@@ -3312,7 +3421,7 @@ else
 
 {
 
-variables.pyCode +=  variables.A_LoopField23 + "\n";
+variables.pyCode +=  variables.A_LoopField25 + "\n";
 
 }
 
@@ -3348,15 +3457,15 @@ variables.pycodeLoopfixa = StringTrimRight(variables.pycodeLoopfixa, 1)
 
 variables.AIndexLoopCurlyFix =  1;
 
-variables.characters27 = variables.pycodeLoopfixa.split(/[\n\r]/)
-variables.charLength27 = variables.characters27.length
+variables.characters30 = variables.pycodeLoopfixa.split(/[\n\r]/)
+variables.charLength30 = variables.characters30.length
 
-for (/* Loop parse */ variables.A_Index27 = 1; variables.A_Index27 <= variables.charLength27; variables.A_Index27++) {
-variables.A_LoopField27 = variables.characters27[variables.A_Index27 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index30 = 1; variables.A_Index30 <= variables.charLength30; variables.A_Index30++) {
+variables.A_LoopField30 = variables.characters30[variables.A_Index30 - 1]; // Using array notation to access characters
 
-variables.str123 =  variables.A_LoopField27;
+variables.str123 =  variables.A_LoopField30;
 
-variables.fixLoopLokingFor =  variables.A_LoopField27;
+variables.fixLoopLokingFor =  variables.A_LoopField30;
 
 variables.fixLoopLokingForfound =  1;
 
@@ -3400,17 +3509,17 @@ variables.foundTheTopLoop =  0;
 
 variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] =  ""
 
-variables.characters28 = variables.pyCode.split(/[\n\r]/)
-variables.charLength28 = variables.characters28.length
+variables.characters31 = variables.pyCode.split(/[\n\r]/)
+variables.charLength31 = variables.characters31.length
 
-for (/* Loop parse */ variables.A_Index28 = 1; variables.A_Index28 <= variables.charLength28; variables.A_Index28++) {
-variables.A_LoopField28 = variables.characters28[variables.A_Index28 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index31 = 1; variables.A_Index31 <= variables.charLength31; variables.A_Index31++) {
+variables.A_LoopField31 = variables.characters31[variables.A_Index31 - 1]; // Using array notation to access characters
 
 //MsgBox, dsfgsdefgesrdg1
 
-//MsgBox, |%A_LoopField28%|`n|%fixLoopLokingFor%|
+//MsgBox, |%A_LoopField31%|`n|%fixLoopLokingFor%|
 
-if ( await InStr ( variables.A_LoopField28, variables.fixLoopLokingFor )  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( await InStr ( variables.A_LoopField31, variables.fixLoopLokingFor )  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
@@ -3420,11 +3529,11 @@ variables.fixLoopLokingForNum =  1;
 
 }
 
-if ( await InStr ( variables.A_LoopField28, "for " )  &&  variables.weAreDoneHereCurly !== 1  &&  variables.insdeAnestedLoopBAD !== 1  &&  variables.fixLoopLokingForNum == 1 )
+if ( await InStr ( variables.A_LoopField31, "for " )  &&  variables.weAreDoneHereCurly !== 1  &&  variables.insdeAnestedLoopBAD !== 1  &&  variables.fixLoopLokingForNum == 1 )
 
 {
 
-variables.s =  await StrSplit ( variables.A_LoopField28 ,"A" + String.fromCharCode( 95 )  + "Index", 2 )
+variables.s =  await StrSplit ( variables.A_LoopField31 ,"A" + String.fromCharCode( 95 )  + "Index", 2 )
 
 variables.out1z =  variables.s;
 
@@ -3442,11 +3551,11 @@ variables.foundTheTopLoop++
 
 variables.inTarget =  1;
 
-//MsgBox, % A_LoopField28
+//MsgBox, % A_LoopField31
 
 variables.dontSaveStr =  1;
 
-variables.ALoopField =  variables.A_LoopField28;
+variables.ALoopField =  variables.A_LoopField31;
 
 //ALoopField := StrReplace(ALoopField, posStartQuotes1", posStartQuotes2")
 
@@ -3456,7 +3565,7 @@ variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  varia
 
 }
 
-if ( variables.inTarget == 1  &&  await InStr ( variables.A_LoopField28, String.fromCharCode( 123 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( variables.inTarget == 1  &&  await InStr ( variables.A_LoopField31, String.fromCharCode( 123 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
@@ -3464,7 +3573,7 @@ variables.insideBracket =  1;
 
 }
 
-if ( variables.insideBracket == 1  &&  await InStr ( variables.A_LoopField28, String.fromCharCode( 123 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( variables.insideBracket == 1  &&  await InStr ( variables.A_LoopField31, String.fromCharCode( 123 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
@@ -3472,7 +3581,7 @@ variables.netsedCurly++
 
 }
 
-if ( variables.insideBracket == 1  &&  await InStr ( variables.A_LoopField28, String.fromCharCode( 125 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( variables.insideBracket == 1  &&  await InStr ( variables.A_LoopField31, String.fromCharCode( 125 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
@@ -3482,7 +3591,7 @@ variables.readyToEnd =  1;
 
 }
 
-if ( await InStr ( variables.A_LoopField28, "for " )  &&  variables.insdeAnestedLoopBAD !== 1  &&  variables.foundTheTopLoop >= 2 )
+if ( await InStr ( variables.A_LoopField31, "for " )  &&  variables.insdeAnestedLoopBAD !== 1  &&  variables.foundTheTopLoop >= 2 )
 
 {
 
@@ -3506,7 +3615,7 @@ if ( variables.insdeAnestedLoopBAD == 1 )
 
 {
 
-if ( await InStr ( variables.A_LoopField28, String.fromCharCode( 123 ) ) )
+if ( await InStr ( variables.A_LoopField31, String.fromCharCode( 123 ) ) )
 
 {
 
@@ -3514,7 +3623,7 @@ variables.insideBracket1 =  1;
 
 }
 
-if ( variables.insideBracket1 == 1  &&  await InStr ( variables.A_LoopField28, String.fromCharCode( 123 ) ) )
+if ( variables.insideBracket1 == 1  &&  await InStr ( variables.A_LoopField31, String.fromCharCode( 123 ) ) )
 
 {
 
@@ -3522,7 +3631,7 @@ variables.netsedCurly1++
 
 }
 
-if ( variables.insideBracket1 == 1  &&  await InStr ( variables.A_LoopField28, String.fromCharCode( 125 ) ) )
+if ( variables.insideBracket1 == 1  &&  await InStr ( variables.A_LoopField31, String.fromCharCode( 125 ) ) )
 
 {
 
@@ -3532,19 +3641,19 @@ variables.readyToEnd1 =  1;
 
 }
 
-if ( await InStr ( variables.A_LoopField28, String.fromCharCode( 125 ) )  &&  variables.readyToEnd1 == 1  &&  variables.netsedCurly1 == 0  &&  variables.insideBracket == 1 )
+if ( await InStr ( variables.A_LoopField31, String.fromCharCode( 125 ) )  &&  variables.readyToEnd1 == 1  &&  variables.netsedCurly1 == 0  &&  variables.insideBracket == 1 )
 
 {
 
-//MsgBox, % A_LoopField28
+//MsgBox, % A_LoopField31
 
 variables.eldLoopNestedBADlol =  1;
 
-//out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField28 . posStartQuotes1"
+//out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField31 . posStartQuotes1"
 
 }
 
-variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  variables.A_LoopField28 + "\n";
+variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  variables.A_LoopField31 + "\n";
 
 }
 
@@ -3552,7 +3661,7 @@ if ( variables.inTarget == 1  &&  variables.dontSaveStr !== 1  &&  variables.fix
 
 {
 
-variables.ALoopField =  variables.A_LoopField28;
+variables.ALoopField =  variables.A_LoopField31;
 
 // Replace posStartQuotes1" with or without a following digit with posStartQuotes2" + out1z
 
@@ -3564,11 +3673,11 @@ variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  varia
 
 }
 
-if ( variables.inTarget == 1  &&  await InStr ( variables.A_LoopField28, String.fromCharCode( 125 ) )  &&  variables.readyToEnd == 1  &&  variables.netsedCurly == 0  &&  variables.weAreDoneHereCurly == 0  &&  variables.dontSaveStr !== 1  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( variables.inTarget == 1  &&  await InStr ( variables.A_LoopField31, String.fromCharCode( 125 ) )  &&  variables.readyToEnd == 1  &&  variables.netsedCurly == 0  &&  variables.weAreDoneHereCurly == 0  &&  variables.dontSaveStr !== 1  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
-//MsgBox, % A_LoopField28
+//MsgBox, % A_LoopField31
 
 variables.weAreDoneHereCurly =  1;
 
@@ -3576,7 +3685,7 @@ variables.inTarget =  0;
 
 variables.endBracketDOntPutThere =  1;
 
-//out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField28 . posStartQuotes1"
+//out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField31 . posStartQuotes1"
 
 }
 
@@ -3586,7 +3695,7 @@ if ( variables.inTarget !== 1  &&  variables.endBracketDOntPutThere !== 1  &&  v
 
 {
 
-variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  variables.A_LoopField28 + "\n";
+variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  variables.A_LoopField31 + "\n";
 
 }
 
@@ -3646,13 +3755,13 @@ variables.foundTheTopLoop =  0;
 
 variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] =  ""
 
-variables.characters29 = variables.pyCode.split(/[\n\r]/)
-variables.charLength29 = variables.characters29.length
+variables.characters32 = variables.pyCode.split(/[\n\r]/)
+variables.charLength32 = variables.characters32.length
 
-for (/* Loop parse */ variables.A_Index29 = 1; variables.A_Index29 <= variables.charLength29; variables.A_Index29++) {
-variables.A_LoopField29 = variables.characters29[variables.A_Index29 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index32 = 1; variables.A_Index32 <= variables.charLength32; variables.A_Index32++) {
+variables.A_LoopField32 = variables.characters32[variables.A_Index32 - 1]; // Using array notation to access characters
 
-if ( await InStr ( variables.A_LoopField29 , variables.fixLoopLokingFor )  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( await InStr ( variables.A_LoopField32 , variables.fixLoopLokingFor )  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
@@ -3662,11 +3771,11 @@ variables.fixLoopLokingForNum =  1;
 
 }
 
-if ( await InStr ( variables.A_LoopField29 , "for " )  &&  variables.weAreDoneHereCurly !== 1  &&  variables.insdeAnestedLoopBAD !== 1  &&  variables.fixLoopLokingForNum == 1 )
+if ( await InStr ( variables.A_LoopField32 , "for " )  &&  variables.weAreDoneHereCurly !== 1  &&  variables.insdeAnestedLoopBAD !== 1  &&  variables.fixLoopLokingForNum == 1 )
 
 {
 
-variables.s =  await StrSplit ( variables.A_LoopField29 ,"A" + String.fromCharCode( 95 )  + "LoopField", 2 )
+variables.s =  await StrSplit ( variables.A_LoopField32 ,"A" + String.fromCharCode( 95 )  + "LoopField", 2 )
 
 variables.out1z =  variables.s;
 
@@ -3684,11 +3793,11 @@ variables.foundTheTopLoop++
 
 variables.inTarget =  1;
 
-//MsgBox, % A_LoopField29
+//MsgBox, % A_LoopField32
 
 variables.dontSaveStr =  1;
 
-variables.ALoopField =  variables.A_LoopField29;
+variables.ALoopField =  variables.A_LoopField32;
 
 //ALoopField := StrReplace(ALoopField, posStartQuotes1", posStartQuotes2")
 
@@ -3698,7 +3807,7 @@ variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  varia
 
 }
 
-if ( variables.inTarget == 1  &&  await InStr ( variables.A_LoopField29, String.fromCharCode( 123 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( variables.inTarget == 1  &&  await InStr ( variables.A_LoopField32, String.fromCharCode( 123 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
@@ -3706,7 +3815,7 @@ variables.insideBracket =  1;
 
 }
 
-if ( variables.insideBracket == 1  &&  await InStr ( variables.A_LoopField29, String.fromCharCode( 123 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( variables.insideBracket == 1  &&  await InStr ( variables.A_LoopField32, String.fromCharCode( 123 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
@@ -3714,7 +3823,7 @@ variables.netsedCurly++
 
 }
 
-if ( variables.insideBracket == 1  &&  await InStr ( variables.A_LoopField29, String.fromCharCode( 125 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( variables.insideBracket == 1  &&  await InStr ( variables.A_LoopField32, String.fromCharCode( 125 ) )  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
@@ -3724,7 +3833,7 @@ variables.readyToEnd =  1;
 
 }
 
-if ( await InStr ( variables.A_LoopField29, "for " )  &&  variables.insdeAnestedLoopBAD !== 1  &&  variables.foundTheTopLoop >= 2 )
+if ( await InStr ( variables.A_LoopField32, "for " )  &&  variables.insdeAnestedLoopBAD !== 1  &&  variables.foundTheTopLoop >= 2 )
 
 {
 
@@ -3748,7 +3857,7 @@ if ( variables.insdeAnestedLoopBAD == 1 )
 
 {
 
-if ( await InStr ( variables.A_LoopField29, String.fromCharCode( 123 ) ) )
+if ( await InStr ( variables.A_LoopField32, String.fromCharCode( 123 ) ) )
 
 {
 
@@ -3756,7 +3865,7 @@ variables.insideBracket1 =  1;
 
 }
 
-if ( variables.insideBracket1 == 1  &&  await InStr ( variables.A_LoopField29, String.fromCharCode( 123 ) ) )
+if ( variables.insideBracket1 == 1  &&  await InStr ( variables.A_LoopField32, String.fromCharCode( 123 ) ) )
 
 {
 
@@ -3764,7 +3873,7 @@ variables.netsedCurly1++
 
 }
 
-if ( variables.insideBracket1 == 1  &&  await InStr ( variables.A_LoopField29, String.fromCharCode( 125 ) ) )
+if ( variables.insideBracket1 == 1  &&  await InStr ( variables.A_LoopField32, String.fromCharCode( 125 ) ) )
 
 {
 
@@ -3774,19 +3883,19 @@ variables.readyToEnd1 =  1;
 
 }
 
-if ( await InStr ( variables.A_LoopField29, String.fromCharCode( 125 ) )  &&  variables.readyToEnd1 == 1  &&  variables.netsedCurly1 == 0  &&  variables.insideBracket == 1 )
+if ( await InStr ( variables.A_LoopField32, String.fromCharCode( 125 ) )  &&  variables.readyToEnd1 == 1  &&  variables.netsedCurly1 == 0  &&  variables.insideBracket == 1 )
 
 {
 
-//MsgBox, % A_LoopField29
+//MsgBox, % A_LoopField32
 
 variables.eldLoopNestedBADlol =  1;
 
-//out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField29 . posStartQuotes1"
+//out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField32 . posStartQuotes1"
 
 }
 
-variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  variables.A_LoopField29 + "\n";
+variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  variables.A_LoopField32 + "\n";
 
 }
 
@@ -3794,7 +3903,7 @@ if ( variables.inTarget == 1  &&  variables.dontSaveStr !== 1  &&  variables.fix
 
 {
 
-variables.ALoopField =  variables.A_LoopField29;
+variables.ALoopField =  variables.A_LoopField32;
 
 // Replace posStartQuotes1" with or without a following digit with posStartQuotes2" + out1z
 
@@ -3808,11 +3917,11 @@ variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  varia
 
 }
 
-if ( variables.inTarget == 1  &&  await InStr ( variables.A_LoopField29, String.fromCharCode( 125 ) )  &&  variables.readyToEnd == 1  &&  variables.netsedCurly == 0  &&  variables.weAreDoneHereCurly == 0  &&  variables.dontSaveStr !== 1  &&  variables.insdeAnestedLoopBAD !== 1 )
+if ( variables.inTarget == 1  &&  await InStr ( variables.A_LoopField32, String.fromCharCode( 125 ) )  &&  variables.readyToEnd == 1  &&  variables.netsedCurly == 0  &&  variables.weAreDoneHereCurly == 0  &&  variables.dontSaveStr !== 1  &&  variables.insdeAnestedLoopBAD !== 1 )
 
 {
 
-//MsgBox, % A_LoopField29
+//MsgBox, % A_LoopField32
 
 variables.weAreDoneHereCurly =  1;
 
@@ -3820,7 +3929,7 @@ variables.inTarget =  0;
 
 variables.endBracketDOntPutThere =  1;
 
-//out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField29 . posStartQuotes1"
+//out4758686d86d86d86578991a%AIndexLoopCurlyFix% .= A_LoopField32 . posStartQuotes1"
 
 }
 
@@ -3830,7 +3939,7 @@ if ( variables.inTarget !== 1  &&  variables.endBracketDOntPutThere !== 1  &&  v
 
 {
 
-variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  variables.A_LoopField29 + "\n";
+variables["out4758686d86d86d86578991a" + variables.AIndexLoopCurlyFix] +=  variables.A_LoopField32 + "\n";
 
 }
 
@@ -3876,19 +3985,19 @@ variables.out4758686d86dgt8r754444444 =  ""
 
 variables.hold =  0;
 
-variables.characters30 = variables.pyCode.split(/[\n\r]/)
-variables.charLength30 = variables.characters30.length
+variables.characters33 = variables.pyCode.split(/[\n\r]/)
+variables.charLength33 = variables.characters33.length
 
-for (/* Loop parse */ variables.A_Index30 = 1; variables.A_Index30 <= variables.charLength30; variables.A_Index30++) {
-variables.A_LoopField30 = variables.characters30[variables.A_Index30 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index33 = 1; variables.A_Index33 <= variables.charLength33; variables.A_Index33++) {
+variables.A_LoopField33 = variables.characters33[variables.A_Index33 - 1]; // Using array notation to access characters
 
 variables.ignore =  0;
 
-if ( await InStr ( variables.A_LoopField30, "for " ) )
+if ( await InStr ( variables.A_LoopField33, "for " ) )
 
 {
 
-if ( variables.hold == 1  &&  variables.holdText == variables.A_LoopField30 )
+if ( variables.hold == 1  &&  variables.holdText == variables.A_LoopField33 )
 
 {
 
@@ -3900,7 +4009,7 @@ else
 
 {
 
-variables.holdText =  variables.A_LoopField30;
+variables.holdText =  variables.A_LoopField33;
 
 variables.hold =  1;
 
@@ -3912,7 +4021,7 @@ if ( ! ( variables.ignore ) )
 
 {
 
-variables.out4758686d86dgt8r754444444 +=  variables.A_LoopField30 + "\n";
+variables.out4758686d86dgt8r754444444 +=  variables.A_LoopField33 + "\n";
 
 }
 
@@ -3928,17 +4037,17 @@ variables.pyCode =  await indent_nested_curly_braces ( variables.pyCode )
 
 variables.pyCodeOut1234565432 =  ""
 
-variables.characters31 = variables.pyCode.split(/[\n\r]/)
-variables.charLength31 = variables.characters31.length
+variables.characters34 = variables.pyCode.split(/[\n\r]/)
+variables.charLength34 = variables.characters34.length
 
-for (/* Loop parse */ variables.A_Index31 = 1; variables.A_Index31 <= variables.charLength31; variables.A_Index31++) {
-variables.A_LoopField31 = variables.characters31[variables.A_Index31 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index34 = 1; variables.A_Index34 <= variables.charLength34; variables.A_Index34++) {
+variables.A_LoopField34 = variables.characters34[variables.A_Index34 - 1]; // Using array notation to access characters
 
-if ( Trim( variables.A_LoopField31 ) !== String.fromCharCode( 123 )  &&  Trim( variables.A_LoopField31 ) !== String.fromCharCode( 125 ) )
+if ( Trim( variables.A_LoopField34 ) !== String.fromCharCode( 123 )  &&  Trim( variables.A_LoopField34 ) !== String.fromCharCode( 125 ) )
 
 {
 
-variables.out =  variables.A_LoopField31;
+variables.out =  variables.A_LoopField34;
 
 variables.out = StringTrimLeft(variables.out, 1)
 
@@ -3956,11 +4065,11 @@ if ( ! ( await InStr ( variables.out, "|itsaersdtgtgfergsdgfsegdfsedAA|" ) ) )
 
 {
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField31 ) ) , 1, 1 ) !== String.fromCharCode( 59 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField34 ) ) , 1, 1 ) !== String.fromCharCode( 59 ) )
 
 {
 
-if ( SubStr( Trim( await StrLower ( variables.A_LoopField31 ) ) , 1, 1 ) == String.fromCharCode( 124 ) )
+if ( SubStr( Trim( await StrLower ( variables.A_LoopField34 ) ) , 1, 1 ) == String.fromCharCode( 124 ) )
 
 {
 
@@ -3994,17 +4103,17 @@ variables.pyCodeFinal =  variables.pyCode;
 
 variables.allFuncsHere =  ""
 
-variables.characters32 = variables.funcs_func.split(/["|"]/)
-variables.charLength32 = variables.characters32.length
+variables.characters35 = variables.funcs_func.split(/["|"]/)
+variables.charLength35 = variables.characters35.length
 
-for (/* Loop parse */ variables.A_Index32 = 1; variables.A_Index32 <= variables.charLength32; variables.A_Index32++) {
-variables.A_LoopField32 = variables.characters32[variables.A_Index32 - 1]; // Using array notation to access characters
+for (/* Loop parse */ variables.A_Index35 = 1; variables.A_Index35 <= variables.charLength35; variables.A_Index35++) {
+variables.A_LoopField35 = variables.characters35[variables.A_Index35 - 1]; // Using array notation to access characters
 
-if ( await InStr ( variables.pyCodeFinal, variables.A_LoopField32 + String.fromCharCode( 40 ) ) )
+if ( await InStr ( variables.pyCodeFinal, variables.A_LoopField35 + String.fromCharCode( 40 ) ) )
 
 {
 
-variables.hererererehre =  variables.A_LoopField32 + "_func";
+variables.hererererehre =  variables.A_LoopField35 + "_func";
 
 variables.allFuncsHere +=  variables["func_" + variables.hererererehre];
 
@@ -4056,15 +4165,15 @@ variables.pyCode =  variables.putEndPointFlask1Up + "\n" + variables.pyCode + "\
 
 }
 
-for (/* Normal Loop */ variables.A_Index33 = 1; variables.A_Index33 <= variables.theIdNumOfThe34; variables.A_Index33++)
+for (/* Normal Loop */ variables.A_Index36 = 1; variables.A_Index36 <= variables.theIdNumOfThe34; variables.A_Index36++)
 
 {
 
-variables.pyCode =  StrReplace( variables.pyCode, "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-" + String.fromCharCode( 65 )  + String.fromCharCode( 65 )  + variables.A_Index33 + String.fromCharCode( 65 )  + String.fromCharCode( 65 ) , variables["theIdNumOfThe34theVar" + variables.A_Index33] )
+variables.pyCode =  StrReplace( variables.pyCode, "ihuiuuhuuhtheidFor--asas-theuhturtyphoutr-" + String.fromCharCode( 65 )  + String.fromCharCode( 65 )  + variables.A_Index36 + String.fromCharCode( 65 )  + String.fromCharCode( 65 ) , variables["theIdNumOfThe34theVar" + variables.A_Index36] )
 
 }
 
-GuiControl("textide", "Gui1codeBox", variables.pyCode)
+return variables.pyCode
 
 }
 
