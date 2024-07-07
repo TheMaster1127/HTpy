@@ -466,16 +466,16 @@ outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
 
 
-outOftranspileVariables := StrReplace(outOftranspileVariables, " ( ", Chr(40))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " ) ", Chr(41))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " )", Chr(41))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " < ", Chr(60))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " > ", Chr(62))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " (", "(")
+outOftranspileVariables := StrReplace(outOftranspileVariables, ") ", ")")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, ").", ") .")
+outOftranspileVariables := StrReplace(outOftranspileVariables, ".(", ". (")
 
 outOftranspileVariables := StrReplace(outOftranspileVariables, "  >= ", " >= ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, "  <= ", " <= ")
 
-outOftranspileVariables := StrReplace(outOftranspileVariables, ".", " + ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " . ", " + ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " ,  ", ", ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " [ ", "[")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " ] ", "]")
@@ -612,19 +612,50 @@ func_GetParams_func := "`ndef GetParams():`n    import os`n    import sys`n    #
 func_Floor_func := "`ndef Floor(num):`n    import math`n    if num is None or not isinstance(num, (int, float)):`n        return None`n    return math.floor(num)`n"
 
 
-func_A_TickCount_func := "`nimport time`n`nstart_timestamp = int(time.time() * 1000)  # Initialize with current timestamp in milliseconds`n`n# Function to calculate tick count in milliseconds`ndef A_TickCount():`n    return int(time.time() * 1000) - start_timestamp`n"
-
-
-
-func_RunCMD_func := "import subprocess`n`ndef RunCMD(command):`n    "       .     Chr(34)      .     Chr(34)              .     Chr(34)       .     "`n    Run a specified command in Termux and return the output.`n`n    Args:`n        command (str): The command to run in Termux.`n`n    Returns:`n        tuple: A tuple containing the standard output and standard error of the command.`n    "       .     Chr(34)      .     Chr(34)           .     Chr(34)       .     "`n    try:`n        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)`n        return (result.stdout, result.stderr)`n    except subprocess.CalledProcessError as e:`n        print(f"       .     Chr(34)       .     "Error: {e}"       .     Chr(34)       .     ")`n        return (e.stdout, e.stderr)`n    except Exception as e:`n        print(f"       .     Chr(34)       .     "An unexpected error occurred: {e}"       .     Chr(34)       .     ")`n        return ("       .     Chr(34)            .     Chr(34)       .     ", "       .     Chr(34)           .     Chr(34)       .     ")`n"
+func_RunCMD_func := "`nimport subprocess`ndef RunCMD(command):`n    try:`n        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)`n        return result.stdout`n    except subprocess.CalledProcessError as e:`n        print(f" . Chr(34) . "Error: {e}" . Chr(34) . ")`n        return e.stdout + " . Chr(34) . "" . Chr(92) . "n" . Chr(34) . " + e.stderr`n    except Exception as e:`n        print(f" . Chr(34) . "An unexpected error occurred: {e}" . Chr(34) . ")`n        return " . Chr(34) . "" . Chr(34) . "`n"
 
 
 
 func_SortLikeAHK_func := "`nimport random`ndef SortLikeAHK(var_name, options):`n    # Determine delimiter based on options`n    delimiter = '" . Chr(92) . "n'`n    if 'D' in options:`n        delimiter = options[options.index('D') + 1]`n    `n    # Split the input variable by delimiter`n    items = var_name.split(delimiter)`n    `n    # Remove empty items and strip whitespace`n    items = [item.strip() for item in items if item.strip()]`n    `n    # Apply sorting based on options`n    if 'N' in options:`n        # Numeric sort`n        items.sort(key=lambda x: int(x))`n    elif 'Random' in options:`n        # Random sort`n        random.shuffle(items)`n    else:`n        # Default alphabetical sort`n        items.sort(key=lambda x: x.lower() if 'C' not in options else x)`n    `n    # Reverse if 'R' option is present`n    if 'R' in options:`n        items.reverse()`n    `n    # Remove duplicates if 'U' option is present`n    if 'U' in options:`n        seen = set()`n        unique_items = []`n        for item in items:`n            lower_item = item.lower() if 'C' not in options else item`n            if lower_item not in seen:`n                seen.add(lower_item)`n                unique_items.append(item)`n        items = unique_items`n    `n    # Join the sorted items back into a string`n    sorted_var = delimiter.join(items)`n    `n    return sorted_var`n"
 
+func_BuildInVars_func := "`nimport time`nfrom datetime import datetime`n# Initialize with current timestamp`nlast_input_time = time.time() * 1000  # Convert to milliseconds`nstart_timestamp = time.time() * 1000  # Convert to milliseconds`n`n# Function to reset the idle timer`ndef reset_idle_timer():`n    global last_input_time`n    last_input_time = time.time() * 1000  # Update last input time in milliseconds`n`n# Function to calculate tick count in milliseconds`ndef A_TickCount():`n    return int(time.time() * 1000 - start_timestamp)`n`n# Function to build in variables`ndef BuildInVars(varName):`n    now = datetime.now()`n    if varName == " . Chr(34) . "A_TickCount" . Chr(34) . ":`n        # Return tick count in milliseconds`n        return A_TickCount()`n    elif varName == " . Chr(34) . "A_Now" . Chr(34) . ":`n        # Return current local timestamp`n        return now.strftime(" . Chr(34) . "%Y-%m-%d %H:%M:%S" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_YYYY" . Chr(34) . ":`n        # Return current year`n        return now.strftime(" . Chr(34) . "%Y" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_MM" . Chr(34) . ":`n        # Return current month`n        return now.strftime(" . Chr(34) . "%m" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_DD" . Chr(34) . ":`n        # Return current day`n        return now.strftime(" . Chr(34) . "%d" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_MMMM" . Chr(34) . ":`n        # Return full month name`n        return now.strftime(" . Chr(34) . "%B" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_MMM" . Chr(34) . ":`n        # Return short month name`n        return now.strftime(" . Chr(34) . "%b" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_DDDD" . Chr(34) . ":`n        # Return full day name`n        return now.strftime(" . Chr(34) . "%A" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_DDD" . Chr(34) . ":`n        # Return short day name`n        return now.strftime(" . Chr(34) . "%a" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_Hour" . Chr(34) . ":`n        # Return current hour`n        return now.strftime(" . Chr(34) . "%H" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_Min" . Chr(34) . ":`n        # Return current minute`n        return now.strftime(" . Chr(34) . "%M" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_Sec" . Chr(34) . ":`n        # Return current second`n        return now.strftime(" . Chr(34) . "%S" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_Space" . Chr(34) . ":`n        # Return space character`n        return " . Chr(34) . " " . Chr(34) . "`n    elif varName == " . Chr(34) . "A_Tab" . Chr(34) . ":`n        # Return tab character`n        return " . Chr(34) . Chr(92) . "t" . Chr(34) . "`n    else:`n        # Handle unknown variable names`n        return None`n"
 
 
-funcs_func := "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD|SortLikeAHK"
+func_Floor_func := "`ndef Floor(number):`n    if number > 0:`n        return int(number)`n    else:`n        return int(number) - (1 if number != int(number) else 0)`n`n"
+
+
+func_ExitApp_func := "`nimport os`n# Function to handle application termination`ndef ExitApp():`n    os._exit(1)`n`n"
+
+
+func_SetTimer_func := "`nimport time`nimport threading`n# Dictionary to store active timers`nactive_timers = {}`n`n# Function to start, stop, or adjust a timer`ndef SetTimer(func, timeOrOnOff):`n    def timer_wrapper(name, interval_ms):`n        def run_timer():`n            func()`n            if active_timers[name]['running']:`n                active_timers[name]['timer'] = threading.Timer(interval_ms / 1000.0, run_timer)`n                active_timers[name]['timer'].start()`n                `n        if timeOrOnOff == " . Chr(34) . "On" . Chr(34) . " and not active_timers[name]['running']:`n            active_timers[name]['timer'] = threading.Timer(active_timers[name]['interval_ms'] / 1000.0, run_timer)`n            active_timers[name]['timer'].start()`n            active_timers[name]['running'] = True`n            #print(f" . Chr(34) . "Timer '{name}' started with interval {active_timers[name]['interval_ms']} ms." . Chr(34) . ")`n        elif timeOrOnOff == " . Chr(34) . "Off" . Chr(34) . " and active_timers[name]['running']:`n            active_timers[name]['timer'].cancel()`n            active_timers[name]['running'] = False`n            #print(f" . Chr(34) . "Timer '{name}' stopped." . Chr(34) . ")`n        elif isinstance(timeOrOnOff, int):`n            active_timers[name]['interval_ms'] = timeOrOnOff  # Update the stored interval`n            if active_timers[name]['running']:`n                active_timers[name]['timer'].cancel()`n                active_timers[name]['timer'] = threading.Timer(timeOrOnOff / 1000.0, run_timer)`n                active_timers[name]['timer'].start()`n                #print(f" . Chr(34) . "Timer '{name}' adjusted to interval {timeOrOnOff} ms." . Chr(34) . ")`n            else:`n                active_timers[name]['timer'] = threading.Timer(timeOrOnOff / 1000.0, run_timer)`n                active_timers[name]['timer'].start()`n                active_timers[name]['running'] = True`n                #print(f" . Chr(34) . "Timer '{name}' started with adjusted interval {timeOrOnOff} ms." . Chr(34) . ")`n        else:`n            print(" . Chr(34) . "Invalid arguments. Please provide a valid function and time/On/Off state." . Chr(34) . ")`n`n    # Ensure func is callable`n    if not callable(func):`n        print(" . Chr(34) . "Invalid function provided." . Chr(34) . ")`n        return`n`n    name = func.__name__  # Use function name as timer identifier`n`n    # Initialize timer if not already active`n    if name not in active_timers:`n        active_timers[name] = {`n            'timer': None,`n            'running': False,`n            'interval_ms': 1000  # Default interval`n        }`n`n    # Determine the interval_ms value`n    if isinstance(timeOrOnOff, int):`n        interval_ms = timeOrOnOff`n    else:`n        interval_ms = active_timers[name]['interval_ms']  # Use stored interval`n`n    # Call timer_wrapper to manage timer based on timeOrOnOff`n    timer_wrapper(name, interval_ms)`n"
+
+
+func_Abs_func := "`ndef Abs(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return abs(num)`n"
+func_ACos_func := "`ndef ACos(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.acos(num)`n"
+func_ASin_func := "`ndef ASin(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.asin(num)`n"
+func_ATan_func := "`ndef ATan(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.atan(num)`n"
+func_Ceil_func := "`ndef Ceil(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.ceil(num)`n"
+func_Cos_func := "`ndef Cos(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.cos(num)`n"
+func_Exp_func := "`ndef Exp(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.exp(num)`n"
+func_Ln_func := "`ndef Ln(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.log(num)`n"
+func_Log_func := "`ndef Log(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.log10(num)`n"
+func_Round_func := "`ndef Round(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return round(num)`n"
+func_Sin_func := "`ndef Sin(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.sin(num)`n"
+func_Sqrt_func := "`ndef Sqrt(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.sqrt(num)`n"
+func_Tan_func := "`ndef Tan(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.tan(num)`n"
+func_RegExMatch_func := "`ndef RegExMatch(Haystack, NeedleRegEx, OutputVar=None, StartingPos=0):`n    import re`n    if Haystack is None or NeedleRegEx is None:`n        return None`n`n    regex = re.compile(NeedleRegEx)`n    match = regex.search(Haystack)`n`n    if match:`n        if OutputVar is not None:`n            OutputVar.append(match.group(0))`n        return match.start() + 1`n    else:`n        return 0`n"
+func_StrLen_func := "`ndef StrLen(string):`n    if string is None:`n        return None`n    return len(string)`n"
+func_Asc_func := "`ndef Asc(char):`n    if char is None or len(char) == 0:`n        return None`n    return ord(char[0])`n"
+func_getDataFromAPI_func := "`nimport json`nimport urllib.request`nimport urllib.error`ndef getDataFromAPI(url):`n    try:`n        with urllib.request.urlopen(url) as response:`n            if response.getcode() == 200:`n                return response.read()`n            else:`n                return None`n    except urllib.error.URLError as e:`n        print(f" . Chr(34) . "Error accessing URL: {e.reason}" . Chr(34) . ")`n        return None`n"
+func_getDataFromJSON_func := "`nimport json`nimport re`ndef getDataFromJSON(json_data, json_path):`n    try:`n        if json_data:`n            json_data = json.loads(json_data)  # Parse JSON data into Python object`n`n        # Check if the path starts with a dot and remove it if present`n        if json_path.startswith(" . Chr(34) . "." . Chr(34) . "):`n            json_path = json_path[1:]`n`n        path_segments = json_path.split(" . Chr(34) . "." . Chr(34) . ")  # Split the path into segments`n        current_data = json_data  # Use json_data directly (already an object)`n`n        for segment in path_segments:`n            if current_data is None:`n                return None`n`n            # Handle array indices e.g., " . Chr(34) . "Children[0]" . Chr(34) . "`n            if " . Chr(34) . "[" . Chr(34) . " in segment and " . Chr(34) . "]" . Chr(34) . " in segment:`n                array_index = re.search(r" . Chr(34) . "" . Chr(92) . "[(" . Chr(92) . "d+)" . Chr(92) . "]" . Chr(34) . ", segment)`n                if array_index:`n                    array_name = segment[:segment.index(" . Chr(34) . "[" . Chr(34) . ")]`n                    index = int(array_index.group(1))`n                    if array_name:`n                        current_data = current_data.get(array_name, [])[index]`n                    else:`n                        current_data = current_data[index]`n                    segment = segment[segment.index(" . Chr(34) . "]" . Chr(34) . ") + 1:]`n`n            # Handle regular dictionary keys`n            if segment:`n                current_data = current_data.get(segment, None)`n`n        return current_data`n`n    except (TypeError, IndexError, KeyError) as error:`n        print(f" . Chr(34) . "Error accessing data: {error}" . Chr(34) . ")`n        return None`n"
+
+funcs_func := "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|Floor|RunCMD|SortLikeAHK|BuildInVars|Floor|ExitApp|SetTimer|Abs|ACos|ASin|ATan|Ceil|Cos|Exp|Ln|Log|Round|Sin|Sqrt|Tan|RegExMatch|StrLen|Asc|getDataFromAPI|getDataFromJSON"
+
+
+
+functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|RunCMD|SortLikeAHK|BuildInVars|Floor|ExitApp|SetTimer|Abs|ACos|ASin|ATan|Ceil|Cos|Exp|Ln|Log|Round|Sin|Sqrt|Tan|RegExMatch|StrLen|Asc|getDataFromAPI|getDataFromJSON|float"
+
+
 
 nothing := ""
 HTpyCode := StrReplace(HTpyCode, Chr(13), nothing)
@@ -634,6 +665,7 @@ out := ""
 HTpyCodeD1 := ""
 skipLeftCuleyForFuncPLS := 0
 eavbnsalvbaslv := 0
+port := "8000"
 Loop, Parse, HTpyCode, `n, `r
 {
 if (A_Index = 1)
@@ -744,7 +776,7 @@ CheckIFandElsesss7 := "else if !("
 CheckIFandElsesss8 := "else if!("
 CheckIFandElsesssNum := 0
 
-functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|RunCMD|SortLikeAHK"
+
 
 awesdrtf := "|A" . Chr(95) . "LoopField|A" . Chr(95) . "Index"
 
@@ -844,6 +876,8 @@ StringTrimLeft, var1, A_LoopField, 8
 
 OUTvarMsgLow := transpileLowVariables(var1)
 
+OUTvarMsgLow := StrReplace(OUTvarMsgLow, Chr(96), Chr(92))
+
 out := "print(" . OUTvarMsgLow . ")"
 
 
@@ -885,6 +919,18 @@ lineDone := 1
 pyCode .= var1 . "`n"
 
 
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = StrLower("Port, "))
+{
+StringTrimLeft, str1, A_LoopField, 6
+str1 := Trim(transpileVariables(str1, functionNames))
+
+
+
+var1 := "variables['port'] = " . str(str1)
+port := "variables['port']"
+lineDone := 1
+pyCode .= var1 . "`n"
 }
 else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("Random, "))
 {
@@ -950,6 +996,34 @@ usedLib .= "import time`n"
 }
 pyCode .= out . "`n"
 
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = "settimer, ")
+{
+StringTrimLeft, str1, A_LoopField, 10
+
+str2 := Trim(StrSplit(str1, ",", 1))
+str3 := Trim(StrSplit(str1, ",", 2))
+
+if (StrLower(str3) = "on")
+{
+str3 := Chr(34) . "On" . Chr(34)
+}
+
+if (StrLower(str3) = "off")
+{
+str3 := Chr(34) . "Off" . Chr(34)
+}
+
+out1 := "SetTimer(" . str2 . ", " . str3 . ")"
+
+lineDone := 1
+pyCode .= out1 . "`n"
+}
+else if (Trim(StrLower(A_LoopField)) = "exitapp")
+{
+
+lineDone := 1
+pyCode .= "ExitApp()" . "`n"
 }
 else if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = "fileread, ")
 {
@@ -1106,7 +1180,7 @@ strFormEndpoint2 := Trim(StrSplit(strFormEndpoint, ",", 2))
 
 putEndPointFlask1Up := "from flask import Flask, send_file, request, jsonify`nimport os`nvariables = {}`napp = Flask(__name__)`n`n@app.route('/')`ndef app_route():`n    return send_file(os.path.join(os.path.dirname(__file__), 'index.html')), 200`n"
 
-putEndPointFlask2Down := "`n@app.errorhandler(404)`ndef not_found(e):`n    return " . Chr(34) . "Page not found" . Chr(34) . ", 404`n`nif __name__ == '__main__':`n    app.run(host='0.0.0.0', port=8000, debug=True)"
+putEndPointFlask2Down := "`n@app.errorhandler(404)`ndef not_found(e):`n    return " . Chr(34) . "Page not found" . Chr(34) . ", 404`n`nif __name__ == '__main__':`n    app.run(host='0.0.0.0', port=" . str(port) . ", debug=True)"
 
 
 
@@ -1289,6 +1363,53 @@ pycodeLoopfixa .= "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength . "`n"
 pycodeLoopfixa1 := "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . AindexcharLength
 AindexcharLength++
 pyCode .= pycodeLoopfixa1 . "`n" . var1out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 7) = "gosub, ")
+{
+
+;MsgBox, % A_LoopField
+
+
+sstr1 := A_LoopField
+
+s := StrSplit(sstr1, ",", 2)
+out1 := s
+
+out1 := Trim(out1)
+
+out2 := out1 . "()"
+
+;MsgBox, % out2
+lineDone := 1
+pyCode .= out2 . "`n"
+
+}
+else if (A_LoopField == "Return")
+{
+pyCode .= "}" . "`n"
+lineDone := 1
+}
+else if (RegExReplace(A_LoopField, "^\\w+:$", "") != A_LoopField) && (Trim(SubStr(A_LoopField, 0)) = ":") && (lineDone != 1)
+{
+
+;MsgBox, % A_LoopField
+
+
+
+out1 := A_LoopField
+
+out1 := Trim(out1)
+
+StringTrimRight, out1, out1, 1
+
+
+
+pyCode .= "def " . out1 . "():`n{`n"
+
+;MsgBox, % out1
+;~ MsgBox, % see
+
+lineDone := 1
 }
 else if (SubStr(A_LoopField, -1) = "++")
 {
@@ -2053,6 +2174,39 @@ pyCodeOut1234565432 .= out . "`n"
 
 
 StringTrimRight, pyCode, pyCodeOut1234565432, 1
+
+
+pyCodeOutOneLastFix := ""
+Loop, Parse, pyCode, `n, `r
+{
+
+sstr1 := A_LoopField
+
+sstr1 := StrReplace(sstr1, "variables['A_TickCount']", "BuildInVars(" . Chr(34) . "A_TickCount" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Now']", "BuildInVars(" . Chr(34) . "A_Now" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_YYYY']", "BuildInVars(" . Chr(34) . "A_YYYY" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_MMMM']", "BuildInVars(" . Chr(34) . "A_MMMM" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_MMM']", "BuildInVars(" . Chr(34) . "A_MMM" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_MM']", "BuildInVars(" . Chr(34) . "A_MM" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_DDDD']", "BuildInVars(" . Chr(34) . "A_DDDD" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_DDD']", "BuildInVars(" . Chr(34) . "A_DDD" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_DD']", "BuildInVars(" . Chr(34) . "A_DD" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Hour']", "BuildInVars(" . Chr(34) . "A_Hour" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Min']", "BuildInVars(" . Chr(34) . "A_Min" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Sec']", "BuildInVars(" . Chr(34) . "A_Sec" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Space']", "BuildInVars(" . Chr(34) . "A_Space" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Tab']", "BuildInVars(" . Chr(34) . "A_Tab" . Chr(34) . ")")
+
+
+pyCodeOutOneLastFix .= sstr1 . "`n"
+
+}
+StringTrimRight, pyCode, pyCodeOutOneLastFix, 1
+
+
+
+
+
 pyCodeFinal := pyCode
 
 allFuncsHere := ""
@@ -2096,6 +2250,9 @@ if (putEndPointFlask1Up != "")
 {
 pyCode := putEndPointFlask1Up . "`n" . pyCode . "`n" . putEndPointFlask2Down . "`n"
 }
+
+
+
 
 Loop, % theIdNumOfThe34
 {

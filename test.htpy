@@ -1,5 +1,40 @@
-Endpoint, request_data, endpointName
+
+timer1()
 {
-var1 := request_data
-msgbox, % var1
+MsgBox, timer1 msg`n
+}
+wert := 5555
+Port, %wert%
+Endpoint, as, waesdrf
+{
+MsgBox, j
+}
+
+timer2()
+{
+MsgBox, timer2 msg`n
+}
+
+SetTimer, timer1, 300
+SetTimer, timer2, 69
+
+Loop, 20
+{
+Sleep, 300
+MsgBox, % "this is Index " . str(A_Index) . "`n"
+if (A_Index = 4)
+{
+MsgBox, STOP the timer2`n
+SetTimer, timer2, Off
+}
+if (A_Index = 17)
+{
+MsgBox, bye bye`n
+ExitApp
+}
+if (A_Index = 10)
+{
+MsgBox, Start back the timer2`n
+SetTimer, timer2, On
+}
 }

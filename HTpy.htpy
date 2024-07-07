@@ -349,16 +349,17 @@ outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " = ", " == ")
 
 
-outOftranspileVariables := StrReplace(outOftranspileVariables, " ( ", Chr(40))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " ) ", Chr(41))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " )", Chr(41))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " < ", Chr(60))
-outOftranspileVariables := StrReplace(outOftranspileVariables, " > ", Chr(62))
+outOftranspileVariables := StrReplace(outOftranspileVariables, " (", "(")
+outOftranspileVariables := StrReplace(outOftranspileVariables, ") ", ")")
+
+outOftranspileVariables := StrReplace(outOftranspileVariables, ").", ") .")
+outOftranspileVariables := StrReplace(outOftranspileVariables, ".(", ". (")
+
 
 outOftranspileVariables := StrReplace(outOftranspileVariables, "  >= ", " >= ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, "  <= ", " <= ")
 
-outOftranspileVariables := StrReplace(outOftranspileVariables, ".", " + ")
+outOftranspileVariables := StrReplace(outOftranspileVariables, " . ", " + ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " ,  ", ", ")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " [ ", "[")
 outOftranspileVariables := StrReplace(outOftranspileVariables, " ] ", "]")
@@ -418,6 +419,7 @@ out := ""
 HTpyCodeD1 := ""
 skipLeftCuleyForFuncPLS := 0
 eavbnsalvbaslv := 0
+port := "8000"
 Loop, Parse, HTpyCode, `n, `r
 {
 if (A_Index = 1)
@@ -528,9 +530,111 @@ CheckIFandElsesss7 := "else if !("
 CheckIFandElsesss8 := "else if!("
 CheckIFandElsesssNum := 0
 
-functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD|SortLikeAHK"
 
 
+func_LoopParseFunc_func := "`ndef LoopParseFunc(var, delimiter1=" . Chr(34) . "" . Chr(34) . ", delimiter2=" . Chr(34) . "" . Chr(34) . "):`n    import re`n    if not delimiter1 and not delimiter2:`n        # If no delimiters are provided, return a list of characters`n        items = list(var)`n    else:`n        # Construct the regular expression pattern for splitting the string`n        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'`n`n        # Split the string using the constructed pattern`n        items = re.split(pattern, var)`n`n    return items`n`n"
+
+
+func_InStr_func := "`ndef InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):`n    if Haystack is None or Needle is None:`n        return False`n    StartingPos = max(StartingPos, 1)`n    if not CaseSensitive:`n        Haystack = Haystack.lower()`n        Needle = Needle.lower()`n    count = 0`n    for i in range(StartingPos - 1, len(Haystack)):`n        if Haystack[i:i + len(Needle)] == Needle:`n            count += 1`n            if count == Occurrence:`n                return True`n    return False  `n"
+
+func_SubStr_func := "`ndef SubStr(str, startPos, length=None):`n    if str is None or str == " . Chr(34) . "" . Chr(34) . ":`n        return " . Chr(34) . "" . Chr(34) . "`n`n    if length is None or length == " . Chr(34) . "" . Chr(34) . ":`n        length = len(str) - startPos + 1`n`n    if startPos < 1:`n        startPos = len(str) + startPos`n`n    return str[startPos - 1:startPos - 1 + length]`n"
+
+
+func_Trim_func := "`ndef Trim(inputString):`n    if inputString is None:`n        return " . Chr(34) . "" . Chr(34) . "`n`n    return inputString.strip()`n"
+
+
+func_StrReplace_func := "  `ndef StrReplace(originalString, find, replaceWith):`n    # Use the replace method to replace occurrences of 'find' with 'replaceWith'`n    return originalString.replace(find, replaceWith)`n"
+
+
+func_StringTrimLeft_func := "`ndef StringTrimLeft(input, numChars):`n    # Convert input to a string if it's not already a string`n    if not isinstance(input, str):`n        input = str(input)  # Convert input to string`n`n    # Check if the input is long enough to perform trimming`n    if len(input) >= numChars:`n        return input[numChars:]  # Trim the string from the left`n    else:`n        return input  # Return input unchanged if numChars is larger than string length`n"
+
+
+func_StringTrimRight_func := "`ndef StringTrimRight(input, numChars):`n    # Convert input to a string if it's not already a string`n    if not isinstance(input, str):`n        input = str(input)  # Convert input to string`n`n    # Check if the input is long enough to perform trimming`n    if len(input) >= numChars:`n        return input[:-numChars]  # Trim the string from the right`n    else:`n        return input  # Return input unchanged if numChars is larger than string length`n"
+
+
+func_StrLower_func := "`ndef StrLower(string):`n    return string.lower()`n"
+
+
+func_RegExReplace_func := "`ndef RegExReplace(inputStr, regexPattern, replacement):`n    # Create a regular expression object using the provided pattern`n    import re`n    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching`n`n    # Use the sub() method to perform the regex replacement`n    resultStr = regex.sub(replacement, inputStr)`n`n    # Return the modified string`n    return resultStr`n"
+
+
+func_StrSplit_func := "`ndef StrSplit(inputStr, delimiter, num):`n    # Check if the delimiter is empty`n    if delimiter == '':`n        # Return an empty string since splitting with an empty delimiter is not possible`n        return ''`n`n    # Split the input string based on the delimiter`n    parts = inputStr.split(delimiter)`n`n    # Return the part specified by the num parameter (1-based index)`n    if 0 < num <= len(parts):`n        return parts[num - 1]  # Return the specified part (0-based index)`n    else:`n        return ''  # Return an empty string if num is out of range`n"
+
+func_Chr_func := "`ndef Chr(number):`n    # Check if the number is None`n    if number is None:`n        # Return an empty string`n        return " . Chr(34) . "" . Chr(34) . "`n`n    # Check if the number is within the valid Unicode range`n    if 0 <= number <= 0x10FFFF:`n        # Convert the number to a character using chr()`n        return chr(number)`n    else:`n        # Return an empty string for invalid numbers`n        return " . Chr(34) . "" . Chr(34) . "`n`n"
+
+func_Mod_func := "`n# Custom Mod function in Python`ndef Mod(dividend, divisor):`n    return dividend % divisor`n"
+
+
+
+func_HTpy_func := "`ndef HTpy():`n    import sys`n    import os`n    if len(sys.argv) < 2 or len(sys.argv) > 3:`n        print(" . Chr(34) . "Usage: python app.py <input_file.htpy> [run]" . Chr(34) . ")`n        sys.exit(1)`n`n    input_file = sys.argv[1]`n`n    # Ensure the input_file ends with '.htpy'`n    if not input_file.endswith('.htpy'):`n        print(" . Chr(34) . "Error: Input file must have a .htpy extension." . Chr(34) . ")`n        sys.exit(1)`n`n    # Check if the input_file exists`n    if not os.path.isfile(input_file):`n        print(f" . Chr(34) . "Error: '{input_file}' is not a valid file path." . Chr(34) . ")`n        sys.exit(1)`n`n    # Determine the output .py file name based on input file name`n    output_file = os.path.splitext(input_file)[0] + '.py'`n`n    # Compile the .htpy content using the compiler function`n    with open(input_file, 'r') as file:`n        htpy_content = file.read()`n`n    compiled_result = compiler(htpy_content)`n`n    # Save the compiled result to the determined .py output file`n    with open(output_file, 'w') as file:`n        file.write(compiled_result)`n`n    print(f" . Chr(34) . "Compiled result saved to '{output_file}'." . Chr(34) . ")`n`n    # Check if 'run' parameter is provided and execute the compiled Python script`n    if len(sys.argv) == 3 and sys.argv[2] == 'run':`n        print(f" . Chr(34) . "Running '{output_file}'..." . Chr(34) . ")`n        try:`n            exec(compile(open(output_file).read(), output_file, 'exec'), globals())`n        except Exception as e:`n            print(f" . Chr(34) . "Error occurred while running the compiled file: {e}" . Chr(34) . ")`n`n"
+
+
+
+
+func_FileRead_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(82) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(32) . Chr(97) . Chr(110) . Chr(121) . Chr(32) . Chr(101) . Chr(120) . Chr(116) . Chr(114) . Chr(97) . Chr(32) . Chr(100) . Chr(111) . Chr(117) . Chr(98) . Chr(108) . Chr(101) . Chr(32) . Chr(113) . Chr(117) . Chr(111) . Chr(116) . Chr(101) . Chr(115) . Chr(32) . Chr(97) . Chr(114) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(112) . Chr(40) . Chr(39) . Chr(34) . Chr(39) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(114) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(110) . Chr(99) . Chr(111) . Chr(100) . Chr(105) . Chr(110) . Chr(103) . Chr(61) . Chr(39) . Chr(117) . Chr(116) . Chr(102) . Chr(45) . Chr(56) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(114) . Chr(114) . Chr(111) . Chr(114) . Chr(115) . Chr(61) . Chr(39) . Chr(105) . Chr(103) . Chr(110) . Chr(111) . Chr(114) . Chr(101) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(114) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(78) . Chr(111) . Chr(116) . Chr(70) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(69) . Chr(114) . Chr(114) . Chr(111) . Chr(114) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(39) . Chr(39) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(10)
+
+func_FileAppend_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(65) . Chr(112) . Chr(112) . Chr(101) . Chr(110) . Chr(100) . Chr(40) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(32) . Chr(97) . Chr(110) . Chr(121) . Chr(32) . Chr(101) . Chr(120) . Chr(116) . Chr(114) . Chr(97) . Chr(32) . Chr(100) . Chr(111) . Chr(117) . Chr(98) . Chr(108) . Chr(101) . Chr(32) . Chr(113) . Chr(117) . Chr(111) . Chr(116) . Chr(101) . Chr(115) . Chr(32) . Chr(97) . Chr(114) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(112) . Chr(40) . Chr(39) . Chr(34) . Chr(39) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(97) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(110) . Chr(99) . Chr(111) . Chr(100) . Chr(105) . Chr(110) . Chr(103) . Chr(61) . Chr(39) . Chr(117) . Chr(116) . Chr(102) . Chr(45) . Chr(56) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(39) . Chr(97) . Chr(39) . Chr(32) . Chr(109) . Chr(111) . Chr(100) . Chr(101) . Chr(32) . Chr(102) . Chr(111) . Chr(114) . Chr(32) . Chr(97) . Chr(112) . Chr(112) . Chr(101) . Chr(110) . Chr(100) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(119) . Chr(114) . Chr(105) . Chr(116) . Chr(101) . Chr(40) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(84) . Chr(114) . Chr(117) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(70) . Chr(97) . Chr(108) . Chr(115) . Chr(101) . Chr(10)
+
+
+func_FileDelete_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(68) . Chr(101) . Chr(108) . Chr(101) . Chr(116) . Chr(101) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(101) . Chr(120) . Chr(105) . Chr(115) . Chr(116) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(114) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(115) . Chr(115) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(10) . Chr(10)
+
+
+
+func_GetParams_func := "`nimport os`nimport sys`n`ndef GetParams():`n    # Check if any command line arguments are provided`n    if len(sys.argv) < 2:`n        return " . Chr(34) . "" . Chr(34) . "`n`n    # Store the provided command line arguments`n    params = []`n    for arg in sys.argv[1:]:`n        if os.path.exists(arg):`n            arg = os.path.abspath(arg)`n        params.append(arg)`n`n    return " . Chr(34) . "" . Chr(92) . "n" . Chr(34) . ".join(params)`n"
+
+
+func_Floor_func := "`ndef Floor(num):`n    import math`n    if num is None or not isinstance(num, (int, float)):`n        return None`n    return math.floor(num)`n"
+
+func_A_TickCount_func := "`nimport time`n`nstart_timestamp = int(time.time() * 1000)  # Initialize with current timestamp in milliseconds`n`n# Function to calculate tick count in milliseconds`ndef A_TickCount():`n    return int(time.time() * 1000) - start_timestamp`n"
+
+
+
+func_RunCMD_func := "`nimport subprocess`ndef RunCMD(command):`n    try:`n        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)`n        return result.stdout`n    except subprocess.CalledProcessError as e:`n        print(f" . Chr(34) . "Error: {e}" . Chr(34) . ")`n        return e.stdout + " . Chr(34) . "" . Chr(92) . "n" . Chr(34) . " + e.stderr`n    except Exception as e:`n        print(f" . Chr(34) . "An unexpected error occurred: {e}" . Chr(34) . ")`n        return " . Chr(34) . "" . Chr(34) . "`n"
+
+
+func_SortLikeAHK_func := "`nimport random`ndef SortLikeAHK(var_name, options):`n    # Determine delimiter based on options`n    delimiter = '" . Chr(92) . "n'`n    if 'D' in options:`n        delimiter = options[options.index('D') + 1]`n    `n    # Split the input variable by delimiter`n    items = var_name.split(delimiter)`n    `n    # Remove empty items and strip whitespace`n    items = [item.strip() for item in items if item.strip()]`n    `n    # Apply sorting based on options`n    if 'N' in options:`n        # Numeric sort`n        items.sort(key=lambda x: int(x))`n    elif 'Random' in options:`n        # Random sort`n        random.shuffle(items)`n    else:`n        # Default alphabetical sort`n        items.sort(key=lambda x: x.lower() if 'C' not in options else x)`n    `n    # Reverse if 'R' option is present`n    if 'R' in options:`n        items.reverse()`n    `n    # Remove duplicates if 'U' option is present`n    if 'U' in options:`n        seen = set()`n        unique_items = []`n        for item in items:`n            lower_item = item.lower() if 'C' not in options else item`n            if lower_item not in seen:`n                seen.add(lower_item)`n                unique_items.append(item)`n        items = unique_items`n    `n    # Join the sorted items back into a string`n    sorted_var = delimiter.join(items)`n    `n    return sorted_var`n"
+
+
+func_BuildInVars_func := "`nimport time`nfrom datetime import datetime`n# Initialize with current timestamp`nlast_input_time = time.time() * 1000  # Convert to milliseconds`nstart_timestamp = time.time() * 1000  # Convert to milliseconds`n`n# Function to reset the idle timer`ndef reset_idle_timer():`n    global last_input_time`n    last_input_time = time.time() * 1000  # Update last input time in milliseconds`n`n# Function to calculate tick count in milliseconds`ndef A_TickCount():`n    return int(time.time() * 1000 - start_timestamp)`n`n# Function to build in variables`ndef BuildInVars(varName):`n    now = datetime.now()`n    if varName == " . Chr(34) . "A_TickCount" . Chr(34) . ":`n        # Return tick count in milliseconds`n        return A_TickCount()`n    elif varName == " . Chr(34) . "A_Now" . Chr(34) . ":`n        # Return current local timestamp`n        return now.strftime(" . Chr(34) . "%Y-%m-%d %H:%M:%S" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_YYYY" . Chr(34) . ":`n        # Return current year`n        return now.strftime(" . Chr(34) . "%Y" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_MM" . Chr(34) . ":`n        # Return current month`n        return now.strftime(" . Chr(34) . "%m" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_DD" . Chr(34) . ":`n        # Return current day`n        return now.strftime(" . Chr(34) . "%d" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_MMMM" . Chr(34) . ":`n        # Return full month name`n        return now.strftime(" . Chr(34) . "%B" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_MMM" . Chr(34) . ":`n        # Return short month name`n        return now.strftime(" . Chr(34) . "%b" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_DDDD" . Chr(34) . ":`n        # Return full day name`n        return now.strftime(" . Chr(34) . "%A" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_DDD" . Chr(34) . ":`n        # Return short day name`n        return now.strftime(" . Chr(34) . "%a" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_Hour" . Chr(34) . ":`n        # Return current hour`n        return now.strftime(" . Chr(34) . "%H" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_Min" . Chr(34) . ":`n        # Return current minute`n        return now.strftime(" . Chr(34) . "%M" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_Sec" . Chr(34) . ":`n        # Return current second`n        return now.strftime(" . Chr(34) . "%S" . Chr(34) . ")`n    elif varName == " . Chr(34) . "A_Space" . Chr(34) . ":`n        # Return space character`n        return " . Chr(34) . " " . Chr(34) . "`n    elif varName == " . Chr(34) . "A_Tab" . Chr(34) . ":`n        # Return tab character`n        return " . Chr(34) . Chr(92) . "t" . Chr(34) . "`n    else:`n        # Handle unknown variable names`n        return None`n"
+
+
+func_Floor_func := "`ndef Floor(number):`n    if number > 0:`n        return int(number)`n    else:`n        return int(number) - (1 if number != int(number) else 0)`n`n"
+
+
+func_ExitApp_func := "`nimport os`n# Function to handle application termination`ndef ExitApp():`n    os._exit(1)`n`n"
+
+
+func_SetTimer_func := "`nimport time`nimport threading`n# Dictionary to store active timers`nactive_timers = {}`n`n# Function to start, stop, or adjust a timer`ndef SetTimer(func, timeOrOnOff):`n    def timer_wrapper(name, interval_ms):`n        def run_timer():`n            func()`n            if active_timers[name]['running']:`n                active_timers[name]['timer'] = threading.Timer(interval_ms / 1000.0, run_timer)`n                active_timers[name]['timer'].start()`n                `n        if timeOrOnOff == " . Chr(34) . "On" . Chr(34) . " and not active_timers[name]['running']:`n            active_timers[name]['timer'] = threading.Timer(active_timers[name]['interval_ms'] / 1000.0, run_timer)`n            active_timers[name]['timer'].start()`n            active_timers[name]['running'] = True`n            #print(f" . Chr(34) . "Timer '{name}' started with interval {active_timers[name]['interval_ms']} ms." . Chr(34) . ")`n        elif timeOrOnOff == " . Chr(34) . "Off" . Chr(34) . " and active_timers[name]['running']:`n            active_timers[name]['timer'].cancel()`n            active_timers[name]['running'] = False`n            #print(f" . Chr(34) . "Timer '{name}' stopped." . Chr(34) . ")`n        elif isinstance(timeOrOnOff, int):`n            active_timers[name]['interval_ms'] = timeOrOnOff  # Update the stored interval`n            if active_timers[name]['running']:`n                active_timers[name]['timer'].cancel()`n                active_timers[name]['timer'] = threading.Timer(timeOrOnOff / 1000.0, run_timer)`n                active_timers[name]['timer'].start()`n                #print(f" . Chr(34) . "Timer '{name}' adjusted to interval {timeOrOnOff} ms." . Chr(34) . ")`n            else:`n                active_timers[name]['timer'] = threading.Timer(timeOrOnOff / 1000.0, run_timer)`n                active_timers[name]['timer'].start()`n                active_timers[name]['running'] = True`n                #print(f" . Chr(34) . "Timer '{name}' started with adjusted interval {timeOrOnOff} ms." . Chr(34) . ")`n        else:`n            print(" . Chr(34) . "Invalid arguments. Please provide a valid function and time/On/Off state." . Chr(34) . ")`n`n    # Ensure func is callable`n    if not callable(func):`n        print(" . Chr(34) . "Invalid function provided." . Chr(34) . ")`n        return`n`n    name = func.__name__  # Use function name as timer identifier`n`n    # Initialize timer if not already active`n    if name not in active_timers:`n        active_timers[name] = {`n            'timer': None,`n            'running': False,`n            'interval_ms': 1000  # Default interval`n        }`n`n    # Determine the interval_ms value`n    if isinstance(timeOrOnOff, int):`n        interval_ms = timeOrOnOff`n    else:`n        interval_ms = active_timers[name]['interval_ms']  # Use stored interval`n`n    # Call timer_wrapper to manage timer based on timeOrOnOff`n    timer_wrapper(name, interval_ms)`n"
+
+func_Abs_func := "`ndef Abs(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return abs(num)`n"
+func_ACos_func := "`ndef ACos(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.acos(num)`n"
+func_ASin_func := "`ndef ASin(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.asin(num)`n"
+func_ATan_func := "`ndef ATan(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.atan(num)`n"
+func_Ceil_func := "`ndef Ceil(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.ceil(num)`n"
+func_Cos_func := "`ndef Cos(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.cos(num)`n"
+func_Exp_func := "`ndef Exp(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.exp(num)`n"
+func_Ln_func := "`ndef Ln(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.log(num)`n"
+func_Log_func := "`ndef Log(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.log10(num)`n"
+func_Round_func := "`ndef Round(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return round(num)`n"
+func_Sin_func := "`ndef Sin(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.sin(num)`n"
+func_Sqrt_func := "`ndef Sqrt(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.sqrt(num)`n"
+func_Tan_func := "`ndef Tan(num):`n    import math`n    if num is None or math.isnan(num):`n        return None`n    return math.tan(num)`n"
+func_RegExMatch_func := "`ndef RegExMatch(Haystack, NeedleRegEx, OutputVar=None, StartingPos=0):`n    import re`n    if Haystack is None or NeedleRegEx is None:`n        return None`n`n    regex = re.compile(NeedleRegEx)`n    match = regex.search(Haystack)`n`n    if match:`n        if OutputVar is not None:`n            OutputVar.append(match.group(0))`n        return match.start() + 1`n    else:`n        return 0`n"
+func_StrLen_func := "`ndef StrLen(string):`n    if string is None:`n        return None`n    return len(string)`n"
+func_Asc_func := "`ndef Asc(char):`n    if char is None or len(char) == 0:`n        return None`n    return ord(char[0])`n"
+func_getDataFromAPI_func := "`nimport json`nimport urllib.request`nimport urllib.error`ndef getDataFromAPI(url):`n    try:`n        with urllib.request.urlopen(url) as response:`n            if response.getcode() == 200:`n                return response.read()`n            else:`n                return None`n    except urllib.error.URLError as e:`n        print(f" . Chr(34) . "Error accessing URL: {e.reason}" . Chr(34) . ")`n        return None`n"
+func_getDataFromJSON_func := "`nimport json`nimport re`ndef getDataFromJSON(json_data, json_path):`n    try:`n        if json_data:`n            json_data = json.loads(json_data)  # Parse JSON data into Python object`n`n        # Check if the path starts with a dot and remove it if present`n        if json_path.startswith(" . Chr(34) . "." . Chr(34) . "):`n            json_path = json_path[1:]`n`n        path_segments = json_path.split(" . Chr(34) . "." . Chr(34) . ")  # Split the path into segments`n        current_data = json_data  # Use json_data directly (already an object)`n`n        for segment in path_segments:`n            if current_data is None:`n                return None`n`n            # Handle array indices e.g., " . Chr(34) . "Children[0]" . Chr(34) . "`n            if " . Chr(34) . "[" . Chr(34) . " in segment and " . Chr(34) . "]" . Chr(34) . " in segment:`n                array_index = re.search(r" . Chr(34) . "" . Chr(92) . "[(" . Chr(92) . "d+)" . Chr(92) . "]" . Chr(34) . ", segment)`n                if array_index:`n                    array_name = segment[:segment.index(" . Chr(34) . "[" . Chr(34) . ")]`n                    index = int(array_index.group(1))`n                    if array_name:`n                        current_data = current_data.get(array_name, [])[index]`n                    else:`n                        current_data = current_data[index]`n                    segment = segment[segment.index(" . Chr(34) . "]" . Chr(34) . ") + 1:]`n`n            # Handle regular dictionary keys`n            if segment:`n                current_data = current_data.get(segment, None)`n`n        return current_data`n`n    except (TypeError, IndexError, KeyError) as error:`n        print(f" . Chr(34) . "Error accessing data: {error}" . Chr(34) . ")`n        return None`n"
+
+funcs_func := "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|Floor|RunCMD|SortLikeAHK|BuildInVars|Floor|ExitApp|SetTimer|Abs|ACos|ASin|ATan|Ceil|Cos|Exp|Ln|Log|Round|Sin|Sqrt|Tan|RegExMatch|StrLen|Asc|getDataFromAPI|getDataFromJSON"
+
+
+
+functionNames := "input|int|chr|str|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|FileRead|FileAppend|FileDelete|GetParams|RunCMD|SortLikeAHK|BuildInVars|Floor|ExitApp|SetTimer|Abs|ACos|ASin|ATan|Ceil|Cos|Exp|Ln|Log|Round|Sin|Sqrt|Tan|RegExMatch|StrLen|Asc|getDataFromAPI|getDataFromJSON|float"
+
+
+
+funcs_func .= "|HTpy"
+functionNames .= "|HTpy"
 awesdrtf := "|A" . Chr(95) . "LoopField|A" . Chr(95) . "Index"
 
 willNextLineBeCurlyBracee := 0
@@ -628,7 +732,7 @@ else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("msgbox, ")) && (S
 StringTrimLeft, var1, A_LoopField, 8
 
 OUTvarMsgLow := transpileLowVariables(var1)
-
+OUTvarMsgLow := StrReplace(OUTvarMsgLow, Chr(96), Chr(92))
 out := "print(" . OUTvarMsgLow . ")"
 
 
@@ -670,6 +774,18 @@ lineDone := 1
 pyCode .= var1 . "`n"
 
 
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 6) = StrLower("Port, "))
+{
+StringTrimLeft, str1, A_LoopField, 6
+str1 := Trim(transpileVariables(str1, functionNames))
+
+
+
+var1 := "variables['port'] = " . str(str1)
+port := "variables['port']"
+lineDone := 1
+pyCode .= var1 . "`n"
 }
 else if (SubStr(Trim(StrLower(A_LoopField)), 1, 8) = StrLower("Random, "))
 {
@@ -735,6 +851,34 @@ usedLib .= "import time`n"
 }
 pyCode .= out . "`n"
 
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = "settimer, ")
+{
+StringTrimLeft, str1, A_LoopField, 10
+
+str2 := Trim(StrSplit(str1, ",", 1))
+str3 := Trim(StrSplit(str1, ",", 2))
+
+if (StrLower(str3) = "on")
+{
+str3 := Chr(34) . "On" . Chr(34)
+}
+
+if (StrLower(str3) = "off")
+{
+str3 := Chr(34) . "Off" . Chr(34)
+}
+
+out1 := "SetTimer(" . str2 . ", " . str3 . ")"
+
+lineDone := 1
+pyCode .= out1 . "`n"
+}
+else if (Trim(StrLower(A_LoopField)) = "exitapp")
+{
+
+lineDone := 1
+pyCode .= "ExitApp()" . "`n"
 }
 else if (SubStr(Trim(StrLower(A_LoopField)), 1, 10) = "fileread, ")
 {
@@ -891,7 +1035,7 @@ strFormEndpoint2 := Trim(StrSplit(strFormEndpoint, ",", 2))
 
 putEndPointFlask1Up := "from flask import Flask, send_file, request, jsonify`nimport os`nvariables = {}`napp = Flask(__name__)`n`n@app.route('/')`ndef app_route():`n    return send_file(os.path.join(os.path.dirname(__file__), 'index.html')), 200`n"
 
-putEndPointFlask2Down := "`n@app.errorhandler(404)`ndef not_found(e):`n    return " . Chr(34) . "Page not found" . Chr(34) . ", 404`n`nif __name__ == '__main__':`n    app.run(host='0.0.0.0', port=8000, debug=True)"
+putEndPointFlask2Down := "`n@app.errorhandler(404)`ndef not_found(e):`n    return " . Chr(34) . "Page not found" . Chr(34) . ", 404`n`nif __name__ == '__main__':`n    app.run(host='0.0.0.0', port=" . str(port) . ", debug=True)"
 
 
 
@@ -1073,6 +1217,53 @@ pycodeLoopfixa .= "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength) .
 pycodeLoopfixa1 := "lp|itsaersdtgtgfergsdgfsegdfsedAA|" . str(AindexcharLength)
 AindexcharLength++
 pyCode .= pycodeLoopfixa1 . "`n" . var1out . "`n"
+}
+else if (SubStr(Trim(StrLower(A_LoopField)), 1, 7) = "gosub, ")
+{
+
+;MsgBox, % A_LoopField
+
+
+sstr1 := A_LoopField
+
+s := StrSplit(sstr1, ",", 2)
+out1 := s
+
+out1 := Trim(out1)
+
+out2 := out1 . "()"
+
+;MsgBox, % out2
+lineDone := 1
+pyCode .= out2 . "`n"
+
+}
+else if (A_LoopField == "Return")
+{
+pyCode .= "}" . "`n"
+lineDone := 1
+}
+else if (RegExReplace(A_LoopField, "^\\w+:$", "") != A_LoopField) && (Trim(SubStr(A_LoopField, 0)) = ":") && (lineDone != 1)
+{
+
+;MsgBox, % A_LoopField
+
+
+
+out1 := A_LoopField
+
+out1 := Trim(out1)
+
+StringTrimRight, out1, out1, 1
+
+
+
+pyCode .= "def " . out1 . "():`n{`n"
+
+;MsgBox, % out1
+;~ MsgBox, % see
+
+lineDone := 1
 }
 else if (SubStr(A_LoopField, -1) = "++")
 {
@@ -1827,77 +2018,41 @@ pyCodeOut1234565432 .= out . "`n"
 
 
 StringTrimRight, pyCode, pyCodeOut1234565432, 1
+
+
+
+pyCodeOutOneLastFix := ""
+Loop, Parse, pyCode, `n, `r
+{
+
+sstr1 := A_LoopField
+
+sstr1 := StrReplace(sstr1, "variables['A_TickCount']", "BuildInVars(" . Chr(34) . "A_TickCount" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Now']", "BuildInVars(" . Chr(34) . "A_Now" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_YYYY']", "BuildInVars(" . Chr(34) . "A_YYYY" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_MMMM']", "BuildInVars(" . Chr(34) . "A_MMMM" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_MMM']", "BuildInVars(" . Chr(34) . "A_MMM" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_MM']", "BuildInVars(" . Chr(34) . "A_MM" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_DDDD']", "BuildInVars(" . Chr(34) . "A_DDDD" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_DDD']", "BuildInVars(" . Chr(34) . "A_DDD" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_DD']", "BuildInVars(" . Chr(34) . "A_DD" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Hour']", "BuildInVars(" . Chr(34) . "A_Hour" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Min']", "BuildInVars(" . Chr(34) . "A_Min" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Sec']", "BuildInVars(" . Chr(34) . "A_Sec" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Space']", "BuildInVars(" . Chr(34) . "A_Space" . Chr(34) . ")")
+sstr1 := StrReplace(sstr1, "variables['A_Tab']", "BuildInVars(" . Chr(34) . "A_Tab" . Chr(34) . ")")
+
+
+pyCodeOutOneLastFix .= sstr1 . "`n"
+
+}
+StringTrimRight, pyCode, pyCodeOutOneLastFix, 1
+
+
+
 pyCodeFinal := pyCode
 
 
-
-
-func_LoopParseFunc_func := "`ndef LoopParseFunc(var, delimiter1=" . Chr(34) . "" . Chr(34) . ", delimiter2=" . Chr(34) . "" . Chr(34) . "):`n    import re`n    if not delimiter1 and not delimiter2:`n        # If no delimiters are provided, return a list of characters`n        items = list(var)`n    else:`n        # Construct the regular expression pattern for splitting the string`n        pattern = r'[' + re.escape(delimiter1) + re.escape(delimiter2) + r']+'`n`n        # Split the string using the constructed pattern`n        items = re.split(pattern, var)`n`n    return items`n`n"
-
-
-func_InStr_func := "`ndef InStr(Haystack, Needle, CaseSensitive=True, StartingPos=1, Occurrence=1):`n    if Haystack is None or Needle is None:`n        return False`n    StartingPos = max(StartingPos, 1)`n    if not CaseSensitive:`n        Haystack = Haystack.lower()`n        Needle = Needle.lower()`n    count = 0`n    for i in range(StartingPos - 1, len(Haystack)):`n        if Haystack[i:i + len(Needle)] == Needle:`n            count += 1`n            if count == Occurrence:`n                return True`n    return False  `n"
-
-func_SubStr_func := "`ndef SubStr(str, startPos, length=None):`n    if str is None or str == " . Chr(34) . "" . Chr(34) . ":`n        return " . Chr(34) . "" . Chr(34) . "`n`n    if length is None or length == " . Chr(34) . "" . Chr(34) . ":`n        length = len(str) - startPos + 1`n`n    if startPos < 1:`n        startPos = len(str) + startPos`n`n    return str[startPos - 1:startPos - 1 + length]`n"
-
-
-func_Trim_func := "`ndef Trim(inputString):`n    if inputString is None:`n        return " . Chr(34) . "" . Chr(34) . "`n`n    return inputString.strip()`n"
-
-
-func_StrReplace_func := "  `ndef StrReplace(originalString, find, replaceWith):`n    # Use the replace method to replace occurrences of 'find' with 'replaceWith'`n    return originalString.replace(find, replaceWith)`n"
-
-
-func_StringTrimLeft_func := "`ndef StringTrimLeft(input, numChars):`n    # Convert input to a string if it's not already a string`n    if not isinstance(input, str):`n        input = str(input)  # Convert input to string`n`n    # Check if the input is long enough to perform trimming`n    if len(input) >= numChars:`n        return input[numChars:]  # Trim the string from the left`n    else:`n        return input  # Return input unchanged if numChars is larger than string length`n"
-
-
-func_StringTrimRight_func := "`ndef StringTrimRight(input, numChars):`n    # Convert input to a string if it's not already a string`n    if not isinstance(input, str):`n        input = str(input)  # Convert input to string`n`n    # Check if the input is long enough to perform trimming`n    if len(input) >= numChars:`n        return input[:-numChars]  # Trim the string from the right`n    else:`n        return input  # Return input unchanged if numChars is larger than string length`n"
-
-
-func_StrLower_func := "`ndef StrLower(string):`n    return string.lower()`n"
-
-
-func_RegExReplace_func := "`ndef RegExReplace(inputStr, regexPattern, replacement):`n    # Create a regular expression object using the provided pattern`n    import re`n    regex = re.compile(regexPattern, re.MULTILINE)  # re.MULTILINE for multi-line matching`n`n    # Use the sub() method to perform the regex replacement`n    resultStr = regex.sub(replacement, inputStr)`n`n    # Return the modified string`n    return resultStr`n"
-
-
-func_StrSplit_func := "`ndef StrSplit(inputStr, delimiter, num):`n    # Check if the delimiter is empty`n    if delimiter == '':`n        # Return an empty string since splitting with an empty delimiter is not possible`n        return ''`n`n    # Split the input string based on the delimiter`n    parts = inputStr.split(delimiter)`n`n    # Return the part specified by the num parameter (1-based index)`n    if 0 < num <= len(parts):`n        return parts[num - 1]  # Return the specified part (0-based index)`n    else:`n        return ''  # Return an empty string if num is out of range`n"
-
-func_Chr_func := "`ndef Chr(number):`n    # Check if the number is None`n    if number is None:`n        # Return an empty string`n        return " . Chr(34) . "" . Chr(34) . "`n`n    # Check if the number is within the valid Unicode range`n    if 0 <= number <= 0x10FFFF:`n        # Convert the number to a character using chr()`n        return chr(number)`n    else:`n        # Return an empty string for invalid numbers`n        return " . Chr(34) . "" . Chr(34) . "`n`n"
-
-func_Mod_func := "`n# Custom Mod function in Python`ndef Mod(dividend, divisor):`n    return dividend % divisor`n"
-
-
-
-func_HTpy_func := "`ndef HTpy():`n    import sys`n    import os`n    if len(sys.argv) < 2 or len(sys.argv) > 3:`n        print(" . Chr(34) . "Usage: python app.py <input_file.htpy> [run]" . Chr(34) . ")`n        sys.exit(1)`n`n    input_file = sys.argv[1]`n`n    # Ensure the input_file ends with '.htpy'`n    if not input_file.endswith('.htpy'):`n        print(" . Chr(34) . "Error: Input file must have a .htpy extension." . Chr(34) . ")`n        sys.exit(1)`n`n    # Check if the input_file exists`n    if not os.path.isfile(input_file):`n        print(f" . Chr(34) . "Error: '{input_file}' is not a valid file path." . Chr(34) . ")`n        sys.exit(1)`n`n    # Determine the output .py file name based on input file name`n    output_file = os.path.splitext(input_file)[0] + '.py'`n`n    # Compile the .htpy content using the compiler function`n    with open(input_file, 'r') as file:`n        htpy_content = file.read()`n`n    compiled_result = compiler(htpy_content)`n`n    # Save the compiled result to the determined .py output file`n    with open(output_file, 'w') as file:`n        file.write(compiled_result)`n`n    print(f" . Chr(34) . "Compiled result saved to '{output_file}'." . Chr(34) . ")`n`n    # Check if 'run' parameter is provided and execute the compiled Python script`n    if len(sys.argv) == 3 and sys.argv[2] == 'run':`n        print(f" . Chr(34) . "Running '{output_file}'..." . Chr(34) . ")`n        try:`n            exec(compile(open(output_file).read(), output_file, 'exec'), globals())`n        except Exception as e:`n            print(f" . Chr(34) . "Error occurred while running the compiled file: {e}" . Chr(34) . ")`n`n"
-
-
-
-
-func_FileRead_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(82) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(32) . Chr(97) . Chr(110) . Chr(121) . Chr(32) . Chr(101) . Chr(120) . Chr(116) . Chr(114) . Chr(97) . Chr(32) . Chr(100) . Chr(111) . Chr(117) . Chr(98) . Chr(108) . Chr(101) . Chr(32) . Chr(113) . Chr(117) . Chr(111) . Chr(116) . Chr(101) . Chr(115) . Chr(32) . Chr(97) . Chr(114) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(112) . Chr(40) . Chr(39) . Chr(34) . Chr(39) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(114) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(110) . Chr(99) . Chr(111) . Chr(100) . Chr(105) . Chr(110) . Chr(103) . Chr(61) . Chr(39) . Chr(117) . Chr(116) . Chr(102) . Chr(45) . Chr(56) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(114) . Chr(114) . Chr(111) . Chr(114) . Chr(115) . Chr(61) . Chr(39) . Chr(105) . Chr(103) . Chr(110) . Chr(111) . Chr(114) . Chr(101) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(32) . Chr(61) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(114) . Chr(101) . Chr(97) . Chr(100) . Chr(40) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(78) . Chr(111) . Chr(116) . Chr(70) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(69) . Chr(114) . Chr(114) . Chr(111) . Chr(114) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(39) . Chr(39) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(78) . Chr(111) . Chr(110) . Chr(101) . Chr(10)
-
-func_FileAppend_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(65) . Chr(112) . Chr(112) . Chr(101) . Chr(110) . Chr(100) . Chr(40) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(82) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(32) . Chr(97) . Chr(110) . Chr(121) . Chr(32) . Chr(101) . Chr(120) . Chr(116) . Chr(114) . Chr(97) . Chr(32) . Chr(100) . Chr(111) . Chr(117) . Chr(98) . Chr(108) . Chr(101) . Chr(32) . Chr(113) . Chr(117) . Chr(111) . Chr(116) . Chr(101) . Chr(115) . Chr(32) . Chr(97) . Chr(114) . Chr(111) . Chr(117) . Chr(110) . Chr(100) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(115) . Chr(116) . Chr(114) . Chr(105) . Chr(112) . Chr(40) . Chr(39) . Chr(34) . Chr(39) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(119) . Chr(105) . Chr(116) . Chr(104) . Chr(32) . Chr(111) . Chr(112) . Chr(101) . Chr(110) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(44) . Chr(32) . Chr(39) . Chr(97) . Chr(39) . Chr(44) . Chr(32) . Chr(101) . Chr(110) . Chr(99) . Chr(111) . Chr(100) . Chr(105) . Chr(110) . Chr(103) . Chr(61) . Chr(39) . Chr(117) . Chr(116) . Chr(102) . Chr(45) . Chr(56) . Chr(39) . Chr(41) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(58) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(39) . Chr(97) . Chr(39) . Chr(32) . Chr(109) . Chr(111) . Chr(100) . Chr(101) . Chr(32) . Chr(102) . Chr(111) . Chr(114) . Chr(32) . Chr(97) . Chr(112) . Chr(112) . Chr(101) . Chr(110) . Chr(100) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(102) . Chr(105) . Chr(108) . Chr(101) . Chr(46) . Chr(119) . Chr(114) . Chr(105) . Chr(116) . Chr(101) . Chr(40) . Chr(99) . Chr(111) . Chr(110) . Chr(116) . Chr(101) . Chr(110) . Chr(116) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(84) . Chr(114) . Chr(117) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(32) . Chr(97) . Chr(115) . Chr(32) . Chr(101) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(114) . Chr(101) . Chr(116) . Chr(117) . Chr(114) . Chr(110) . Chr(32) . Chr(70) . Chr(97) . Chr(108) . Chr(115) . Chr(101) . Chr(10)
-
-
-func_FileDelete_func := Chr(10) . Chr(105) . Chr(109) . Chr(112) . Chr(111) . Chr(114) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(10) . Chr(100) . Chr(101) . Chr(102) . Chr(32) . Chr(70) . Chr(105) . Chr(108) . Chr(101) . Chr(68) . Chr(101) . Chr(108) . Chr(101) . Chr(116) . Chr(101) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(35) . Chr(32) . Chr(69) . Chr(110) . Chr(115) . Chr(117) . Chr(114) . Chr(101) . Chr(32) . Chr(116) . Chr(104) . Chr(101) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(105) . Chr(115) . Chr(32) . Chr(97) . Chr(98) . Chr(115) . Chr(111) . Chr(108) . Chr(117) . Chr(116) . Chr(101) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(110) . Chr(111) . Chr(116) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(105) . Chr(115) . Chr(97) . Chr(98) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(32) . Chr(61) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(106) . Chr(111) . Chr(105) . Chr(110) . Chr(40) . Chr(111) . Chr(115) . Chr(46) . Chr(103) . Chr(101) . Chr(116) . Chr(99) . Chr(119) . Chr(100) . Chr(40) . Chr(41) . Chr(44) . Chr(32) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(116) . Chr(114) . Chr(121) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(105) . Chr(102) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(46) . Chr(101) . Chr(120) . Chr(105) . Chr(115) . Chr(116) . Chr(115) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(111) . Chr(115) . Chr(46) . Chr(114) . Chr(101) . Chr(109) . Chr(111) . Chr(118) . Chr(101) . Chr(40) . Chr(112) . Chr(97) . Chr(116) . Chr(104) . Chr(41) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(101) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(32) . Chr(69) . Chr(120) . Chr(99) . Chr(101) . Chr(112) . Chr(116) . Chr(105) . Chr(111) . Chr(110) . Chr(58) . Chr(10) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(112) . Chr(97) . Chr(115) . Chr(115) . Chr(32) . Chr(32) . Chr(32) . Chr(32) . Chr(10) . Chr(10)
-
-
-
-func_GetParams_func := "`nimport os`nimport sys`n`ndef GetParams():`n    # Check if any command line arguments are provided`n    if len(sys.argv) < 2:`n        return " . Chr(34) . "" . Chr(34) . "`n`n    # Store the provided command line arguments`n    params = []`n    for arg in sys.argv[1:]:`n        if os.path.exists(arg):`n            arg = os.path.abspath(arg)`n        params.append(arg)`n`n    return " . Chr(34) . "" . Chr(92) . "n" . Chr(34) . ".join(params)`n"
-
-
-func_Floor_func := "`ndef Floor(num):`n    import math`n    if num is None or not isinstance(num, (int, float)):`n        return None`n    return math.floor(num)`n"
-
-func_A_TickCount_func := "`nimport time`n`nstart_timestamp = int(time.time() * 1000)  # Initialize with current timestamp in milliseconds`n`n# Function to calculate tick count in milliseconds`ndef A_TickCount():`n    return int(time.time() * 1000) - start_timestamp`n"
-
-
-
-func_RunCMD_func := "import subprocess`n`ndef RunCMD(command):`n    " . Chr(34) . "" . Chr(34) . "" . Chr(34) . "`n    Run a specified command in Termux and return the output.`n`n    Args:`n        command (str): The command to run in Termux.`n`n    Returns:`n        tuple: A tuple containing the standard output and standard error of the command.`n    " . Chr(34) . "" . Chr(34) . "" . Chr(34) . "`n    try:`n        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)`n        return (result.stdout, result.stderr)`n    except subprocess.CalledProcessError as e:`n        print(f" . Chr(34) . "Error: {e}" . Chr(34) . ")`n        return (e.stdout, e.stderr)`n    except Exception as e:`n        print(f" . Chr(34) . "An unexpected error occurred: {e}" . Chr(34) . ")`n        return (" . Chr(34) . "" . Chr(34) . ", " . Chr(34) . "" . Chr(34) . ")`n"
-
-
-
-func_SortLikeAHK_func := "`nimport random`ndef SortLikeAHK(var_name, options):`n    # Determine delimiter based on options`n    delimiter = '" . Chr(92) . "n'`n    if 'D' in options:`n        delimiter = options[options.index('D') + 1]`n    `n    # Split the input variable by delimiter`n    items = var_name.split(delimiter)`n    `n    # Remove empty items and strip whitespace`n    items = [item.strip() for item in items if item.strip()]`n    `n    # Apply sorting based on options`n    if 'N' in options:`n        # Numeric sort`n        items.sort(key=lambda x: int(x))`n    elif 'Random' in options:`n        # Random sort`n        random.shuffle(items)`n    else:`n        # Default alphabetical sort`n        items.sort(key=lambda x: x.lower() if 'C' not in options else x)`n    `n    # Reverse if 'R' option is present`n    if 'R' in options:`n        items.reverse()`n    `n    # Remove duplicates if 'U' option is present`n    if 'U' in options:`n        seen = set()`n        unique_items = []`n        for item in items:`n            lower_item = item.lower() if 'C' not in options else item`n            if lower_item not in seen:`n                seen.add(lower_item)`n                unique_items.append(item)`n        items = unique_items`n    `n    # Join the sorted items back into a string`n    sorted_var = delimiter.join(items)`n    `n    return sorted_var`n"
-
-
-
-funcs_func :=       "LoopParseFunc|InStr|SubStr|Trim|StrReplace|StringTrimLeft|StringTrimRight|StrLower|RegExReplace|StrSplit|Chr|Mod|HTpy|FileRead|FileAppend|FileDelete|GetParams|Floor|A_TickCount|RunCMD|SortLikeAHK"
 
 allFuncsHere := ""
 Loop, Parse, funcs_func, "|"
