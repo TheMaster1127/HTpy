@@ -44,22 +44,22 @@ HTpy currently supports a subset of commands similar to AutoHotkey:
 - Functions
 - If, else, else if
 - Random
-- Sleep
+- Sleep (This feature does NOT work on the web HTpy playground)
 - Msgbox
-- FileRead
-- FileAppend
-- SetTimer
+- FileRead (This feature does NOT work on the web HTpy playground)
+- FileAppend (This feature does NOT work on the web HTpy playground)
+- SetTimer (This feature does NOT work on the web HTpy playground)
 - Labels
 - Gosub
 - Return/return
 - Loop
 - Loop, Parse
 - Variables
-- RunCMD and ExitApp
+- RunCMD and ExitApp (Both features does NOT work on the web HTpy playground)
 - Comments
 - Sort
-- Endpoint
-- getDataFromAPI and getDataFromJSON
+- Endpoint (This feature does NOT work on the web HTpy playground)
+- getDataFromAPI and getDataFromJSON (Both features does NOT work on the web HTpy playground)
 - Math Functions
 - Build-in Functions
 - Build-in Variables
