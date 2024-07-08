@@ -1369,7 +1369,6 @@ Sort, VarName , Options
 ```ahk
 ; Example 1: Sort alphabetically (default) with linefeed delimiter
 MyVar := "apple`norange`nbanana`ngrape`napple`nbanana"
-; ONLY in HTpy v2 in HTpy v1 we will have an error!
 Sort, MyVar
 MsgBox, % "Sorted Alphabetically:`n" . MyVar
 
