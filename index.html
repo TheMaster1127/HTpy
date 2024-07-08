@@ -1567,6 +1567,8 @@ variables.outOftranspileVariables = await StrReplace (variables.outOftranspileVa
 variables.outOftranspileVariables = await StrReplace (variables.outOftranspileVariables , " [ " , "[" )
 variables.outOftranspileVariables = await StrReplace (variables.outOftranspileVariables , " ] " , "]" )
 variables.outOftranspileVariables = await StrReplace (variables.outOftranspileVariables , "!=" , " !=" )
+variables.outOftranspileVariables = await StrReplace (variables.outOftranspileVariables , " )" , ")" )
+variables.outOftranspileVariables = await StrReplace (variables.outOftranspileVariables , "( " , "(" )
 //OutputDebug, %outOftranspileVariables%
 return variables.outOftranspileVariables
 }

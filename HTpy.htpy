@@ -366,6 +366,9 @@ outOftranspileVariables := StrReplace(outOftranspileVariables, " ] ", "]")
 
 outOftranspileVariables := StrReplace(outOftranspileVariables, "!=", " !=")
 
+outOftranspileVariables := StrReplace(outOftranspileVariables, " )", ")")
+outOftranspileVariables := StrReplace(outOftranspileVariables, "( ", "(")
+
 ;OutputDebug, %outOftranspileVariables%
 
 return outOftranspileVariables

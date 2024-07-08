@@ -75,7 +75,6 @@ def SetTimer(func, timeOrOnOff):
 def timer1():
     print("timer1 msg\n")
 variables['wert'] = 5555
-variables['port'] = variables['wert']
 @app.route('/waesdrf', methods=['POST'])
 def waesdrf():
     variables['as'] = request.get_json()
@@ -87,7 +86,7 @@ SetTimer(timer2, 69)
 for A_Index1 in range(1, 20 + 1):
     variables['A_Index1'] = A_Index1
     time.sleep(300 / 1000)
-    print("this is Index "  +  str(variables['A_Index1']) +  "\n")
+    print("this is Index " + str( variables['A_Index1'] ) + "\n")
     if (variables['A_Index1'] == 4):
         print("STOP the timer2\n")
         SetTimer(timer2, "Off")
@@ -104,4 +103,4 @@ def not_found(e):
     return "Page not found", 404
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=variables['port'], debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)

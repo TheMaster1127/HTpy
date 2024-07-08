@@ -4,7 +4,7 @@ timer1()
 MsgBox, timer1 msg`n
 }
 wert := 5555
-Port, %wert%
+
 Endpoint, as, waesdrf
 {
 MsgBox, j
