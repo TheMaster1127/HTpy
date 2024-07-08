@@ -425,6 +425,8 @@ With the `Random` feature in HeavenToPython (HTpy), developers can easily incorp
 
 The `Sleep` feature in HeavenToPython (HTpy) allows developers to introduce delays or pauses in their scripts, which can be useful for various purposes such as controlling the timing of actions, implementing animations, or simulating real-time behavior.
 
+This feature does NOT work on the web HTpy playground.
+
 #### Syntax:
 
 ```ahk
@@ -528,6 +530,8 @@ The `MsgBox` function in HeavenToPython (HTpy) provides developers with a versat
 
 The `FileRead` feature in HeavenToPython (HTpy) allows you to read the contents of a file into a variable within your script.
 
+This feature does NOT work on the web HTpy playground.
+
 #### Syntax:
 
 ```ahk
@@ -573,6 +577,8 @@ By following these guidelines, you can effectively use the `FileRead` feature in
 
 The `FileAppend` feature in HeavenToPython (HTpy) enables you to append text content to a file.
 
+This feature does NOT work on the web HTpy playground.
+
 #### Syntax:
 
 ```ahk
@@ -603,6 +609,8 @@ FileAppend, %text%, FileName.txt
 [Go back](#features)
 
 In HeavenToPython (HTpy), the `SetTimer` command is used to create and control timers within the script. Timers allow developers to execute specific actions or functions at regular intervals, providing a mechanism for scheduling tasks and automating processes.
+
+This feature does NOT work on the web HTpy playground.
 
 #### Syntax:
 
@@ -1223,6 +1231,8 @@ Variables play a crucial role in storing and manipulating data within HeavenToPy
 
 The `RunCMD` function in HeavenToPython (HTpy) allows developers to execute a system command or script from within the current HTpy script. This can be particularly useful for integrating external processes or automating tasks that require command-line operations. It works on both Windows and Linux-like systems.
 
+This feature does NOT work on the web HTpy playground.
+
 #### Syntax:
 
 ```ahk
@@ -1253,6 +1263,8 @@ This function will execute the specified system command or script and display th
 [Go back](#runcmd-and-exitapp)
 
 The `ExitApp` feature in HeavenToPython (HTpy) allows developers to terminate the currently active script. This functionality is particularly useful for terminating script execution programmatically.
+
+This feature does NOT work on the web HTpy playground.
 
 #### Syntax:
 
@@ -1423,6 +1435,8 @@ Got it! Here's the revised documentation with the correct "Go back" link:
 
 The `Endpoint` command in HeavenToPython (HTpy) is used to define and execute communication Endpoints within a script. This functionality allows developers to specify points of interaction or data exchange, ensuring structured and modular script design.
 
+This feature does NOT work on the web HTpy playground.
+
 #### Syntax:
 
 ```ahk
@@ -1529,6 +1543,8 @@ To see the HTML file you are serving, navigate to `localhost:8000` or the specif
 
 The `getDataFromAPI` function in HeavenToPython (HTpy) performs an HTTP GET request to retrieve data from an external API endpoint and processes the response asynchronously.
 
+This feature does NOT work on the web HTpy playground.
+
 #### Syntax:
 
 ```ahk
@@ -1556,6 +1572,8 @@ jsonOutput := getDataFromAPI("https://api.example.com/data")
 [Go back](#getdatafromapi-and-getdatafromjson)
 
 The `getDataFromJSON` function in HeavenToPython (HTpy) retrieves specific data from a JSON string using a path-like syntax to navigate nested objects and arrays.
+
+This feature does NOT work on the web HTpy playground.
 
 #### Syntax:
 
