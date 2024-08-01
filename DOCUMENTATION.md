@@ -1427,8 +1427,6 @@ MsgBox, % "Sorted Numerically in Reverse with Unique and Case-Sensitive:`n" . My
 
 ---
 
-Got it! Here's the revised documentation with the correct "Go back" link:
-
 ### Endpoint <a id="endpoint"></a>
 
 [Go back](#features)
@@ -2183,8 +2181,6 @@ In Example 2:
 This function is essential for converting string representations of numbers or floating-point numbers into integers when performing calculations, comparisons, or storing numeric data in variables.
 
 ---
-
-Got it! Here's the markdown formatted explanation for the `float` function in HTpy:
 
 ### float <a id="float"></a>
 
