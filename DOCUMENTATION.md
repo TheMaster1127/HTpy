@@ -2218,7 +2218,7 @@ In Example 1:
 
 - `float(integer_number)` converts the integer `42` into the floating-point number `42.0`.
 - The variable `float_value` now holds the floating-point representation of `integer_number`.
-- The `htpy.msg_box` function displays a message box showing: "The floating-point value of 42 is 42.0".
+- The `MsgBox` function displays a message box showing: "The floating-point value of 42 is 42.0".
 
 #### Example 2:
 
@@ -2233,7 +2233,7 @@ MsgBox, % "The floating-point value of " . strNumber . " is " . str(parsedFloat)
 In Example 2:
 
 - `float(str_number)` converts the string `"3.14"` into the floating-point number `3.14`.
-- The `htpy.msg_box` function formats a message to display: "The floating-point value of 3.14 is 3.14".
+- The `MsgBox` function formats a message to display: "The floating-point value of 3.14 is 3.14".
 
 This function is essential for converting integer values, string representations of numbers, or other non-floating-point values into floating-point numbers when performing calculations, handling decimal data, or storing numeric data in variables in HTpy.
 
