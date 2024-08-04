@@ -2053,17 +2053,18 @@ A collection of Build-in Function available in HTpy.
 1. [str](#str)
 2. [int](#int)
 3. [float](#float)
-4. [Chr](#chr)
-5. [InStr](#instr)
-6. [RegExMatch](#regexmatch)
-7. [RegExReplace](#regexreplace)
-8. [StrLen](#strlen)
-9. [SubStr](#substr)
-10. [Trim](#trim)
-11. [StrReplace](#strreplace)
-12. [Mod](#mod)
-13. [Asc](#asc)
-14. [StrLower](#strlower)
+4. [input](#input)
+5. [Chr](#chr)
+6. [InStr](#instr)
+7. [RegExMatch](#regexmatch)
+8. [RegExReplace](#regexreplace)
+9. [StrLen](#strlen)
+10. [SubStr](#substr)
+11. [Trim](#trim)
+12. [StrReplace](#strreplace)
+13. [Mod](#mod)
+14. [Asc](#asc)
+15. [StrLower](#strlower)
 
 ---
 
@@ -2218,7 +2219,7 @@ In Example 1:
 
 - `float(integer_number)` converts the integer `42` into the floating-point number `42.0`.
 - The variable `float_value` now holds the floating-point representation of `integer_number`.
-- The `htpy.msg_box` function displays a message box showing: "The floating-point value of 42 is 42.0".
+- The `MsgBox` function displays a message box showing: "The floating-point value of 42 is 42.0".
 
 #### Example 2:
 
@@ -2233,9 +2234,65 @@ MsgBox, % "The floating-point value of " . strNumber . " is " . str(parsedFloat)
 In Example 2:
 
 - `float(str_number)` converts the string `"3.14"` into the floating-point number `3.14`.
-- The `htpy.msg_box` function formats a message to display: "The floating-point value of 3.14 is 3.14".
+- The `MsgBox` function formats a message to display: "The floating-point value of 3.14 is 3.14".
 
 This function is essential for converting integer values, string representations of numbers, or other non-floating-point values into floating-point numbers when performing calculations, handling decimal data, or storing numeric data in variables in HTpy.
+
+---
+
+### input <a id="input"></a>
+
+[Go back](#build-in-functions)
+
+**input**: Prompts the user for input and returns the user's response.
+
+#### Syntax:
+
+```ahk
+userInput = input(prompt)
+```
+
+#### Parameters:
+
+- _prompt_: The text message to display to the user when asking for input.
+
+#### Return Value:
+
+- Returns the text entered by the user as a string.
+
+#### Example 1:
+
+```ahk
+userName := input("Please enter your name: ")
+MsgBox, % "Hello, " . userName . "!"
+```
+
+#### Explanation:
+
+The `input` function displays a prompt to the user and captures their input as a string. This is useful for gathering user input in a script, such as names, preferences, or other data.
+
+In Example 1:
+
+- `input("Please enter your name: ")` shows a prompt asking the user to enter their name.
+- The variable `userName` captures the user's input.
+- `MsgBox` then displays a greeting message: "Hello, [userName]!"
+
+#### Example 2:
+
+```ahk
+userAge := input("Enter your age: ")
+MsgBox, % "You are " . userAge . " years old."
+```
+
+#### Explanation:
+
+In Example 2:
+
+- `input("Enter your age: ")` prompts the user to enter their age.
+- The variable `userAge` stores the input as a string.
+- `MsgBox` displays a message: "You are [userAge] years old."
+
+The `input` function is essential for creating interactive scripts that require user feedback or data. It enables the script to capture and use user-provided information in various applications.
 
 ---
 
@@ -2926,6 +2983,6 @@ Check out the best editor for HTpy at https://github.com/TheMaster1127/SciTE4HTH
 
 View a showcase of programs created using the HTpy programming language, demonstrating its capabilities.
 
-Check HTH v2 written in HTpy at https://github.com/TheMaster1127/HTH/blob/main/HTH.htpy
+Check this simple code at https://github.com/TheMaster1127/HTpy/blob/main/test.htpy
 
 ---
